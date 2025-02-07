@@ -39,6 +39,15 @@ module.exports = {
       label: "Enterprise Edition",
       className: "enterprise-badge",
     },
+    // Wiki
+    {
+      type: "category",
+      label: "Wiki",
+      className: "category-as-header",
+      items: [
+        "wiki/index",
+      ],
+    },
     // Guides & Concepts
     {
       type: "category",
