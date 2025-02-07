@@ -2,8 +2,35 @@
 title: Wiki
 displayed_sidebar: mainSidebar
 ---
+# Documentation
+
 ## Index
 
+- [Documentation](#documentation)
+  - [Index](#index)
+  - [Introduction](#introduction)
+  - [Quickstart for Developers](#quickstart-for-developers)
+    - [1. **Create the `.txt` file**](#1-create-the-txt-file)
+    - [2. **Accessing the page via the Developer UI**](#2-accessing-the-page-via-the-developer-ui)
+      - [a) **Navigate Button**](#a-navigate-button)
+        - [b) **Refresh Button**](#b-refresh-button)
+        - [c) **Copy URL Button**](#c-copy-url-button)
+    - [3. **Testing changes immediately**](#3-testing-changes-immediately)
+    - [4. **Deploying to Production**](#4-deploying-to-production)
+    - [5. **Further Customization**](#5-further-customization)
+  - [Wiki Configuration](#wiki-configuration)
+    - [PACKED\_QUERY](#packed_query)
+    - [ITEM\_ORIGIN\_LOCALE\_MAPPING](#item_origin_locale_mapping)
+    - [MOB\_ORIGIN\_LOCALE\_MAPPING](#mob_origin_locale_mapping)
+    - [QUEST\_NAMES](#quest_names)
+    - [RAID\_NAMES](#raid_names)
+    - [DUNGEON\_NAMES](#dungeon_names)
+    - [MAP\_NAMES](#map_names)
+    - [WIKI\_CATEGORIES](#wiki_categories)
+    - [INDEXED\_PAGES](#indexed_pages)
+    - [SEARCH\_RESULT\_CATEGORY](#search_result_category)
+    - [ITEM\_WHITELIST](#item_whitelist)
+    - [MOB\_WHITELIST](#mob_whitelist)
 - [Wiki Data](#wiki-data)
     - [Output Files](#output-files)
     - [File Formats](#file-formats)
@@ -1448,7 +1475,8 @@ This creates a table where the first 2 row’s column widths are set by `[th]`, 
 
 ### `[tr]`
 
-Defines a row inside a table.
+Defines a row inside a table.  
+Is important to know that the row will force all `TR` and `TD` to **not exceed** its width. Therefore when the division is not perfect (like 3 columns) it is possible to set the last one to be slightly wider (34%) and the row will take care of the exact width.
 
 **Parameters**:
 - *(No specific parameters)*
