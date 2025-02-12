@@ -890,7 +890,7 @@ Below is a table of all currently available embedded functions. These functions 
 | `$item_is_upgrade_material_for`  | Checks if the specified item can be used as upgrade material for another. | vnum (int), *args | Boolean (True/False) |
 | `$item_can_show_stats` | Checks if the specified item can display its stats. | vnum (int) | Boolean (True/False) |
 | `$template_exists` | Check If a given template exists | template path (string) | Boolean (True/False) |
-| `$template_resolve` | Formats the template string with all parameters passed after the first.<br>See [\[template\]](#template) | String, *args | Resolved template string |
+| `$template_resolve` | Formats the template string with all parameters passed after the first.<br></br>See [\[template\]](#template) | String, *args | Resolved template string |
 
 ### Embedded Variables
 
@@ -997,8 +997,8 @@ All bbcode tags share a common set of attributes that control their layout, posi
 
 | Attribute | Description | Example |
 |---|----|----|
-| `width` | Sets the width of the element. Can be a fixed value (e.g., `200`), a percentage of the parent (`50%`) or `auto`.<br>If omitted, it gets the parent's width.<br>If `auto` the body will adjust it's width to fit all children | `width="50%"` |
-| `height` | Sets the height of the element. Can be a fixed value (e.g., `200`) or `auto`.<br>If omitted, it gets the parent's height.<br>If `auto` the body will adjust it's height to fit all children | `height="auto"` |
+| `width` | Sets the width of the element. Can be a fixed value (e.g., `200`), a percentage of the parent (`50%`) or `auto`.<br></br>If omitted, it gets the parent's width.<br></br>If `auto` the body will adjust it's width to fit all children | `width="50%"` |
+| `height` | Sets the height of the element. Can be a fixed value (e.g., `200`) or `auto`.<br></br>If omitted, it gets the parent's height.<br></br>If `auto` the body will adjust it's height to fit all children | `height="auto"` |
 | `align` | Controls horizontal alignment. Possible values: `left` (default), `center`, `right`. | `align="center"` |
 | `vertical_align`| Controls vertical alignment. For example, `vertical_align="center"` centers child elements vertically if applicable. | `vertical_align="center"` |
 | `margin_left` / `margin_right` / `margin_top` / `margin_bottom` | Adds spacing around the element. Useful when you want to offset elements within a body. | `margin_left="10"` |
@@ -1015,8 +1015,8 @@ Additionally its important to keep in mind that **height=auto** and **width=auto
 
 | Property | Default value | Children constraints |
 | --- | --- | --- | 
-| `height` | Parent's height **wiki's window** | Must specify an `height` (can be **auto**).<br>Can't have **..%** height. |
-| `width` | Parent's width **wiki's window** | Must specify an `width` (can be **auto**).<br>Can't have **..%** width. |
+| `height` | Parent's height **wiki's window** | Must specify an `height` (can be **auto**).<br></br>Can't have **..%** height. |
+| `width` | Parent's width **wiki's window** | Must specify an `width` (can be **auto**).<br></br>Can't have **..%** width. |
 
 **Important! `display=flex`, `display=block` and `padding_*` are only available to (`[body]`, `[header]`, `[foreach]`)**
 
@@ -1034,10 +1034,10 @@ Refer to [Structural ELements](#structural-elements) for the grid system.
 
 | **BBCode**    | **Parameters** | **Description** |
 |---------------|---|------|
-| **`[header]{content}[/header]`** | All [above attributes](#universally-available-attributes)<br>`content` (mandatory): The content displayed within the header block. | Defines a header block, typically used for page titles or filter section headings. |
-| **`[body]{content}[/body]`**   | All [above attributes](#universally-available-attributes)<br>`content` (mandatory)<br>`name` (optional): The content displayed within the body block.<br>`min_height` (optional)<br>`max_height` (optional) | Represents a primary content container with flexible layout options. |
+| **`[header]{content}[/header]`** | All [above attributes](#universally-available-attributes)<br></br>`content` (mandatory): The content displayed within the header block. | Defines a header block, typically used for page titles or filter section headings. |
+| **`[body]{content}[/body]`**   | All [above attributes](#universally-available-attributes)<br></br>`content` (mandatory)<br></br>`name` (optional): The content displayed within the body block.<br></br>`min_height` (optional)<br></br>`max_height` (optional) | Represents a primary content container with flexible layout options. |
 | **`[inline]{content}[/inline]`**   | A shortcut for **[BODY display=flex height=auto**] | The behaviour is the same as a flex **BODY** |
-| **`[template]`** | All [above attributes](#universally-available-attributes)<br>`path` (mandatory): pathurl of the template txt file.<br>`name` (optional) | Embeds a predefined template with dynamic variable support. |
+| **`[template]`** | All [above attributes](#universally-available-attributes)<br></br>`path` (mandatory): pathurl of the template txt file.<br></br>`name` (optional) | Embeds a predefined template with dynamic variable support. |
 
 ------
 
@@ -1167,11 +1167,11 @@ This section describes the document flow control BBCodes used in the wiki system
 
 | BBCode | Parameters | Description |
 |--------------|---|---|
-| `[if]`       | `variable` (mandatory)<br>`op` (mandatory)<br>`value` (mandatory) | Conditional rendering based on variable comparison. |
-| `[elseif]`   | `variable` (mandatory)<br>`op` (mandatory)<br>`value` (mandatory) | Conditional rendering, executed if the previous `[if]` or `[elseif]` condition fails. |
+| `[if]`       | `variable` (mandatory)<br></br>`op` (mandatory)<br></br>`value` (mandatory) | Conditional rendering based on variable comparison. |
+| `[elseif]`   | `variable` (mandatory)<br></br>`op` (mandatory)<br></br>`value` (mandatory) | Conditional rendering, executed if the previous `[if]` or `[elseif]` condition fails. |
 | `[else]`     | - | Fallback rendering executed if all previous `[if]` and `[elseif]` conditions fail. |
-| `[foreach]`  | All [above attributes](#universally-available-attributes)<br>`values` (mandatory)<br>`lazy` (optional)<br>`name` (optional)<br>`min_height` (optional)<br>`max_height` (optional) | Iterates over a list or dictionary to render child elements for each item. |
-| `[extractor]`| `from` (mandatory)<br>`target` (mandatory)<br>`split` (optional)<br>`cast` (optional)<br>`property` (optional) | Extracts and transforms data from a source into a specific format or structure. |
+| `[foreach]`  | All [above attributes](#universally-available-attributes)<br></br>`values` (mandatory)<br></br>`lazy` (optional)<br></br>`name` (optional)<br></br>`min_height` (optional)<br></br>`max_height` (optional) | Iterates over a list or dictionary to render child elements for each item. |
+| `[extractor]`| `from` (mandatory)<br></br>`target` (mandatory)<br></br>`split` (optional)<br></br>`cast` (optional)<br></br>`property` (optional) | Extracts and transforms data from a source into a specific format or structure. |
 
 ---
 
@@ -1440,10 +1440,10 @@ The table below summarizes the table-related BBCodes available in the system, th
 
 | **BBCode**   | **Parameters** | **Description** |
 |--------------|----------------|------------------|
-| `[table]{content}[/table]`   | All [above attributes](#universally-available-attributes)<br>**`content`** (mandatory): Table content. | Defines a table layout. The table must contain at least one `[tr]` (table row). |
+| `[table]{content}[/table]`   | All [above attributes](#universally-available-attributes)<br></br>**`content`** (mandatory): Table content. | Defines a table layout. The table must contain at least one `[tr]` (table row). |
 | `[tr]{content}[/tr]`      | **`content`** (mandatory): Row content. | Defines a table row. It must contain at least one `[td]` or `[th]`. |
-| `[th]{content}[/th]`      | **`width`** (mondatory): Column width in percentage (e.g., `34%`).<br>**`content`** (mandatory): Table Header content. | Defines a table header cell. The width specified for a `[th]` applies to all columns of the same index unless overridden by `[td]`. |
-| `[td]{content}[/td]`      | **`width`** (optional): Column width in percentage (e.g., `34%`).<br>**`content`** (mandatory): Table Data content. | Defines a table data cell for normal content. If a `[td]` has a width set, it will override the `[th]` width for that specific column in that row. |
+| `[th]{content}[/th]`      | **`width`** (mondatory): Column width in percentage (e.g., `34%`).<br></br>**`content`** (mandatory): Table Header content. | Defines a table header cell. The width specified for a `[th]` applies to all columns of the same index unless overridden by `[td]`. |
+| `[td]{content}[/td]`      | **`width`** (optional): Column width in percentage (e.g., `34%`).<br></br>**`content`** (mandatory): Table Data content. | Defines a table data cell for normal content. If a `[td]` has a width set, it will override the `[th]` width for that specific column in that row. |
 
 ---
 
@@ -1559,17 +1559,17 @@ The table below summarizes the basic graphic-related BBCodes available in the sy
 | **BBCode**   | **Parameters** | **Description** |
 |--------------|----------------|------------------|
 | Plain Text   | *(No BBCode, default case)* | Displays plain text as it appears in the input. |
-| `[text]{content}[/text]` | All [above attributes](#universally-available-attributes)<br>**`content`** (mandatory): Text content. **Content can only be play text, hyperlinks and [C], not other components.<br>**`color`** (optional): Hex color code.<br>**`font_size`** (optional): Size of the font.<br>**`font_name`** (optional): Font name. | Displays a text block with optional styling. |
-| `[c]{content}[/c]` | **`color`** (mandatory): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FF0000FF`).<br>**`content`** (mandatory): The inline text to colorize. | Adds inline color to a text snippet using the provided hex color code. |
-| `[img]` | All [above attributes](#universally-available-attributes)<br>**`path`** (mandatory): File path to the image | Adds an image to the page. |
+| `[text]{content}[/text]` | All [above attributes](#universally-available-attributes)<br></br>**`content`** (mandatory): Text content. **Content can only be play text, hyperlinks and [C], not other components.<br></br>**`color`** (optional): Hex color code.<br></br>**`font_size`** (optional): Size of the font.<br></br>**`font_name`** (optional): Font name. | Displays a text block with optional styling. |
+| `[c]{content}[/c]` | **`color`** (mandatory): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FF0000FF`).<br></br>**`content`** (mandatory): The inline text to colorize. | Adds inline color to a text snippet using the provided hex color code. |
+| `[img]` | All [above attributes](#universally-available-attributes)<br></br>**`path`** (mandatory): File path to the image | Adds an image to the page. |
 | `[divider]` | None | Adds a horizontal divider to separate sections visually. |
 | `[spacer]` | None | Adds vertical space between elements. |
-| `[h1]{content}[/h1]` | All [above attributes](#universally-available-attributes)<br>**`content`** (mandatory): the content to put in the h1 | Creates a large header (level 1) for the page. |
-| `[h2]` | All [above attributes](#universally-available-attributes)<br>**`text`** (mandatory): Subtitle text. | Creates a medium-sized header (level 2) for the page. |
-| `[list_item]{content}[/list_item]` | All [above attributes](#universally-available-attributes)<br>**`content`** (mandatory): the content to put as bullet point. | Creates a bullet point for a list. |
-| `[item_slot]` | All [above attributes](#universally-available-attributes)<br>**`vnum`** (mandatory): Item number.<br>**`count`** (optional): Number of items to display. | Displays an item with its icon and optional count. |
-| `[skill_slot]` | All [above attributes](#universally-available-attributes)<br>**`vnum`** (mandatory): Skill vnum.<br>**`grade`** (mandatory): Skill grade.<br>**`level`** (mandatory): Skill level. | Displays skill with given level and grade. |
-| `[card_slot]` | All [above attributes](#universally-available-attributes)<br>**`image`** (mandatory): Path to the image.<br>**`level`** (optional): Level to show.<br>**`tooltip_text`** (optional): String to show as tooltip when cursor hovers the slot. | Displays a slot with the given image and level. |
+| `[h1]{content}[/h1]` | All [above attributes](#universally-available-attributes)<br></br>**`content`** (mandatory): the content to put in the h1 | Creates a large header (level 1) for the page. |
+| `[h2]` | All [above attributes](#universally-available-attributes)<br></br>**`text`** (mandatory): Subtitle text. | Creates a medium-sized header (level 2) for the page. |
+| `[list_item]{content}[/list_item]` | All [above attributes](#universally-available-attributes)<br></br>**`content`** (mandatory): the content to put as bullet point. | Creates a bullet point for a list. |
+| `[item_slot]` | All [above attributes](#universally-available-attributes)<br></br>**`vnum`** (mandatory): Item number.<br></br>**`count`** (optional): Number of items to display. | Displays an item with its icon and optional count. |
+| `[skill_slot]` | All [above attributes](#universally-available-attributes)<br></br>**`vnum`** (mandatory): Skill vnum.<br></br>**`grade`** (mandatory): Skill grade.<br></br>**`level`** (mandatory): Skill level. | Displays skill with given level and grade. |
+| `[card_slot]` | All [above attributes](#universally-available-attributes)<br></br>**`image`** (mandatory): Path to the image.<br></br>**`level`** (optional): Level to show.<br></br>**`tooltip_text`** (optional): String to show as tooltip when cursor hovers the slot. | Displays a slot with the given image and level. |
 
 ---
 
@@ -1794,10 +1794,10 @@ This section documents the `filter_group` and `filter` BBCodes used to create dy
 
 | BBCode           | Parameters                  | Description                                                                 |
 |------------------|-----------------------------|-----------------------------------------------------------------------------|
-| **`filter_group`** | All [above attributes](#universally-available-attributes)<br>`type` (mandatory) | Specifies the filter group type (`buttons` or `list`). |
+| **`filter_group`** | All [above attributes](#universally-available-attributes)<br></br>`type` (mandatory) | Specifies the filter group type (`buttons` or `list`). |
 |                  | `filter_target` (mandatory) | The target variable to set when a filter is selected. |
 |                  | `default` (optional)        | Specifies the default filter index. |
-| **`filter`**     | All [above attributes](#universally-available-attributes)<br>`type` (mandatory) | Specifies the filter type (`button`, `dynamic_button`, `item`). |
+| **`filter`**     | All [above attributes](#universally-available-attributes)<br></br>`type` (mandatory) | Specifies the filter type (`button`, `dynamic_button`, `item`). |
 |                  | `path` (mandatory for `button`) | Defines the image path for visual button states (`normal`, `hover`, `selected`). |
 |                  | `filter_value` (mandatory)  | The value to set in the target variable when the filter is selected. |
 |                  | `text` (mandatory for `dynamic_button` and `item`) | Specifies the display text of the filter button or list item. |
@@ -1910,18 +1910,18 @@ This section documents the BBCode tags designed for game-related data display. T
 
 | **BBCode Type**         | **Parameters**                                                                                   | **Description**                                                                                       |
 |--------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
-| **`item_stats`**         | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)  | Displays the stats of an item identified by its VNUM. |
-| **`equip_epic_up`**      | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory) | Displays the epic upgrade options for the specified equipment VNUM. |
-| **`equip_up`**           | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)  | Displays upgrade options for equipment. |
-| **`item_details`**       | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory) | Displays detailed information about an item. |
-| **`item_obtainable_from`** | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)  | Displays where an item can be obtained (e.g., drops or chests). |
-| **`chest_content`**      | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)  | Displays the contents of a chest identified by its VNUM. |
-| **`items_grid`**         | All [above attributes](#universally-available-attributes)<br>`vnums` (mandatory)  | Displays a grid of multiple items identified by their VNUMs. |
-| **`mob_details`**        | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)<br>`show_drop` (optional): Sets the default detail view to **Drop** | Displays detailed information about a monster. |
-| **`chest_details`**      | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory) | Displays detailed information about a chest. |
-| **`mob_info`**           | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)  | Displays general information about a monster. |
-| **`mob_drop`**           | All [above attributes](#universally-available-attributes)<br>`vnum` (mandatory)  | Displays drop information for a monster. |
-| **`render_target`**      | All [above attributes](#universally-available-attributes)<br>Either `mob_vnum` or `item_vnum`<br>`camera_move` (optional, default `0`) | Displays a 3D render of a monster or item.                                                          |
+| **`item_stats`**         | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays the stats of an item identified by its VNUM. |
+| **`equip_epic_up`**      | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory) | Displays the epic upgrade options for the specified equipment VNUM. |
+| **`equip_up`**           | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays upgrade options for equipment. |
+| **`item_details`**       | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory) | Displays detailed information about an item. |
+| **`item_obtainable_from`** | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays where an item can be obtained (e.g., drops or chests). |
+| **`chest_content`**      | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays the contents of a chest identified by its VNUM. |
+| **`items_grid`**         | All [above attributes](#universally-available-attributes)<br></br>`vnums` (mandatory)  | Displays a grid of multiple items identified by their VNUMs. |
+| **`mob_details`**        | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)<br></br>`show_drop` (optional): Sets the default detail view to **Drop** | Displays detailed information about a monster. |
+| **`chest_details`**      | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory) | Displays detailed information about a chest. |
+| **`mob_info`**           | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays general information about a monster. |
+| **`mob_drop`**           | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays drop information for a monster. |
+| **`render_target`**      | All [above attributes](#universally-available-attributes)<br></br>Either `mob_vnum` or `item_vnum`<br></br>`camera_move` (optional, default `0`) | Displays a 3D render of a monster or item.                                                          |
 
 
 ### `[item_stats]`
@@ -2149,7 +2149,7 @@ This section documents the BBCodes used for representing and displaying equipmen
 |-----------------------|--------|----------|
 | **`multi_equip_window`** | All [above attributes](#universally-available-attributes) | Represents a container for multiple `equip_window` elements, arranged in a flexible layout. |
 | **`equip_window`**    | All [above attributes](#universally-available-attributes) | Represents a container for individual equipment parts, organized into slots. |
-| **`equip_part`**      | **`slot`** (mandatory)<br>**`vnum`** (mandatory)<br>**`attrs`** (optional)<br>**`values`** (optional)<br>**`sockets`** (optional) | Represents an individual equipment item in a specific slot. |
+| **`equip_part`**      | **`slot`** (mandatory)<br></br>**`vnum`** (mandatory)<br></br>**`attrs`** (optional)<br></br>**`values`** (optional)<br></br>**`sockets`** (optional) | Represents an individual equipment item in a specific slot. |
 
 ### `[multi_equip_window]`
 
