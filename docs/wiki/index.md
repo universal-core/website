@@ -119,6 +119,7 @@ displayed_sidebar: mainSidebar
     - [`[td]`](#td)
     - [**Advanced Example**](#advanced-example)
 - [Basic Graphic BBCodes](#basic-graphic-bbcodes)
+    - [Registered Color table](#registered-color-table)
     - [Plain Text (Default Case)](#plain-text-default-case)
     - [`[text]`](#text)
     - [`[c]`](#c)
@@ -1179,7 +1180,7 @@ This section describes the document flow control BBCodes used in the wiki system
 
 #### Parameters:
 - **`variable`** (mandatory): The variable to evaluate.
-- **`op`** (mandatory): The comparison operator (`EQ`, `NEQ`, `GT`, `GTE`, `LT`, `LTE`).
+- **`op`** (mandatory): The comparison operator (`EQ`, `NEQ`, `GT`, `GTE`, `LT`, `LTE`, `IN`).
 - **`value`** (mandatory): The value to compare the variable against.
 
 #### Example:
@@ -1560,7 +1561,7 @@ The table below summarizes the basic graphic-related BBCodes available in the sy
 |--------------|----------------|------------------|
 | Plain Text   | *(No BBCode, default case)* | Displays plain text as it appears in the input. |
 | `[text]{content}[/text]` | All [above attributes](#universally-available-attributes)<br></br>**`content`** (mandatory): Text content. **Content can only be play text, hyperlinks and [C], not other components.<br></br>**`color`** (optional): Hex color code.<br></br>**`font_size`** (optional): Size of the font.<br></br>**`font_name`** (optional): Font name. | Displays a text block with optional styling. |
-| `[c]{content}[/c]` | **`color`** (mandatory): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FF0000FF`).<br></br>**`content`** (mandatory): The inline text to colorize. | Adds inline color to a text snippet using the provided hex color code. |
+| `[c]{content}[/c]` | **`color`** (mandatory): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FF0000FF`) or a [**Registered color**](#registered-color-table).<br></br>**`content`** (mandatory): The inline text to colorize. | Adds inline color to a text snippet using the provided hex color code. |
 | `[img]` | All [above attributes](#universally-available-attributes)<br></br>**`path`** (mandatory): File path to the image | Adds an image to the page. |
 | `[divider]` | None | Adds a horizontal divider to separate sections visually. |
 | `[spacer]` | None | Adds vertical space between elements. |
@@ -1570,6 +1571,53 @@ The table below summarizes the basic graphic-related BBCodes available in the sy
 | `[item_slot]` | All [above attributes](#universally-available-attributes)<br></br>**`vnum`** (mandatory): Item number.<br></br>**`count`** (optional): Number of items to display. | Displays an item with its icon and optional count. |
 | `[skill_slot]` | All [above attributes](#universally-available-attributes)<br></br>**`vnum`** (mandatory): Skill vnum.<br></br>**`grade`** (mandatory): Skill grade.<br></br>**`level`** (mandatory): Skill level. | Displays skill with given level and grade. |
 | `[card_slot]` | All [above attributes](#universally-available-attributes)<br></br>**`image`** (mandatory): Path to the image.<br></br>**`level`** (optional): Level to show.<br></br>**`tooltip_text`** (optional): String to show as tooltip when cursor hovers the slot. | Displays a slot with the given image and level. |
+
+### Registered Color table
+| Name | ARGB |
+| - | - |
+| black | (0, 0, 0, 255) |
+| white | (255, 255, 255, 255) |
+| red | (255, 0, 0, 255) |
+| green | (0, 128, 0, 255) |
+| blue | (0, 0, 255, 255) |
+| yellow | (255, 255, 0, 255) |
+| cyan | (0, 255, 255, 255) |
+| magenta | (255, 0, 255, 255) |
+| silver | (192, 192, 192, 255) |
+| gray | (128, 128, 128, 255) |
+| maroon | (128, 0, 0, 255) |
+| olive | (128, 128, 0, 255) |
+| purple | (128, 0, 128, 255) |
+| teal | (0, 128, 128, 255) |
+| navy | (0, 0, 128, 255) |
+| lime | (0, 255, 0, 255) |
+| aqua | (0, 255, 255, 255) |
+| fuchsia | (255, 0, 255, 255) |
+| orange | (255, 165, 0, 255) |
+| brown | (165, 42, 42, 255) |
+| pink | (255, 192, 203, 255) |
+| gold | (255, 215, 0, 255) |
+| indigo | (75, 0, 130, 255) |
+| violet | (238, 130, 238, 255) |
+| chocolate | (210, 105, 30, 255) |
+| coral | (255, 127, 80, 255) |
+| crimson | (220, 20, 60, 255) |
+| darkblue | (0, 0, 139, 255) |
+| darkcyan | (0, 139, 139, 255) |
+| darkgray | (169, 169, 169, 255) |
+| darkgreen | (0, 100, 0, 255) |
+| darkmagenta | (139, 0, 139, 255) |
+| darkorange | (255, 140, 0, 255) |
+| darkred | (139, 0, 0, 255) |
+| deepskyblue | (0, 191, 255, 255) |
+| forestgreen | (34, 139, 34, 255) |
+| lightblue | (173, 216, 230, 255) |
+| lightgray | (211, 211, 211, 255) |
+| lightgreen | (144, 238, 144, 255) |
+| lightpink | (255, 182, 193, 255) |
+| lightsalmon | (255, 160, 122, 255) |
+| lightyellow | (255, 255, 224, 255) |
+
 
 ---
 
@@ -1595,7 +1643,7 @@ The content can only be **plain text**, an **hyperlink** or a **[C]** tag
 **Parameters**:
 - All [above attributes](#universally-available-attributes)
 - `content` (mandatory): Text content.
-- `color` (optional): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FFFF0000`).
+- `color` (optional): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FFFF0000`) or  [**Registered color**](#registered-color-table).
 - `font_size` (optional): Size of the font.
 - `font_name` (optional): Font name.
 
@@ -1612,7 +1660,7 @@ Displays the text "Welcome to the wiki!" in red (`FF0000`), with a font size of 
 Adds inline color to a text snippet using a hex color code.
 
 **Parameters**:
-- `color` (mandatory): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FFFF0000`).
+- `color` (mandatory): A hex color code, which can be 8 characters for **ARGB** color (e.g., `FF0000` or `FFFF0000`) or  [**Registered color**](#registered-color-table).
 - `content` (mandatory): The inline text to colorize.
 
 **Example**:
@@ -1921,7 +1969,7 @@ This section documents the BBCode tags designed for game-related data display. T
 | **`chest_details`**      | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory) | Displays detailed information about a chest. |
 | **`mob_info`**           | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays general information about a monster. |
 | **`mob_drop`**           | All [above attributes](#universally-available-attributes)<br></br>`vnum` (mandatory)  | Displays drop information for a monster. |
-| **`render_target`**      | All [above attributes](#universally-available-attributes)<br></br>Either `mob_vnum` or `item_vnum`<br></br>`camera_move` (optional, default `0`) | Displays a 3D render of a monster or item.                                                          |
+| **`render_target`**      | All [above attributes](#universally-available-attributes)<br></br>Either `mob_vnum` or `item_vnum`<br></br>`camera_move` (optional, default `0`)<br></br>`background` (optional) | Displays a 3D render of a monster or item.                                                          |
 
 
 ### `[item_stats]`
@@ -2132,6 +2180,7 @@ Displays a 3D render of a monster or item.
 - **`mob_vnum`** (optional): The VNUM of the monster to render.
 - **`item_vnum`** (optional): The VNUM of the item to render.
 - **`camera_move`** (optional, default `0`): Allows camera movement if set to `1`.
+- **`background`** (optional): Path to background image.
 
 **Example**:
 ```bbcode
