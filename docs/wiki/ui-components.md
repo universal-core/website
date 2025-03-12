@@ -730,6 +730,12 @@ Hidden foo
 | [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
 | **padding**| Auto-set     | `5`         | Default padding is set to 5. |
 
+:::caution
+
+Minimum size is 64x64.
+
+:::
+
 <details><summary>Code Example</summary>
 
 ```html
@@ -746,6 +752,12 @@ Hidden foo
 |-----------------------|--------------|---------------|-------------------|
 | [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
 | **padding**| Auto-set     | `7`         | Default padding is set to 7. |
+
+:::caution
+
+Minimum size is 32x32.
+
+:::
 
 <details><summary>Code Example</summary>
 
