@@ -10,7 +10,7 @@ This quickstart guide will help you create and deploy a new wiki page in the gam
 ## Workspace Location
 When the client is in **__DEBUG__** mode, the wiki will try to search the file using the following priority order:
 
-- Development environment (`wikidev`):  `[client-folder]/locale/[localization]/wiki/...` directory.
+- Development environment (`client-folder`):  `[client-folder]/locale/[localization]/wiki/...` directory.
 - Production environment: Pack file at location `locale/[localization]/wiki/<pagePath>.txt` directory.
 (default localization is `universal`)
 
@@ -98,7 +98,7 @@ More info in the [URL](url.md) page.
 
 #### b) **Refresh Button**
 - Use this button to reload the currently displayed wiki page.
-- Useful for testing changes made in the `wikidev` folder. Save your changes, press **Refresh**, and see them applied instantly.
+- Useful for testing changes made in the `client-folder` folder. Save your changes, press **Refresh**, and see them applied instantly.
 
 #### c) **Copy URL Button**
 - Copies the full URL of the currently loaded wiki page to your clipboard.
@@ -108,7 +108,7 @@ More info in the [URL](url.md) page.
 :::note Example **Testing changes immediately**  
 
 When using `__DEBUG__` launchers, changes to the `.html` file are applied immediately.
-- Save the `.html` file in the `wikidev` directory.
+- Save the `.html` file in the `client-folder` directory.
 - Use the **Navigate** button to load the page or the **Refresh** button to reload the current page and see the changes.
 
 :::
