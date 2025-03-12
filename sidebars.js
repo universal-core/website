@@ -46,6 +46,14 @@ module.exports = {
       className: "category-as-header",
       items: [
         "wiki/index",
+        "wiki/grid-system",
+        "wiki/jinja2",
+        "wiki/jinja2-context",
+        "wiki/quickstart",
+        "wiki/ui-components",
+        "wiki/configuration",
+        "wiki/url",
+        "wiki/data-generation",
       ],
     },
     // Guides & Concepts
