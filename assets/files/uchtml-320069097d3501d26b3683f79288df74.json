@@ -1,0 +1,7438 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "accordion",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "icon"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "state"
+        },
+        {
+          "name": "text"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "atlas-info",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "fit-size"
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "scale-x"
+        },
+        {
+          "name": "scale-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "atlas-marker",
+      "description": "",
+      "attributes": [
+        {
+          "name": "color"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "type"
+        },
+        {
+          "name": "x",
+          "description": "Required attribute"
+        },
+        {
+          "name": "y",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "atlas-waypoint",
+      "description": "",
+      "attributes": [
+        {
+          "name": "color"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "x",
+          "description": "Required attribute"
+        },
+        {
+          "name": "y",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "board",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "body",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "br",
+      "description": "",
+      "attributes": []
+    },
+    {
+      "name": "bullet-list",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "bullet-path"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height",
+          "description": "Required attribute"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "path",
+          "description": "Required attribute"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "text",
+          "description": "Required attribute"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "type",
+          "values": [
+            {
+              "name": "button"
+            },
+            {
+              "name": "dynamic"
+            }
+          ],
+          "description": "Required attribute"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "c",
+      "description": "",
+      "attributes": [
+        {
+          "name": "color",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "chest-card",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "chest-content",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "cube-card",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "cost"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "npc"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "pct"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "cube-material",
+      "description": "",
+      "attributes": [
+        {
+          "name": "count",
+          "description": "Required attribute"
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "cube-result",
+      "description": "",
+      "attributes": [
+        {
+          "name": "count",
+          "description": "Required attribute"
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "div",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "pattern"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "equip-epic-up",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "equip-part",
+      "description": "",
+      "attributes": [
+        {
+          "name": "attrs"
+        },
+        {
+          "name": "slot",
+          "description": "Required attribute"
+        },
+        {
+          "name": "sockets"
+        },
+        {
+          "name": "values"
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "equip-up",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "equip-window",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "filter",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "filter-value",
+          "description": "Required attribute"
+        },
+        {
+          "name": "height",
+          "description": "Required attribute"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "path",
+          "description": "Required attribute"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "text",
+          "description": "Required attribute"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "type",
+          "values": [
+            {
+              "name": "button"
+            },
+            {
+              "name": "dynamic-button"
+            },
+            {
+              "name": "item"
+            },
+            {
+              "name": "tab"
+            }
+          ],
+          "description": "Required attribute"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "filter-group",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "default",
+          "description": "Required attribute"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "filter-target",
+          "description": "Required attribute"
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "type",
+          "values": [
+            {
+              "name": "buttons"
+            },
+            {
+              "name": "list"
+            },
+            {
+              "name": "tabs"
+            }
+          ],
+          "description": "Required attribute"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "footer",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "h1",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "h2",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "pattern"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "h3",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "pattern"
+        },
+        {
+          "name": "pattern_space"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "hdungeon",
+      "description": "",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "hitem",
+      "description": "",
+      "attributes": [
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "hmap",
+      "description": "",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "hmob",
+      "description": "",
+      "attributes": [
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "hquest",
+      "description": "",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "hraid",
+      "description": "",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "href",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "href",
+          "description": "Required attribute"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "path",
+          "description": "Required attribute"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "text",
+          "description": "Required attribute"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "type",
+          "values": [
+            {
+              "name": "button"
+            },
+            {
+              "name": "text"
+            }
+          ],
+          "description": "Required attribute"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "hyperlink",
+      "description": "",
+      "attributes": [
+        {
+          "name": "url",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "img",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "path",
+          "description": "Required attribute"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "inline",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "item-card",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "item-obtainable-from",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width",
+          "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "item-stats",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "items-grid",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height",
+          "description": "Required attribute"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "sort-size"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnums",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width",
+          "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "lazy-div",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "preload"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "main",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "model",
+      "description": "One of these is required: mob-vnum, item-vnum",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "background"
+        },
+        {
+          "name": "camera-move"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "monster-card",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "monster-drop",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "monster-spawn",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "monster-stats",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height",
+          "description": "Required attribute"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width",
+          "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "multi-equip-window",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "count"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "max"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "progress-checkpoint",
+      "description": "",
+      "attributes": [
+        {
+          "name": "count",
+          "description": "Required attribute"
+        },
+        {
+          "name": "tooltip-text"
+        }
+      ]
+    },
+    {
+      "name": "slot-card",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "image",
+          "description": "Required attribute"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "level"
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "tooltip-text"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "slot-item",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "count"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "sockets"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "values"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "slot-skill",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "grade",
+          "description": "Required attribute"
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "level",
+          "description": "Required attribute"
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "vnum",
+          "description": "Required attribute"
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "spacer",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "scrollbar-gap"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "td",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "th",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "thin-board",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "tr",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "txt",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "color"
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "font"
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    }
+  ]
+}
