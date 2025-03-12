@@ -45,7 +45,7 @@ Each tag’s documentation is presented with an attribute table that details the
 Here we will cover more in details how `display=flex` works.  
 
 The main attribute you can use with `display=flex`:
-- **justify-content** which controls horizontal dispositions.
+- **justify-content** which controls horizontal positioning.
 - **align-items** which controls the vertical alignment of elements in each row.
   
 <details><summary>justify-content Examples</summary>
