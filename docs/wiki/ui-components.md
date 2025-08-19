@@ -1041,8 +1041,9 @@ Should not contain any child elements.
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
 | type                  | Required `button`    | —             | Button type identifier. |
-| target                  | Required    | —             | The variable the button will set once clicked. |
-| value                  | Required    | —             | The value the button will set to the `target` variable. |
+| target                  | Optional (either `call` or `target+value` must be set)   | —             | The variable the button will set once clicked. |
+| value                  | Optional (either `call` or `target+value` must be set)   | —             | The value the button will set to the `target` variable. |
+| call                  | Optional (either `call` or `target+value` must be set)   | —             | The function to call when the button is pressed. Function must be registered in the [Jinja Context](./jinja2-context.md)  |
 | path                  | Required     | —             | Image path template for button states. |
 | tooltip-text          | Optional     | —             | Tooltip text. |
 | [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
@@ -1070,6 +1071,7 @@ And each of the images need to exist in order to render the button.
 
 ```html
 <button type="button" path="d:/ymir work/ui/wiki/class_s_{}.tga" target="bar" value="123" />
+<button type="button" path="d:/ymir work/ui/wiki/class_s_{}.tga" call="interfacemodule.OpenSomething('argument') />
 ```
 
 ![image](/assets/wiki/button-button.png) 
