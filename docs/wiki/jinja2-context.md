@@ -6,6 +6,9 @@ displayed_sidebar: mainSidebar
 
 This document outlines the utility functions and variables embedded by default in `UCHTML`. These functions assist with variable management and basic validations within the templating system.
 
+## `interfacemodule` Namespace
+The **interfacemodule** object provides access to all interfaceModule functions, this object is ment for advanced internal use and needs knoewldge over the Python code handling the game interface.
+
 ## `func` Namespace
 
 ### func.getv
