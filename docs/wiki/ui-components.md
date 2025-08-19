@@ -1083,8 +1083,9 @@ And each of the images need to exist in order to render the button.
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
 | type                  | Required `dynamic`    | —             | Button type identifier. |
-| target                  | Required    | —             | The variable the button will set once clicked. |
-| value                  | Required    | —             | The value the button will set to the `target` variable. |
+| target                  | Optional (either `call` or `target+value` must be set)   | —             | The variable the button will set once clicked. |
+| value                  | Optional (either `call` or `target+value` must be set)   | —             | The value the button will set to the `target` variable. |
+| call                  | Optional (either `call` or `target+value` must be set)   | —             | The function to call when the button is pressed. Function must be registered in the [Jinja Context](./jinja2-context.md)  |
 | text                  | Required     | —             | Display text on the button. |
 | width                 | Required     | —             | Button width. |
 | height                | Required     | —             | Button height. |
@@ -1095,6 +1096,7 @@ And each of the images need to exist in order to render the button.
 
 ```html
 <button type="dynamic" height=50 width="100" text="bla" target="foo" value="packed_query:HELMETS_SHAMAN" />
+<button type="dynamic" height=50 width="100" text="bla" call="interfacemodule.OpenSomething('argument') />
 ```
 
 ![image](/assets/wiki/button-dynamic.png) 
