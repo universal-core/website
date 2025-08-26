@@ -1581,15 +1581,21 @@ Each slot corresponds to a specific part of the equipment layout:
 ## **`model`**
 | Attribute       | Requirement | Default | Description |
 |-----------------|-------------|---------|-------------|
-| mob-vnum        | Optional    | —       | Mob identifier; must be provided if `item-vnum` is not set. |
-| item-vnum       | Optional    | —       | Item identifier; must be provided if `mob-vnum` is not set. |
-| camera-move     | Optional    | —       | Boolean-like value enabling camera movement. |
-| background      | Optional    | `"d:/ymir work/ui/game/myshop_deco/model_view_background.sub"` | Path to background image/texture. |
-| [Base Attributes](#common-base-attributes) | Inherited | — | See common base attributes. |
+| mob-vnum    | Optional  | —    | Mob identifier; must be provided if `item-vnum` is not set. |
+| item-vnum    | Optional  | —    | Item identifier; must be provided if `mob-vnum` is not set. |
+| camera-move   | Optional  | false    | Boolean-like value enabling camera movement. |
+| motion-index  | Optional  | 0    | Motion index to set. |
+| camera-eye   | Optional  | —    | A tuple of three values representing the camera's eye position. |
+| camera-target  | Optional  | —    | A tuple of three values representing the camera's target position. |
+| camera-up    | Optional  | —    | A tuple of three values representing the camera's up vector. |
+| background   | Optional  | `"d:/ymir work/ui/game/myshop_deco/model_view_background.sub"` | Path to background image/texture. |
+| [Base Attributes](https://www.google.com/search?q=%23common-base-attributes) | Inherited | — | See common base attributes. |
 
 :::caution
 
 Exactly **one** of `mob-vnum` or `item-vnum` must be provided. 
+
+:::
 
 <details><summary>Code Example</summary>
 
@@ -1600,7 +1606,66 @@ Exactly **one** of `mob-vnum` or `item-vnum` must be provided.
 ![image](/assets/wiki/model.png) 
 </details>
 
-:::
+**Motion Index Reference**
+The `motion-index` attribute controls the animation of the model being displayed. These values correspond to the `EName` enum in the source code.
+
+| Value | Name | Description |
+|---|---|---|
+| 0 | NAME\_NONE | No specific motion. |
+| 1 | NAME\_WAIT | Waiting or idle motion. |
+| 2 | NAME\_WALK | Walking animation. |
+| 3 | NAME\_RUN | Running animation. |
+| 4 | NAME\_CHANGE\_WEAPON | Changing weapon animation. |
+| 5 | NAME\_DAMAGE | Front damage animation. |
+| 6 | NAME\_DAMAGE\_FLYING | Front flying damage animation. |
+| 7 | NAME\_STAND\_UP | Standing up from front damage animation. |
+| 8 | NAME\_DAMAGE\_BACK | Back damage animation. |
+| 9 | NAME\_DAMAGE\_FLYING\_BACK | Back flying damage animation. |
+| 10 | NAME\_STAND\_UP\_BACK | Standing up from back damage animation. |
+| 11 | NAME\_DEAD | Death animation. |
+| 12 | NAME\_DEAD\_BACK | Death animation from a back attack. |
+| 13 | NAME\_NORMAL\_ATTACK | Normal attack animation. |
+| 14-21 | NAME\_COMBO\_ATTACK\_1 to NAME\_COMBO\_ATTACK\_8 | Combo attack animations. |
+| 22 | NAME\_INTRO\_WAIT | Intro screen idle. |
+| 23 | NAME\_INTRO\_SELECTED | Intro screen selected. |
+| 24 | NAME\_INTRO\_NOT\_SELECTED | Intro screen not selected. |
+| 25 | NAME\_SPAWN | Spawn animation. |
+| 26 | NAME\_FISHING\_THROW | Fishing rod throwing animation. |
+| 27 | NAME\_FISHING\_WAIT | Waiting for a bite animation. |
+| 28 | NAME\_FISHING\_STOP | Stopping fishing animation. |
+| 29 | NAME\_FISHING\_REACT | Reacting to a bite animation. |
+| 30 | NAME\_FISHING\_CATCH | Catching a fish animation. |
+| 31 | NAME\_FISHING\_FAIL | Failing to catch a fish animation. |
+| 32 | NAME\_STOP | Stopping motion. |
+| 33 | NAME\_SPECIAL\_1 | Special/NPC motion 1. (skill) |
+| 34 | NAME\_SPECIAL\_2 | Special/NPC motion 2. (skill) |
+| 35 | NAME\_SPECIAL\_3 | Special/NPC motion 3. (skill) |
+| 36 | NAME\_SPECIAL\_4 | Special/NPC motion 4. (skill) |
+| 37 | NAME\_SPECIAL\_5 | Special/NPC motion 5. (skill) |
+| 38 | NAME\_SPECIAL\_6 | Special/NPC motion 6. (skill) |
+| 39 | NAME\_SPAWN\_REMOTE | Server-triggered spawn. |
+| 50 | NAME\_SKILL | Skill start. |
+| 51+ | NAME\_SKILL\_END | Skill end (variable). |
+| 67 | NAME\_CLAP | Clapping animation. |
+| 68 | NAME\_CHEERS\_1 | Cheers animation 1. |
+| 69 | NAME\_CHEERS\_2 | Cheers animation 2. |
+| 70 | NAME\_KISS\_START to NAME\_KISS\_WITH\_SHAMAN | Kissing animations. |
+| 74 | NAME\_FRENCH\_KISS\_START to NAME\_FRENCH\_KISS\_WITH\_SHAMAN | French kissing animations. |
+| 78 | NAME\_SLAP\_HIT\_START to NAME\_SLAP\_HIT\_WITH\_SHAMAN | Slap hit animations. |
+| 82 | NAME\_SLAP\_HURT\_START to NAME\_SLAP\_HURT\_WITH\_SHAMAN | Slap hurt animations. |
+| 86 | NAME\_DIG | Digging animation. |
+| 87 | NAME\_DANCE\_1 to NAME\_DANCE\_6 | Dance animations. |
+| 93 | NAME\_DANCE\_END | Dance animation end. |
+| 103 | NAME\_CONGRATULATION | Congratulation motion. |
+| 104 | NAME\_FORGIVE | Forgive motion. |
+| 105 | NAME\_ANGRY | Angry motion. |
+| 106 | NAME\_ATTRACTIVE | Attractive motion. |
+| 107 | NAME\_SAD | Sad motion. |
+| 108 | NAME\_SHY | Shy motion. |
+| 109 | NAME\_CHEERUP | Cheer up motion. |
+| 110 | NAME\_BANTER | Banter motion. |
+| 111 | NAME\_JOY | Joyful motion. |
+| 112 | NAME\_MAX\_NUM | Maximum number of motions. |
 
 ---
 
