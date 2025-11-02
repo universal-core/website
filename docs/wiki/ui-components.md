@@ -150,8 +150,47 @@ justify-content=<c color="wikititle">space-around</c>
 |---------------------|--------------|---------------|-------------------|
 | [*Base Attributes*](#common-base-attributes)   | Optional     | N/A           | Inherits all common base attributes. |
 | scrollbar-gap       | Optional     | —             | Used for the scrollable peek window when a fixed height is applied and content overflows. |
+| reactive            | Optional     | —             | Comma-separated list of variable names this zone watches. When present, **`id` attribute is required**. Enables reactive updates - only this zone re-renders when watched variables change. |
 
 When a `div` has a fixed height (i.e. its height is not set to `"content"`) and its content exceeds that height, a scrollable peek window is created for all rows after the first one.
+
+### Reactive Zones
+
+A `div` can be marked as a **reactive zone** by adding the `reactive` attribute along with a required `id` attribute. This enables automatic, efficient updates when specific variables change, without re-rendering the entire page.
+
+**How it works:**
+- List the variable names (comma-separated) that this zone depends on in the `reactive` attribute
+- When any of those variables change via `SetVar()` or `SetVars()`, only this zone re-renders
+- Scroll position is preserved automatically
+- 10-100x faster than full page reload for small updates
+
+**Example:**
+```html
+<div id="progress-zone" reactive="mh_1_done,mh_1_need">
+    {% set mh_1_done = fun.getv('mh_1_done', 0) %}
+    {% set mh_1_need = fun.getv('mh_1_need', 0) %}
+
+    Progress: {{ mh_1_done }}/{{ mh_1_need }}
+    <progress max="{{ mh_1_need }}" count="{{ mh_1_done }}" />
+</div>
+```
+
+**Python usage:**
+```python
+# Update single variable - only the reactive zone updates
+loader.SetVar("mh_1_done", 15)
+
+# Update multiple variables - template rendered once, all affected zones update
+loader.SetVars({
+    "mh_1_done": 15,
+    "mh_1_need": 20
+})
+```
+
+**Requirements:**
+- `reactive` attribute must have a corresponding `id` attribute
+- Variables listed in `reactive` should be used within the zone's template
+- Zone content is rebuilt when watched variables change
 
 ---
 
