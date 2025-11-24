@@ -1612,6 +1612,7 @@ Each slot corresponds to a specific part of the equipment layout:
 | 10       | Slot Item 3         |
 | 11       | Artifacts           |
 | 13       | Belt                |
+| 14       | Manufact (MH)       |
 
 
 
