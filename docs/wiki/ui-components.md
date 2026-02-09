@@ -1842,6 +1842,7 @@ ItemsGrid accepts only the following formats for the `vnums` attribute:
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
 | vnum                  | Required     | —             | Monster identifier. |
+| tab                   | Optional     | `stats`             | The tab shown as default. Admitted values are `stats` and `drop` |
 | [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
 
 > This element internally uses `mob origin` which can be [configured](./configuration.md#item_origin_locale_mapping--mob_origin_locale_mapping) in the `config.yaml`.
