@@ -1926,5 +1926,29 @@ ItemsGrid accepts only the following formats for the `vnums` attribute:
 <chest-card width="auto" vnum="27987" />
 ```
 
-![image](/assets/wiki/chest-card.png) 
+![image](/assets/wiki/chest-card.png)
+</details>
+
+---
+
+## **`item-shop-card`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| id                    | Required     | —             | Item shop item ID (integer). Must match an item loaded in `ItemShopStore`. |
+| [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
+
+Renders a full `ItemShopDisplayItem` widget (200×145) with icon, name, price, quantity selector, and purchase button. The item data is pulled from `ItemShopStore` by `id`. Purchase actions are routed through `interfacemodule_wrapper`.
+
+:::caution
+
+Should not contain any child elements. The item shop must be loaded (store populated) before this element renders correctly.
+
+:::
+
+<details><summary>Code Example</summary>
+
+```html
+<item-shop-card id="7" />
+```
+
 </details>
