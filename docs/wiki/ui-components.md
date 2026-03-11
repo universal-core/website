@@ -763,6 +763,87 @@ Hidden foo
 
 ---
 
+## **`carousel`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| [*Base Attributes*](#common-base-attributes)     | Optional     | N/A           | Inherits all common base attributes. |
+| arrows                | Optional     | `"under"`     | Arrow placement; valid values: `"over"` (overlaid on content), `"under"` (below content). |
+| page-var              | Optional     | —             | Variable name to sync current page index with the loader context. Enables external page control. |
+
+A container that shows one `<carousel-page>` at a time with left/right arrow navigation. The carousel height is determined by the tallest page, preventing layout jumps when switching pages.
+
+**Arrow placement:**
+- `arrows="under"` (default): Arrows appear centered below the content, adding ~25px of extra height.
+- `arrows="over"`: Arrows overlay the content on left/right edges, vertically centered. No extra height.
+
+Arrows are automatically hidden when there is only one page. Navigation wraps around (last page → first page and vice versa).
+
+:::caution
+
+**Allowed Children:** Only `<carousel-page>` elements.
+
+:::
+
+<details><summary>Code Example</summary>
+
+```html
+<carousel arrows="under" width="auto">
+    <carousel-page>
+        <h2>Page 1</h2>
+        <txt>First page content</txt>
+        <slot-item vnum="19" />
+    </carousel-page>
+    <carousel-page>
+        <h2>Page 2</h2>
+        <txt>Second page content</txt>
+        <slot-item vnum="20" />
+    </carousel-page>
+    <carousel-page>
+        <h2>Page 3</h2>
+        <txt>Third page content</txt>
+    </carousel-page>
+</carousel>
+```
+
+</details>
+
+<details><summary>Code Example with page-var</summary>
+
+```html
+<carousel arrows="over" page-var="current_tab" width="auto">
+    <carousel-page>
+        <txt>Tab content A</txt>
+    </carousel-page>
+    <carousel-page>
+        <txt>Tab content B</txt>
+    </carousel-page>
+</carousel>
+```
+
+The `page-var` attribute syncs the 0-based page index with a loader variable. This allows:
+- Reading the initial page from the variable on load
+- Updating the variable when the user navigates via arrows
+- External components to control which page is shown
+
+</details>
+
+---
+
+### **`carousel-page`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| [*Base Attributes*](#common-base-attributes)     | Optional     | N/A           | Inherits all common base attributes. |
+
+A page within a `<carousel>`. Behaves as a standard `div` container — any content that can be placed inside a `div` can be placed inside a `carousel-page`.
+
+:::caution
+
+**Parent Constraint:** Must be placed inside a `<carousel>`.
+
+:::
+
+---
+
 ## **`board`**
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
