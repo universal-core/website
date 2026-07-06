@@ -130,7 +130,11 @@ const siteConfig = {
     [
       "@docusaurus/plugin-client-redirects",
       {
-        redirects: redirectJson.redirects,
+        // Drop redirects whose target was removed with the blog trim — the
+        // client-redirects plugin hard-fails the build on invalid `to` paths.
+        redirects: redirectJson.redirects.filter(
+          (r) => !String(r.to).startsWith("/blog/"),
+        ),
         createRedirects(existingPath) {
           if (existingPath.includes("/api-reference/core/")) {
             return [
@@ -167,6 +171,27 @@ const siteConfig = {
           // Return an object that merges with the existing webpack config
           return {
             resolve: {
+              alias: {
+                ...config.resolve?.alias,
+                // docgen plugin is disabled (no sibling monorepo). Resolve
+                // @docgen to an empty stub so require("@docgen/…") compiles;
+                // requireDocgen()'s try/catch returns null at runtime.
+                "@docgen": require("path").resolve(__dirname, "src/docgen-stub"),
+                // The live CodeSandbox bundler was removed; a Metin2
+                // client/server platform has nothing to run in a browser. Every
+                // runtime `@codesandbox/sandpack-react` import resolves to a
+                // static shim (file tree + read-only editor, no execution).
+                "@codesandbox/sandpack-react": require("path").resolve(
+                  __dirname,
+                  "src/sandpack-static/shim.tsx",
+                ),
+                // Defensive: nothing imports the themes anymore, but keep a
+                // stub so a stray import can't re-introduce the dependency.
+                "@codesandbox/sandpack-themes": require("path").resolve(
+                  __dirname,
+                  "src/sandpack-static/themes-stub.ts",
+                ),
+              },
               fallback: {
                 ...config.resolve?.fallback,
                 buffer: require.resolve("buffer/"),
@@ -278,7 +303,7 @@ const siteConfig = {
         },
       ],
     },
-    image: "img/refine_social.png",
+    image: "img/uc-social.png",
     algolia: {
       appId: "KRR9VEUPCT",
       apiKey: "cd0188125dcd31fb4b011b5e536d963a",

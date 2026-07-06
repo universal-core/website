@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="12%" r="70%">
+      <stop offset="0%" stop-color="#a78bf5" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#0c0b09" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0c0b09"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g stroke="#ffffff" stroke-opacity="0.03" stroke-width="1">
+    <line x1="0" y1="157" x2="1200" y2="157"/><line x1="0" y1="315" x2="1200" y2="315"/><line x1="0" y1="473" x2="1200" y2="473"/>
+    <line x1="300" y1="0" x2="300" y2="630"/><line x1="600" y1="0" x2="600" y2="630"/><line x1="900" y1="0" x2="900" y2="630"/>
+  </g>
+  <g transform="translate(600 232)">
+    <g transform="translate(-64 -64) scale(4)">
+      <polygon points="29,21.7 21.7,29 10.3,29 3,21.7 3,10.3 10.3,3 21.7,3 29,10.3" stroke="rgba(167,139,245,0.4)" stroke-width="1.4"/>
+      <polygon points="16,6.4 25.6,16 16,25.6 6.4,16" stroke="#a78bf5" stroke-width="1.5"/>
+      <polygon points="16,11.4 20.6,16 16,20.6 11.4,16" fill="#5fc4ec"/>
+      <circle cx="16" cy="3" r="1" fill="#5fc4ec"/><circle cx="16" cy="29" r="1" fill="#5fc4ec"/>
+      <circle cx="3" cy="16" r="1" fill="#5fc4ec"/><circle cx="29" cy="16" r="1" fill="#5fc4ec"/>
+    </g>
+  </g>
+  <text x="600" y="430" text-anchor="middle" font-family="'Space Grotesk','Hanken Grotesk',sans-serif" font-size="76" font-weight="700" letter-spacing="-1">
+    <tspan fill="#ece8df">Universal</tspan><tspan fill="#a78bf5">Core</tspan>
+  </text>
+  <text x="600" y="486" text-anchor="middle" font-family="'Hanken Grotesk',sans-serif" font-size="26" fill="#9a9488">
+    Extend the game without touching the engine.
+  </text>
+  <text x="600" y="556" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="18" fill="#736d62" letter-spacing="2">
+    LUA · PYTHON · YAML
+  </text>
+</svg>

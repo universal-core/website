@@ -1,37 +1,34 @@
 import React from "react";
-import { TutorialDocumentLayout } from "./tutorial-document-layout";
 import clsx from "clsx";
 
-import type {
-  CodeEditorProps,
-  SandpackFiles,
-  SandpackInternal,
-  SandpackInternalOptions,
-  SandpackPredefinedTemplate,
-  TemplateFiles,
-} from "@codesandbox/sandpack-react";
-
-import { nightOwl, aquaBlue } from "@codesandbox/sandpack-themes";
-
-import {
-  SandpackCodeEditor,
-  SandpackPreview,
-  SandpackProvider,
-  useSandpack,
-} from "@codesandbox/sandpack-react";
-
-import { useColorMode } from "@docusaurus/theme-common";
+import { TutorialDocumentLayout } from "./tutorial-document-layout";
 import { TutorialFileExplorer } from "./tutorial-file-explorer";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTutorialLayout } from "../context/tutorial-layout-context";
 
-type SandpackProps = React.ComponentProps<SandpackInternal> & {
+import {
+  TutorialSandpackProvider,
+  useSandpack,
+} from "../sandpack-static/context";
+import { HighlightedCode } from "../sandpack-static/static-code-editor";
+
+/**
+ * Static two-pane tutorial view.
+ *
+ * The live CodeSandbox bundler/preview has been removed — a Metin2
+ * client/server platform has nothing to execute in a browser. What remains is a
+ * narrative pane (the MDX children) beside a right pane holding a read-only file
+ * tree + syntax-highlighted editor, plus the optional "Solve" toggle. State is
+ * sourced from the static `TutorialSandpackProvider`; the content files keep
+ * mutating it through the same `useSandpack()` API as before.
+ */
+
+type SandpackProps = {
   startRoute?: string;
   showOpenInCodeSandbox?: boolean;
   showNavigator?: boolean;
   showLineNumbers?: boolean;
   initialPercentage?: number;
-  dependencies?: React.ComponentProps<SandpackInternal>["customSetup"]["dependencies"];
+  dependencies?: Record<string, string>;
   height?: number;
   previewOnly?: boolean;
   layout?: "row" | "col" | "col-reverse";
@@ -42,13 +39,23 @@ type SandpackProps = React.ComponentProps<SandpackInternal> & {
   showConsole?: boolean;
   hidePreview?: boolean;
   parentResizing?: boolean;
+  template?: string;
+  customSetup?: unknown;
+  files?: Record<string, any>;
+  options?: {
+    activeFile?: string;
+    visibleFiles?: string[];
+    showLineNumbers?: boolean;
+    [key: string]: any;
+  };
+  [key: string]: any;
 };
 
 type Props = React.PropsWithChildren<
   SandpackProps & {
     contentOnly?: boolean;
     contentPercentage?: number;
-    finalFiles?: SandpackFiles;
+    finalFiles?: Record<string, any>;
   }
 >;
 
@@ -58,6 +65,9 @@ export const TutorialSandpack = ({
   children,
   contentOnly,
   finalFiles,
+  files,
+  options,
+  showFiles = true,
   ...sandpackProps
 }: Props) => {
   const { contentPercentage, setContentPercentage } = useTutorialLayout();
@@ -69,84 +79,45 @@ export const TutorialSandpack = ({
   >("tutorial");
 
   React.useEffect(() => {
-    const handleMouseUp = () => {
-      setResizing(false);
-    };
-
-    if (resizing !== null) {
-      window.addEventListener("mouseup", handleMouseUp);
-
-      return () => {
-        window.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
-
-    return;
-  }, [resizing]);
+    const handleMouseUp = () => setResizing(false);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => window.removeEventListener("mouseup", handleMouseUp);
+  }, []);
 
   React.useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (resizing) {
-        const containerRect = containerRef.current?.getBoundingClientRect();
+      if (!resizing) return;
+      const containerRect = containerRef.current?.getBoundingClientRect();
+      if (!containerRect) return;
 
-        if (!containerRect) return;
-
-        const newContentPercentage = Math.min(
-          maxPercentage,
-          Math.max(
-            100 - maxPercentage,
-            ((e.clientX - containerRect.left) / containerRect.width) * 100,
-          ),
-        );
-
-        setContentPercentage(newContentPercentage);
-      }
+      const newContentPercentage = Math.min(
+        maxPercentage,
+        Math.max(
+          100 - maxPercentage,
+          ((e.clientX - containerRect.left) / containerRect.width) * 100,
+        ),
+      );
+      setContentPercentage(newContentPercentage);
     };
 
-    if (resizing !== null) {
-      window.addEventListener("mousemove", handleMouseMove);
-
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-      };
-    }
-
-    return;
-  }, [resizing]);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [resizing, setContentPercentage]);
 
   React.useEffect(() => {
     const currentCursor = document.body.style.cursor;
-
-    if (resizing) {
-      document.body.style.cursor = "col-resize";
-    } else {
-      document.body.style.cursor = "auto";
-    }
-
+    document.body.style.cursor = resizing ? "col-resize" : "auto";
     return () => {
       document.body.style.cursor = currentCursor;
     };
   }, [resizing]);
 
-  console.log(sandpackProps?.options?.codeEditor?.additionalLanguages)
-  const codeEditorOptions: CodeEditorProps = {
-    showTabs: sandpackProps?.options?.showTabs,
-    showLineNumbers: sandpackProps?.options?.showLineNumbers,
-    showInlineErrors: sandpackProps?.options?.showInlineErrors,
-    wrapContent: sandpackProps?.options?.wrapContent,
-    closableTabs: sandpackProps?.options?.closableTabs,
-    initMode: sandpackProps?.options?.initMode,
-    extensions: sandpackProps?.options?.codeEditor?.extensions,
-    extensionsKeymap: sandpackProps?.options?.codeEditor?.extensionsKeymap,
-    readOnly: sandpackProps?.options?.readOnly,
-    showReadOnly:
-      sandpackProps.showReadOnly ?? sandpackProps?.options?.showReadOnly,
-    additionalLanguages:
-      sandpackProps?.options?.codeEditor?.additionalLanguages,
-  };
-
   return (
-    <TutorialSandpackBase parentResizing={resizing} {...sandpackProps}>
+    <TutorialSandpackProvider
+      files={files}
+      activeFile={options?.activeFile}
+      visibleFiles={options?.visibleFiles}
+    >
       <div
         className={clsx(
           "h-[calc(100dvh-112px-57px)]",
@@ -209,12 +180,7 @@ export const TutorialSandpack = ({
           }}
         >
           <ResizeHandleIcon
-            className={clsx(
-              "w-1",
-              "text-gray-400",
-
-              "dark:text-gray-700",
-            )}
+            className={clsx("w-1", "text-gray-400", "dark:text-gray-700")}
           />
         </button>
         <div
@@ -229,13 +195,7 @@ export const TutorialSandpack = ({
             width: `calc(${100 - contentPercentage}% - (0.625rem / 2))`,
           }}
         >
-          <SandpackRightSide
-            sandpackProps={sandpackProps}
-            startRoute={sandpackProps.startRoute}
-            parentResizing={resizing}
-            codeEditorOptions={codeEditorOptions}
-            finalFiles={finalFiles}
-          />
+          <SandpackRightSide showFiles={showFiles} finalFiles={finalFiles} />
         </div>
       </div>
       <div
@@ -313,207 +273,17 @@ export const TutorialSandpack = ({
           </button>
         </div>
       </div>
-    </TutorialSandpackBase>
-  );
-};
-
-const TutorialSandpackBase = ({
-  children,
-  initialPercentage = 50,
-  dependencies,
-  options = {
-    showTabs: true,
-    initMode: "lazy",
-    classes: {
-      "sp-layout": "!rounded-lg !border-gray-300 dark:!border-gray-700",
-      "sp-close-button": "!visible",
-      "sp-editor":
-        "!h-full !gap-0 border-r !border-r-gray-300 dark:!border-r-gray-700 overflow-hidden",
-      "sp-stack": "!h-full",
-      "sp-tabs":
-        "!border-b-gray-300 dark:!border-b-gray-700 !bg-gray-0 dark:!bg-gray-800",
-      "sp-tabs-scrollable-container": "!min-h-[32px] scrollbar-hidden",
-      "sp-input":
-        "!text-gray-800 dark:!text-gray-100 !bg-gray-200 dark:!bg-gray-700 !pb-[5px]",
-      "sp-cm": clsx(
-        "p-0 bg-transparent",
-        "[&>.cm-editor]:!bg-refine-react-light-code",
-        "[&>.cm-editor]:dark:!bg-refine-react-dark-code",
-        "[&_.cm-gutters]:!bg-refine-react-light-code",
-        "[&_.cm-gutters]:dark:!bg-refine-react-dark-code",
-        "[&_.cm-activeLine]:!bg-gray-100 [&_.cm-activeLine]:dark:!bg-gray-800",
-      ),
-      "sp-icon-standalone":
-        "!bg-gray-300 dark:!bg-gray-700 !text-gray-400 dark:!text-gray-500",
-      "sp-tab-button": clsx(
-        "!h-8",
-        "!px-2 !pb-2 !pt-1.5",
-        "!text-gray-800 dark:!text-gray-100",
-        "!border !border-solid !border-b-0 !border-x-gray-300 dark:!border-x-gray-700",
-        "-ml-px first:ml-0",
-        "!border-t-2 !border-t-transparent [&[data-active='true']]:!border-t-refine-react-light-link dark:[&[data-active='true']]:!border-t-refine-react-dark-link",
-      ),
-    },
-  },
-  template = "react-ts",
-  customSetup,
-  files,
-  ...props
-}: Props) => {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const { colorMode } = useColorMode();
-  options ??= {};
-  options.resizablePanels ??= true;
-  options.editorWidthPercentage ??= initialPercentage ?? 50;
-
-  const providerOptions: SandpackInternalOptions<
-    SandpackFiles,
-    SandpackPredefinedTemplate
-  > = {
-    /**
-     * TS-why: Type 'string | number | symbol' is not assignable to type 'string'
-     */
-    activeFile: options.activeFile as unknown as string,
-    visibleFiles: options.visibleFiles as unknown as string[],
-    recompileMode: options.recompileMode,
-    recompileDelay: options.recompileDelay,
-    autorun: options.autorun,
-    autoReload: options.autoReload,
-    bundlerURL: options.bundlerURL,
-    startRoute: options.startRoute,
-    skipEval: options.skipEval,
-    fileResolver: options.fileResolver,
-    initMode: options.initMode,
-    initModeObserverOptions: options.initModeObserverOptions,
-    externalResources: options.externalResources,
-    logLevel: options.logLevel,
-    classes: options.classes,
-  };
-
-  return (
-    <SandpackProvider
-      key={`${template}-${colorMode}-${mounted}`}
-      customSetup={{ dependencies, ...customSetup }}
-      files={files as TemplateFiles<SandpackPredefinedTemplate>}
-      options={providerOptions}
-      template={template}
-      theme={
-        colorMode === "light"
-          ? {
-              ...aquaBlue,
-              colors: {
-                ...aquaBlue.colors,
-                accent: "#1D1E30",
-                surface1: "transparent",
-                surface2: "transparent",
-                surface3: "transparent",
-              },
-            }
-          : {
-              ...nightOwl,
-              colors: {
-                ...nightOwl.colors,
-                surface1: "transparent",
-                surface2: "transparent",
-                surface3: "transparent",
-              },
-            }
-      }
-      className="!w-full"
-      {...props}
-    >
-      {children}
-    </SandpackProvider>
+    </TutorialSandpackProvider>
   );
 };
 
 const SandpackRightSide = ({
-  codeEditorOptions,
-  startRoute,
-  parentResizing,
-  sandpackProps,
+  showFiles = true,
   finalFiles,
 }: {
-  parentResizing: boolean;
-  startRoute: string;
-  codeEditorOptions: CodeEditorProps;
-  sandpackProps: SandpackProps;
-  finalFiles?: SandpackFiles;
+  showFiles?: boolean;
+  finalFiles?: Record<string, any>;
 }) => {
-  const { editorPercenage, setEditorPercentage } = useTutorialLayout();
-  const [resizing, setResizing] = React.useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
-  // Live web preview removed: a Metin2 client/server platform has nothing to
-  // run in a browser. Keep the file tree + editor; drop the result iframe.
-  const { showFiles = true } = sandpackProps ?? {};
-  const hidePreview = true;
-  const previewOnly = false;
-
-  React.useEffect(() => {
-    const handleMouseUp = () => {
-      setResizing(false);
-    };
-
-    if (resizing !== null) {
-      window.addEventListener("mouseup", handleMouseUp);
-
-      return () => {
-        window.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
-
-    return;
-  }, [resizing]);
-
-  React.useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (resizing) {
-        const containerRect = containerRef.current?.getBoundingClientRect();
-
-        if (!containerRect) return;
-
-        const newEditorPercenage = Math.min(
-          maxPercentage,
-          Math.max(
-            100 - maxPercentage,
-            ((e.clientY - containerRect.top) / containerRect.height) * 100,
-          ),
-        );
-
-        setEditorPercentage(newEditorPercenage);
-      }
-    };
-
-    if (resizing !== null) {
-      window.addEventListener("mousemove", handleMouseMove);
-
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-      };
-    }
-
-    return;
-  }, [resizing]);
-
-  React.useEffect(() => {
-    const currentCursor = document.body.style.cursor;
-
-    if (resizing) {
-      document.body.style.cursor = "row-resize";
-    } else {
-      document.body.style.cursor = "auto";
-    }
-
-    return () => {
-      document.body.style.cursor = currentCursor;
-    };
-  }, [resizing]);
-
   return (
     <div className={clsx("w-full", "h-full", "flex", "flex-col")}>
       <div
@@ -526,7 +296,6 @@ const SandpackRightSide = ({
         )}
       >
         <div
-          ref={containerRef}
           className={clsx(
             "flex",
             "flex-col",
@@ -536,246 +305,69 @@ const SandpackRightSide = ({
             "bg-gray-100 dark:bg-refine-tutorial-dark-bg",
           )}
         >
-          {previewOnly ? null : (
-            <div
-              className={clsx(
-                "bg-gray-0 dark:bg-gray-800",
-                "overflow-hidden",
-                "rounded-[4px]",
-                "border border-gray-300 dark:border-gray-700",
-                "flex",
-                "relative",
-              )}
-              style={{
-                height: hidePreview
-                  ? "100%"
-                  : `calc(${editorPercenage}% - (0.625rem / 2))`,
-              }}
-            >
-              {showFiles ? (
-                <TutorialFileExplorer
-                  autoHiddenFiles={true}
-                  hasSolve={!!finalFiles}
-                />
-              ) : null}
-              {finalFiles ? <SolveButton finalFiles={finalFiles} /> : null}
-              <SandpackCodeEditor
-                {...codeEditorOptions}
-                showTabs={false}
-                showLineNumbers
-                closableTabs={true}
-                initMode="lazy"
-                style={{}}
+          <div
+            className={clsx(
+              "bg-gray-0 dark:bg-[#0a0908]",
+              "overflow-hidden",
+              "rounded-[4px]",
+              "border border-gray-300 dark:border-[rgba(255,255,255,0.09)]",
+              "flex",
+              "relative",
+              "h-full",
+            )}
+          >
+            {showFiles ? (
+              <TutorialFileExplorer
+                autoHiddenFiles={true}
+                hasSolve={!!finalFiles}
               />
-            </div>
-          )}
-          {hidePreview || previewOnly ? null : (
-            <button
-              type="button"
-              className={clsx(
-                "h-2.5",
-                "w-full",
-                "appearance-none",
-                "outline-none",
-                "bg-gray-100 dark:bg-refine-tutorial-dark-bg",
-                "border-0",
-                "cursor-row-resize",
-                "flex items-center justify-center",
-              )}
-              onMouseDown={(event) => {
-                setResizing(true);
-                event.preventDefault();
-              }}
-            >
-              <ResizeHandleIcon
-                className={clsx(
-                  "w-1",
-                  "rotate-90",
-                  "text-gray-400",
-                  "dark:text-gray-700",
-                )}
-              />
-            </button>
-          )}
-          {hidePreview ? null : (
-            <div
-              className={clsx(
-                "overflow-hidden",
-                "bg-gray-0 dark:bg-gray-800",
-                "rounded-[4px]",
-                "border border-gray-300 dark:border-gray-700",
-                (resizing || parentResizing) && "pointer-events-none",
-              )}
-              style={{
-                height: previewOnly
-                  ? "100%"
-                  : `calc(${100 - editorPercenage}% - (0.625rem / 2))`,
-              }}
-            >
-              <SandpackPreview
-                showOpenInCodeSandbox={false}
-                startRoute={startRoute}
-                showNavigator={sandpackProps.showNavigator}
-                showRefreshButton={true}
-                style={{
-                  display: "flex",
-                  flex: "initial",
-                  width: "100%",
-                  gap: 0,
-                }}
-              >
-                <div className="sp-custom-loading bg-gray-0 dark:bg-gray-800">
-                  <Spinner />
-                  <LoaderProgress />
-                </div>
-              </SandpackPreview>
-            </div>
-          )}
+            ) : null}
+            {finalFiles ? <SolveButton finalFiles={finalFiles} /> : null}
+            <StaticEditor />
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const Spinner = () => {
+const StaticEditor = () => {
+  const { sandpack } = useSandpack();
+  const { files, activeFile } = sandpack;
+  const file = activeFile ? files[activeFile] : undefined;
+
   return (
     <div
       className={clsx(
-        "flex items-center justify-center",
-        "bg-center bg-no-repeat bg-contain",
-        "w-16 h-16",
-        "bg-[url('/assets/tutorial-spinner-bg.png')]",
+        "w-full",
+        "h-full",
+        "overflow-auto",
+        "bg-gray-0 dark:bg-[#0a0908]",
       )}
     >
-      <img
-        src="/assets/tutorial-spinner.gif"
-        style={{
-          imageRendering: "pixelated",
-          scale: 2,
-        }}
-      />
-    </div>
-  );
-};
-
-const texts = [
-  "installing dependencies",
-  "downloading assets",
-  "preparing the environment",
-  "booting up the server",
-];
-
-const LoaderProgress = () => {
-  const [duration] = React.useState(
-    Math.floor(Math.random() * 10 * 1000 + 10000),
-  );
-  const [index, setIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    const tick = duration / texts.length;
-    const interval = setInterval(() => {
-      setIndex((p) => {
-        if (p + 1 < texts.length) {
-          return p + 1;
-        }
-        clearInterval(interval);
-        return p;
-      });
-    }, tick);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className={clsx("flex", "items-center", "justify-center")}>
-      <div
-        className={clsx(
-          "w-40",
-          "h-4",
-          "rounded-xl",
-          "bg-gray-300 dark:bg-gray-700",
-          "p-px",
-          "relative",
-          "overflow-hidden",
-        )}
-      >
-        <AnimatePresence>
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            className={clsx(
-              "-top-px",
-              "-left-px",
-              "pt-px",
-              "absolute",
-              "w-40",
-              "h-4",
-              "overflow-hidden",
-              "whitespace-nowrap",
-              "break-keep",
-              "text-gray-800",
-              "dark:text-gray-200",
-              "font-semibold",
-              "text-[10px]",
-              "text-center",
-              "flex",
-              "justify-center items-center",
-            )}
-          >
-            {texts[index]}
-          </motion.div>
-        </AnimatePresence>
+      {file ? (
+        <HighlightedCode code={file.code} path={activeFile} showLineNumbers />
+      ) : (
         <div
           className={clsx(
-            "sp-loading-progress",
-            "h-full",
-            "rounded-xl",
-            "bg-refine-tutorial-green dark:bg-refine-green-alt",
-            "min-w-[0.75rem]",
-            "overflow-hidden",
-            "relative",
+            "p-4",
+            "text-sm",
+            "font-jetBrains-mono",
+            "text-gray-500 dark:text-[#9a9488]",
           )}
-          style={{
-            animationDuration: `${duration}ms`,
-          }}
         >
-          <AnimatePresence>
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: -16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 16 }}
-              className={clsx(
-                "-left-0.5",
-                "-top-0.5",
-                "pt-px",
-                "absolute",
-                "w-40",
-                "h-4",
-                "overflow-hidden",
-                "whitespace-nowrap",
-                "break-keep",
-                "text-gray-200",
-                "dark:text-gray-800",
-                "font-semibold",
-                "text-[10px]",
-                "text-center",
-                "flex",
-                "justify-center items-center",
-              )}
-            >
-              {texts[index]}
-            </motion.div>
-          </AnimatePresence>
+          Select a file to view its contents.
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-const SolveButton = ({ finalFiles }: { finalFiles: SandpackFiles }) => {
+export const SolveButton = ({
+  finalFiles,
+}: {
+  finalFiles: Record<string, any>;
+}) => {
   const { sandpack } = useSandpack();
   const [solved, setSolved] = React.useState(false);
 

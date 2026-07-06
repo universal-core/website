@@ -41,7 +41,8 @@ export default function BlogPostItem({ className }) {
               )}?h=668`}
               alt={title}
               className={clsx(
-                "absolute inset-0 mt-0 h-full w-full rounded-[10px] object-cover",
+                "absolute inset-0 mt-0 h-full w-full rounded-[4px] object-cover",
+                "border border-solid border-gray-700",
               )}
               loading="lazy"
             />
@@ -53,11 +54,12 @@ export default function BlogPostItem({ className }) {
           {tags.map((tag) => (
             <Link
               className={clsx(
-                "text-xs",
-                "bg-refine-react-3 dark:bg-refine-react-7",
-                "text-refine-react-8 dark:text-refine-react-3",
+                "text-xs font-medium",
+                "bg-refine-purple/10",
+                "text-refine-purple",
+                "border border-solid border-refine-purple/25",
                 "no-underline",
-                "rounded-full",
+                "rounded-[3px]",
                 "px-2 py-1",
               )}
               href={tag.permalink}
@@ -77,10 +79,10 @@ export default function BlogPostItem({ className }) {
             <div
               className={clsx(
                 "mb-4",
-                "text-gray-700 dark:text-refine-react-3",
+                "font-display",
+                "text-gray-900 dark:text-gray-0",
                 "text-xl",
-                "font-lg",
-                "font-bold",
+                "font-semibold",
               )}
             >
               {title}

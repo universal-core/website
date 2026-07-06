@@ -12,33 +12,18 @@ export const TutorialUpdateFileButton = ({ onClick }: Props) => {
       className={clsx(
         "appearance-none",
         "focus:outline-none",
-        "border-none",
-        "bg-refine-react-light-link bg-opacity-10",
-        "dark:bg-refine-react-dark-link dark:bg-opacity-20",
+        "bg-refine-purple/10",
+        "hover:bg-refine-purple/20",
+        "border border-solid border-refine-purple/25",
         "p-2",
-        "rounded-[40px]",
+        "rounded-[4px]",
         "gap-2",
         "flex items-center justify-center",
         "w-fit",
         "mt-2",
         "mb-6",
         "relative",
-        "overflow-hidden",
-        "after:content-['']",
-        "after:absolute after:top-0 after:left-0",
-        "after:w-full after:h-full",
-        "after:z-[0]",
-        "after:rounded-[40px]",
-        "after:pointer-events-none",
-        "after:scale-0",
-        "after:opacity-50",
-        "hover:after:scale-100",
-        "hover:after:opacity-100",
-        "after:origin-[15%_center]",
-        "active:after:brightness-90",
-        "after:transition-all after:duration-200 after:ease-in-out",
-        "after:bg-refine-react-light-link",
-        "dark:after:bg-refine-react-dark-link",
+        "transition-colors duration-200 ease-in-out",
         "group",
       )}
       onClick={onClick}
@@ -46,8 +31,7 @@ export const TutorialUpdateFileButton = ({ onClick }: Props) => {
       <FileIcon
         className={clsx(
           "z-[1]",
-          "text-gray-800 dark:text-gray-0",
-          "group-hover:text-gray-0",
+          "text-refine-purple",
           "transition-colors duration-200 ease-in-out",
         )}
       />
@@ -56,8 +40,7 @@ export const TutorialUpdateFileButton = ({ onClick }: Props) => {
           "z-[1]",
           "block",
           "text-xs",
-          "text-gray-800 dark:text-gray-0",
-          "group-hover:text-gray-0",
+          "text-refine-purple",
           "transition-colors duration-200 ease-in-out",
         )}
       >

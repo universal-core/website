@@ -1,438 +1,162 @@
 import clsx from "clsx";
 import React from "react";
 
-import type {
-  CodeEditorProps,
-  SandpackFiles,
-  SandpackInternal,
-  SandpackInternalOptions,
-  SandpackPredefinedTemplate,
-  TemplateFiles,
-} from "@codesandbox/sandpack-react";
+import { HighlightedCode } from "@site/src/sandpack-static/static-code-editor";
 
-import { nightOwl, aquaBlue } from "@codesandbox/sandpack-themes";
+/**
+ * Static replacement for the old live `<Sandpack>` playground used across the
+ * docs. The CodeSandbox bundler + preview iframe are gone (a Metin2 platform
+ * has nothing to execute in a browser); this renders a read-only, tabbed,
+ * syntax-highlighted view of the provided files. The full prop surface is kept
+ * so the ~130 existing `<Sandpack ... />` call sites keep compiling — display
+ * flags that only made sense with a live preview are accepted and ignored.
+ */
 
-import {
-  SandpackCodeEditor,
-  SandpackConsole,
-  SandpackFileExplorer,
-  SandpackLayout,
-  SandpackPreview,
-  SandpackProvider,
-} from "@codesandbox/sandpack-react";
+type RawFileValue = string | { code?: string; hidden?: boolean; active?: boolean };
 
-import { useColorMode } from "@docusaurus/theme-common";
-
-import { DragHandle } from "./drag-handle";
-import { useResizable } from "./use-resizable";
-
-type Props = React.ComponentProps<SandpackInternal> & {
-  startRoute?: string;
-  showOpenInCodeSandbox?: boolean;
+type Props = {
+  files?: Record<string, RawFileValue>;
+  dependencies?: Record<string, string>;
+  template?: string;
+  height?: number | string;
+  previewOnly?: boolean;
+  showFiles?: boolean;
+  showConsole?: boolean;
+  hidePreview?: boolean;
   showNavigator?: boolean;
   showLineNumbers?: boolean;
-  initialPercentage?: number;
-  dependencies?: React.ComponentProps<SandpackInternal>["customSetup"]["dependencies"];
-  height?: number;
-  previewOnly?: boolean;
+  showReadOnly?: boolean;
+  showOpenInCodeSandbox?: boolean;
   layout?: "row" | "col" | "col-reverse";
   className?: string;
   wrapperClassName?: string;
-  showFiles?: boolean;
-  showReadOnly?: boolean;
-  showConsole?: boolean;
-  hidePreview?: boolean;
+  startRoute?: string;
+  initialPercentage?: number;
+  customSetup?: unknown;
+  options?: Record<string, any>;
+  [key: string]: any;
 };
 
-export const Sandpack = (props: Props) => {
-  if (props?.template === "nextjs") {
-    return <SandpackNextJS {...props} />;
-  }
+type NormalizedFile = { code: string; hidden: boolean; active: boolean };
 
-  return <SandpackBase {...props} />;
-};
-/**
- * We're using a custom sandpack component and customized some of its features and props.
- *
- * Set `dependencies` to add dependencies.
- *
- * Set `height` property to set the height of the editor. Default is 420.
- *
- * Set `previewOnly` to true to hide the editor.
- *
- * Set `layout` to "col" or "col-reverse" to enforce column layout.
- *
- * Set `initialPercentage` to set the initial percentage of the editor width.
- *
- * Set `startRoute` to set the initial route of the preview.
- */
-const SandpackBase = ({
-  startRoute,
-  showNavigator,
-  showLineNumbers,
-  showOpenInCodeSandbox,
-  initialPercentage = 50,
-  dependencies,
-  showReadOnly,
-  options = {
-    showTabs: true,
-    initMode: "lazy",
-    classes: {
-      "sp-bridge-frame": "!hidden",
-      "sp-layout": "!rounded-lg !border-gray-300 dark:!border-gray-700",
-      "sp-editor": "!gap-0 border-r !border-r-gray-300 dark:!border-r-gray-700",
-      "sp-tabs":
-        "!border-b-gray-300 dark:!border-b-gray-700 !bg-gray-0 dark:!bg-gray-800",
-      "sp-tabs-scrollable-container": "!min-h-[32px]",
-      "sp-input": "!text-gray-800 dark:!text-gray-100",
-      "sp-cm": clsx(
-        "p-0 bg-transparent",
-        "[&>.cm-editor]:!bg-refine-react-light-code",
-        "[&>.cm-editor]:dark:!bg-refine-react-dark-code",
-        "[&_.cm-activeLine]:!bg-gray-100 [&_.cm-activeLine]:dark:!bg-gray-800",
-      ),
-      "sp-icon-standalone":
-        "!bg-gray-300 dark:!bg-gray-700 !text-gray-400 dark:!text-gray-500",
-      "sp-file-explorer": "border-r !border-r-gray-300 dark:!border-r-gray-700",
-      "sp-console": clsx(
-        "not-prose",
-        "!border-t-0 !border !border-solid !border-t-none",
-        "!border-gray-300 dark:!border-gray-700",
-        "!rounded-bl-lg !rounded-br-lg",
-        "!bg-refine-react-light-code",
-        "dark:!bg-refine-react-dark-code",
-      ),
-      "sp-console-header": clsx(
-        "!bg-gray-0 dark:!bg-gray-800",
-        "border-b border-solid !border-b-gray-300 dark:!border-b-gray-700",
-        "!h-[32px] !min-h-[32px]",
-      ),
-      "sp-console-header-actions": clsx("h-full", "!gap-0"),
-      "sp-console-header-button": clsx(
-        "!bg-transparent",
-        "!border !border-solid !border-b-0 !border-x-gray-300 dark:!border-x-gray-700",
-        "!border-t-2 !border-t-transparent [&[data-active='true']]:!border-t-refine-react-light-link dark:[&[data-active='true']]:!border-t-refine-react-dark-link",
-        "h-full",
-        "!text-gray-800 dark:!text-gray-100",
-        "!rounded-none",
-        "-ml-px",
-      ),
-      "sp-console-list": clsx(
-        "!bg-refine-react-light-code",
-        "dark:!bg-refine-react-dark-code",
-        "[&>code]:!bg-transparent",
-      ),
-      "sp-tab-button": clsx(
-        "!h-8",
-        "!px-2 !pb-2 !pt-1.5",
-        "!text-gray-800 dark:!text-gray-100",
-        "!border !border-solid !border-b-0 !border-x-gray-300 dark:!border-x-gray-700",
-        "-ml-px first:ml-0",
-        "!border-t-2 !border-t-transparent [&[data-active='true']]:!border-t-refine-react-light-link dark:[&[data-active='true']]:!border-t-refine-react-dark-link",
-      ),
-    },
-  },
-  template = "react-ts",
-  customSetup,
-  files,
-  previewOnly,
-  layout,
+const normalizePath = (path: string): string =>
+  path.startsWith("/") ? path : `/${path}`;
+
+export const Sandpack = ({
+  files = {},
   height = 420,
+  showLineNumbers = true,
   wrapperClassName,
   className,
-  showFiles = false,
-  showConsole = false,
-  hidePreview = false,
-  ...props
-}: Props) => {
-  const [mounted, setMounted] = React.useState(false);
+}: Props): JSX.Element | null => {
+  const normalized = React.useMemo<Record<string, NormalizedFile>>(() => {
+    const out: Record<string, NormalizedFile> = {};
+    Object.keys(files ?? {}).forEach((key) => {
+      const value = files[key];
+      const path = normalizePath(key);
+      if (typeof value === "string") {
+        out[path] = { code: value, hidden: false, active: false };
+      } else if (value && typeof value === "object") {
+        out[path] = {
+          code: value.code ?? "",
+          hidden: !!value.hidden,
+          active: !!value.active,
+        };
+      }
+    });
+    return out;
+  }, [files]);
+
+  const visibleFiles = React.useMemo<string[]>(() => {
+    const nonHidden = Object.keys(normalized).filter(
+      (path) => !normalized[path].hidden,
+    );
+    // Some docs mark every file hidden and relied on the (now-removed) preview.
+    // Fall back to showing everything so there is always something to read.
+    return nonHidden.length > 0 ? nonHidden : Object.keys(normalized);
+  }, [normalized]);
+
+  const initialActive = React.useMemo<string>(() => {
+    const active = Object.keys(normalized).find(
+      (path) => normalized[path].active && !normalized[path].hidden,
+    );
+    return active ?? visibleFiles[0] ?? Object.keys(normalized)[0] ?? "";
+  }, [normalized, visibleFiles]);
+
+  const [activeFile, setActiveFile] = React.useState(initialActive);
+
   React.useEffect(() => {
-    setMounted(true);
-  }, []);
+    setActiveFile(initialActive);
+  }, [initialActive]);
 
-  const { colorMode } = useColorMode();
-  options ??= {};
-  options.resizablePanels ??= true;
-  options.editorWidthPercentage ??= initialPercentage ?? 50;
+  if (Object.keys(normalized).length === 0) {
+    return null;
+  }
 
-  const codeEditorOptions: CodeEditorProps = {
-    showTabs: options.showTabs,
-    showLineNumbers: options.showLineNumbers,
-    showInlineErrors: options.showInlineErrors,
-    wrapContent: options.wrapContent,
-    closableTabs: options.closableTabs,
-    initMode: options.initMode,
-    extensions: options.codeEditor?.extensions,
-    extensionsKeymap: options.codeEditor?.extensionsKeymap,
-    readOnly: options.readOnly,
-    showReadOnly: showReadOnly ?? options.showReadOnly,
-    additionalLanguages: options.codeEditor?.additionalLanguages,
-  };
-
-  const providerOptions: SandpackInternalOptions<
-    SandpackFiles,
-    SandpackPredefinedTemplate
-  > = {
-    /**
-     * TS-why: Type 'string | number | symbol' is not assignable to type 'string'
-     */
-    activeFile: options.activeFile as unknown as string,
-    visibleFiles: options.visibleFiles as unknown as string[],
-    recompileMode: options.recompileMode,
-    recompileDelay: options.recompileDelay,
-    autorun: options.autorun,
-    autoReload: options.autoReload,
-    bundlerURL: options.bundlerURL,
-    startRoute: options.startRoute,
-    skipEval: options.skipEval,
-    fileResolver: options.fileResolver,
-    initMode: options.initMode,
-    initModeObserverOptions: options.initModeObserverOptions,
-    externalResources: options.externalResources,
-    logLevel: options.logLevel,
-    classes: options.classes,
-  };
-
-  const [bugReportModalVisible, setBugReportModalVisible] =
-    React.useState(false);
-
-  const { onHandleMouseDown, horizontalSize } = useResizable({
-    initialSize: options.editorWidthPercentage,
-  });
-
-  const showHandle = !previewOnly && !layout?.includes("col");
+  const activeCode = normalized[activeFile]?.code ?? "";
+  const numericHeight =
+    typeof height === "number" ? height : parseInt(String(height), 10) || 420;
+  const clampedHeight = Math.min(Math.max(numericHeight, 160), 640);
 
   return (
-    <>
-      <div className={clsx("pb-6", wrapperClassName)}>
+    <div className={clsx("not-prose", "mb-6", "refine-wider-container", wrapperClassName)}>
+      <div
+        className={clsx(
+          "rounded-[4px]",
+          "overflow-hidden",
+          "border border-solid",
+          "border-gray-300 dark:border-[rgba(255,255,255,0.09)]",
+          "bg-gray-0 dark:bg-[#0a0908]",
+          className,
+        )}
+      >
         <div
           className={clsx(
-            "absolute",
-            "left-0",
-            "right-0",
-            "w-full",
-            "px-2",
-            "md:px-4",
-            "xl:px-6",
-            "max-w-screen-xl",
-            "mx-auto",
-            className,
+            "flex items-stretch",
+            "overflow-x-auto",
+            "scrollbar-hidden",
+            "border-b border-solid",
+            "border-gray-300 dark:border-[rgba(255,255,255,0.09)]",
+            "bg-gray-100 dark:bg-[#121110]",
           )}
         >
-          <SandpackProvider
-            key={`${template}-${colorMode}-${mounted}`}
-            customSetup={{ dependencies, ...customSetup }}
-            files={files as TemplateFiles<SandpackPredefinedTemplate>}
-            options={{
-              ...providerOptions,
-              classes: {
-                ...providerOptions.classes,
-                "sp-layout": clsx(
-                  providerOptions.classes?.["sp-layout"],
-                  showConsole && "!rounded-bl-none !rounded-br-none",
-                ),
-              },
-            }}
-            template={template}
-            theme={
-              colorMode === "light"
-                ? {
-                    ...aquaBlue,
-                    colors: {
-                      ...aquaBlue.colors,
-                      accent: "#1D1E30",
-                      surface1: "transparent",
-                      surface2: "transparent",
-                      surface3: "transparent",
-                    },
-                  }
-                : {
-                    ...nightOwl,
-                    colors: {
-                      ...nightOwl.colors,
-                      surface1: "transparent",
-                      surface2: "transparent",
-                      surface3: "transparent",
-                    },
-                  }
-            }
-            className={clsx(
-              "not-prose sandpack-container",
-              "max-w-screen-xl",
-              "animate-reveal",
-            )}
-            {...props}
-          >
-            <SandpackLayout
-              className={clsx(
-                layout === "col" && "!flex-col",
-                layout === "col-reverse" && "!flex-col-reverse",
-              )}
-            >
-              {showFiles && (
-                <SandpackFileExplorer
-                  autoHiddenFiles
-                  style={{
-                    height: options.editorHeight ?? height,
-                  }}
-                />
-              )}
-              {!previewOnly && (
-                <SandpackCodeEditor
-                  {...codeEditorOptions}
-                  // showTabs={!showFiles}
-                  showLineNumbers={showLineNumbers}
-                  closableTabs={showFiles}
-                  initMode="lazy"
-                  style={{
-                    height: options.editorHeight ?? height,
-                    ...(layout?.includes("col")
-                      ? { flex: "initial" }
-                      : {
-                          flexGrow: horizontalSize,
-                          flexShrink: horizontalSize,
-                          flexBasis: 0,
-                        }),
-                    overflow: "hidden",
-                  }}
-                />
-              )}
-              {showHandle ? (
-                <DragHandle
-                  onMouseDown={onHandleMouseDown}
-                  horizontalSize={horizontalSize}
-                />
-              ) : null}
-              {hidePreview ? null : (
-                <>
-                  <SandpackPreview
-                    showOpenInCodeSandbox={showOpenInCodeSandbox}
-                    // actionsChildren={
-                    //     <BugReportButton
-                    //         onClick={() =>
-                    //             setBugReportModalVisible(
-                    //                 true,
-                    //             )
-                    //         }
-                    //     />
-                    // }
-                    startRoute={startRoute}
-                    showNavigator={showNavigator ?? options.showNavigator}
-                    showRefreshButton={options.showRefreshButton}
-                    style={{
-                      display: hidePreview ? "none" : "flex",
-                      ...(layout?.includes("col")
-                        ? {
-                            flex: "initial",
-                            width: "100%",
-                          }
-                        : {
-                            flexGrow: 100 - horizontalSize,
-                            flexShrink: 100 - horizontalSize,
-                            flexBasis: 0,
-                            width: previewOnly
-                              ? "100%"
-                              : `${100 - horizontalSize}%`,
-                          }),
-                      gap: 0,
-                      height: options.editorHeight ?? height, // use the original editor height
-                    }}
-                  >
-                    <div className="sp-custom-loading">
-                      <img
-                        src="https://refine.ams3.cdn.digitaloceanspaces.com/website/static/assets/spinner.gif"
-                        className={clsx("w-12", "h-12", "rounded-full")}
-                      />
-                    </div>
-                  </SandpackPreview>
-                  {/* <BugReportModal
-                                        visible={bugReportModalVisible}
-                                        onClose={() =>
-                                            setBugReportModalVisible(false)
-                                        }
-                                    /> */}
-                </>
-              )}
-            </SandpackLayout>
-            {showConsole ? (
-              <SandpackConsole
-                style={{
-                  height: 200,
-                  ...(layout?.includes("col")
-                    ? { flex: "initial" }
-                    : {
-                        flexGrow: horizontalSize,
-                        flexShrink: horizontalSize,
-                        flexBasis: 0,
-                      }),
-                  overflow: "hidden",
-                }}
-              />
-            ) : null}
-          </SandpackProvider>
+          {visibleFiles.map((path) => {
+            const name = path.split("/").filter(Boolean).pop();
+            const isActive = path === activeFile;
+            return (
+              <button
+                key={path}
+                type="button"
+                title={name}
+                onClick={() => setActiveFile(path)}
+                className={clsx(
+                  "appearance-none",
+                  "cursor-pointer",
+                  "whitespace-nowrap",
+                  "px-3 py-2",
+                  "text-xs",
+                  "font-jetBrains-mono",
+                  "bg-transparent",
+                  "border-0 border-b-2 border-solid",
+                  "transition-colors duration-150 ease-in-out",
+                  isActive
+                    ? "text-gray-800 dark:text-[#ece8df] border-refine-purple"
+                    : "text-gray-500 dark:text-[#9a9488] border-transparent hover:text-gray-800 dark:hover:text-[#ece8df]",
+                )}
+              >
+                {name}
+              </button>
+            );
+          })}
         </div>
-        <div
-          className={clsx("")}
-          style={{
-            height: Number(options.editorHeight ?? height) + 2,
-          }}
-        />
-        <div
-          className={clsx(
-            layout?.includes("col") ? "block" : "block md:hidden",
-          )}
-          style={{
-            height: Number(options.editorHeight ?? height) + 2,
-          }}
-        />
-        <div className={clsx(showConsole ? "block" : "hidden", "h-[200px]")} />
+        <div className="overflow-auto" style={{ height: clampedHeight }}>
+          <HighlightedCode
+            code={activeCode}
+            path={activeFile}
+            showLineNumbers={showLineNumbers}
+          />
+        </div>
       </div>
-      <section className="hidden max-w-0 max-h-0">
-        <p>{`Dependencies: ${Object.keys(dependencies ?? {}).map(
-          (k) => `${k}@${dependencies[k]}`,
-        )}`}</p>
-        <h3>{"Code Files"}</h3>
-        {Object.keys(files ?? {}).map((f) => (
-          <div key={f}>
-            <div>{`File: ${f}`}</div>
-            <div>
-              {`Content: ${"code" in files[f] ? files[f].code : files[f]}`}
-            </div>
-          </div>
-        ))}
-      </section>
-    </>
-  );
-};
-
-const SandpackNextJS = (props: Props) => {
-  const isDevelop = process.env.NODE_ENV === "development";
-
-  const extraProps = isDevelop
-    ? {
-        hidePreview: false,
-        showConsole: true,
-        showNavigator: true,
-        dependencies: {
-          "@refinedev/core": "latest",
-          "@refinedev/simple-rest": "latest",
-          "@refinedev/nextjs-router": "latest",
-          "@types/react": "^18.0.0",
-          "@types/node": "^16.0.0",
-          typescript: "^4.7.4",
-          ...props.dependencies,
-        },
-        files: {
-          ...(props.files as any),
-        },
-      }
-    : { hidePreview: true, showConsole: false };
-
-  return (
-    <SandpackBase
-      {...extraProps}
-      {...props}
-      template={isDevelop ? "nextjs" : "react-ts"}
-    />
+    </div>
   );
 };
