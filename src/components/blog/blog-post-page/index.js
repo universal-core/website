@@ -15,7 +15,6 @@ import {
 import clsx from "clsx";
 
 import { Date, ReadingTime } from "@site/src/components/blog/common";
-import { BannerRandom } from "@site/src/components/banner/banner-random";
 
 import { ChevronLeft, Twitter } from "../icons";
 
@@ -130,9 +129,6 @@ export const BlogPostPageView = ({ children }) => {
                 <ReadingTime readingTime={readingTime} />
               </>
             )}
-          </div>
-          <div className="mx-6 mt-6 blog-lg:mt-10 mb-12">
-            <BannerRandom />
           </div>
         </div>
         <h1 className="text-xl md:text-4xl" itemProp="headline">

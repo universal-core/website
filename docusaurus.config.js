@@ -11,10 +11,27 @@ const redirectJson = require("./redirects.json");
 const tutorialData = require("./tutorial-units");
 const thumbsUpDownFeedbackWidget = require("./plugins/thumbs-up-down-feedback-widget");
 
+// UniversalCore "Forge" syntax theme — token colors from universalcore-design.
+const forgePrism = {
+  plain: { color: "#cfc8bb", backgroundColor: "transparent" },
+  styles: [
+    { types: ["comment", "prolog", "cdata"], style: { color: "#6b6b7a", fontStyle: "italic" } },
+    { types: ["keyword", "boolean", "rule", "atrule", "important"], style: { color: "#e3799b" } },
+    { types: ["tag", "deleted", "symbol"], style: { color: "#b79cf2" } },
+    { types: ["attr-name"], style: { color: "#8fb8e8" } },
+    { types: ["string", "char", "attr-value", "inserted", "url"], style: { color: "#7fd1c0" } },
+    { types: ["function", "function-variable", "class-name", "maybe-class-name"], style: { color: "#c9b4ff" } },
+    { types: ["number"], style: { color: "#d6a8f0" } },
+    { types: ["operator", "punctuation"], style: { color: "#837f8c" } },
+    { types: ["variable", "constant", "property", "parameter"], style: { color: "#6fc0e0" } },
+    { types: ["selector", "builtin", "namespace"], style: { color: "#a78bf5" } },
+  ],
+};
+
 /** @type {import('@docusaurus/types/src/index').DocusaurusConfig} */
 const siteConfig = {
-  title: "Refine",
-  tagline: "Build your React-based CRUD applications, without constraints",
+  title: "UniversalCore",
+  tagline: "An open, modular platform for building and shipping custom features",
   url: "http://universalcore.mentalgone.com",
   deploymentBranch: "gh-pages",
   baseUrl: "/",
@@ -22,6 +39,10 @@ const siteConfig = {
   organizationName: "universal-core",
   trailingSlash: true,
   favicon: "img/favicon.ico",
+  // Transitional: docs/blog are still the trimmed refine corpus with residual
+  // cross-links. Revisit once content is finalized.
+  onBrokenLinks: "warn",
+  onBrokenMarkdownLinks: "warn",
   scripts: [
     "https://platform.twitter.com/widgets.js",
     {
@@ -56,8 +77,7 @@ const siteConfig = {
           : {
               path: "./docs",
               sidebarPath: require.resolve("./sidebars.js"),
-              editUrl:
-                "https://github.com/refinedev/refine/tree/master/documentation",
+              // editUrl intentionally omitted until the public repo is decided.
               showLastUpdateAuthor: true,
               showLastUpdateTime: true,
               disableVersioning: process.env.DISABLE_VERSIONING === "true",
@@ -94,6 +114,7 @@ const siteConfig = {
             require.resolve("./src/css/custom.css"),
             require.resolve("./src/css/split-pane.css"),
             require.resolve("./src/css/demo-page.css"),
+            require.resolve("./src/refine-theme/css/forge.css"),
           ],
         },
         gtag: {
@@ -186,20 +207,19 @@ const siteConfig = {
             {
               blogTitle: "Blog",
               blogDescription:
-                "A resource for Refine, front-end ecosystem, and web development",
+                "Notes, deep dives and release notes from inside UniversalCore",
               routeBasePath: "/blog",
               postsPerPage: 12,
               blogSidebarTitle: "All posts",
               blogSidebarCount: 0,
               feedOptions: {
                 type: "all",
-                copyright: `Copyright © ${new Date().getFullYear()} refine.`,
+                copyright: `Copyright © ${new Date().getFullYear()} UniversalCore.`,
               },
             },
           ],
         ]),
     "./plugins/clarity.js",
-    "./plugins/templates.js",
     "./plugins/example-redirects.js",
     "./plugins/tutorial-navigation.js",
     [
@@ -232,8 +252,8 @@ const siteConfig = {
   ],
   themeConfig: {
     prism: {
-      theme: require("prism-react-renderer/themes/github"),
-      darkTheme: require("prism-react-renderer/themes/vsDark"),
+      theme: forgePrism,
+      darkTheme: forgePrism,
       magicComments: [
         // Remember to extend the default highlight class name as well!
         {
@@ -412,6 +432,8 @@ const siteConfig = {
     },
     colorMode: {
       defaultMode: "dark",
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
     },
   },
   customFields: {

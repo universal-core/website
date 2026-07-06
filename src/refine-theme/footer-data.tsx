@@ -1,10 +1,6 @@
 import React from "react";
 import { FooterDiscordIcon } from "./icons/footer-discord";
 import { FooterGithubIcon } from "./icons/footer-github";
-import { FooterLinkedinIcon } from "./icons/footer-linkedin";
-import { FooterRedditIcon } from "./icons/footer-reddit";
-import { FooterTwitterIcon } from "./icons/footer-twitter";
-import { NewBadgeIcon } from "./icons/popover";
 
 export const menuItems = [
   {
@@ -15,101 +11,62 @@ export const menuItems = [
         href: "/docs/getting-started/quickstart",
       },
       {
-        label: "Tutorials",
+        label: "Tutorial",
         href: "/tutorial/essentials/intro",
       },
       {
         label: "Blog",
         href: "/blog",
       },
+    ],
+  },
+  {
+    label: "Project",
+    items: [
       {
-        label: "React Admin Panel",
-        href: "https://reactadminpanel.com",
+        label: "Documentation",
+        href: "/docs/",
+      },
+      {
+        label: "Contributing",
+        href: "/docs/guides-concepts/contributing/",
       },
     ],
   },
   {
-    label: "Product",
+    label: "Community",
     items: [
+      // TODO: point at the real community links once disclosure is decided.
       {
-        label: "Enterprise",
-        icon: <NewBadgeIcon />,
-        href: "/enterprise",
+        label: "GitHub",
+        href: "#",
       },
       {
-        label: "Templates",
-        href: "/templates",
-      },
-      {
-        label: "Integrations",
-        href: "/integrations",
-      },
-      // {
-      //     label: "Become an Expert",
-      //     href: "/become-an-expert",
-      // },
-      // {
-      //     label: "Cloud",
-      //     href: "/cloud",
-      // },
-    ],
-  },
-  {
-    label: "Company",
-    items: [
-      {
-        label: "About",
-        href: "/about",
-      },
-      {
-        label: "Store",
-        href: "https://store.refine.dev",
-      },
-      {
-        label: "Contact Us",
-        href: "https://form.typeform.com/to/H54hLD9r",
+        label: "Discord",
+        href: "#",
       },
     ],
   },
 ];
 
 export const secondaryMenuItems = [
-  // {
-  //     label: "Terms & Conditions",
-  //     href: "#",
-  // },
   {
     label: "Privacy Policy",
     href: "/privacy-policy",
   },
-  {
-    label: "License",
-    href: "https://github.com/refinedev/refine/blob/master/LICENSE",
-  },
 ];
 
 export const footerDescription =
-  "Refine is a React-based framework for the rapid development of web applications. It eliminates the repetitive tasks demanded by CRUD operations and provides industry standard solutions.";
+  "An open, modular platform for building and shipping custom features — foundations, subsystems, developer experience and operations.";
 
 export const socialLinks = [
   {
     icon: FooterGithubIcon,
-    href: "https://github.com/refinedev/refine",
+    // TODO: real repo URL once disclosure is decided.
+    href: "#",
   },
   {
     icon: FooterDiscordIcon,
-    href: "https://discord.gg/refine",
-  },
-  {
-    icon: FooterRedditIcon,
-    href: "https://www.reddit.com/r/refine/",
-  },
-  {
-    icon: FooterTwitterIcon,
-    href: "https://x.com/refine_dev",
-  },
-  {
-    icon: FooterLinkedinIcon,
-    href: "https://www.linkedin.com/company/refine-dev",
+    href: "#",
   },
 ];

@@ -1999,7 +1999,7 @@
     },
     {
       "from": "/pricing",
-      "to": "/enterprise"
+      "to": "/"
     },
     {
       "from": "/blog/javascript-vs-ts/",

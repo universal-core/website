@@ -3,14 +3,11 @@ import clsx from "clsx";
 
 import SearchBar from "../theme/SearchBar";
 
-import { TutorialRefineLogo } from "./tutorial-refine-logo";
 import { CommonHamburgerIcon } from "./common-hamburger-icon";
-import { CommonThemeToggle, CommonThemeToggleAlt } from "./common-theme-toggle";
 import { DocSearchButton } from "./doc-search-button";
-import { TutorialParameterDropdown } from "./tutorial-parameter-dropdown";
 import { TutorialNavigation } from "./tutorial-navigation";
 import { Dialog, Transition } from "@headlessui/react";
-import { socialLinks } from "./footer-data";
+import { CoreSealLogo } from "./icons/core-seal";
 
 import Link from "@docusaurus/Link";
 
@@ -35,7 +32,7 @@ const TutorialModal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-0 dark:bg-gray-800" />
+          <div className="fixed inset-0 bg-gray-0 dark:bg-gray-900" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -60,7 +57,9 @@ const TutorialModal = ({
                     "flex items-center justify-between",
                   )}
                 >
-                  <TutorialRefineLogo />
+                  <Link to="/" className="hover:no-underline">
+                    <CoreSealLogo />
+                  </Link>
                   <div className={clsx("flex items-center gap-4")}>
                     <CommonHamburgerIcon onClick={onClose} active={true} />
                   </div>
@@ -87,26 +86,6 @@ const TutorialModal = ({
                       "border-b border-b-gray-200 dark:border-b-gray-600",
                     )}
                   >
-                    <span
-                      className={clsx(
-                        "text-sm",
-                        "text-gray-800",
-                        "dark:text-gray-100",
-                      )}
-                    >
-                      Appearance
-                    </span>
-                    <CommonThemeToggleAlt />
-                  </div>
-                  <div
-                    className={clsx(
-                      "flex items-center justify-between",
-                      "gap-10",
-                      "px-4",
-                      "py-4",
-                      "border-b border-b-gray-200 dark:border-b-gray-600",
-                    )}
-                  >
                     <Link
                       to="/"
                       className={clsx(
@@ -117,7 +96,7 @@ const TutorialModal = ({
                         "text-gray-800 dark:text-gray-100",
                       )}
                     >
-                      Refine Home
+                      Home
                     </Link>
                   </div>
                   <div
@@ -126,7 +105,6 @@ const TutorialModal = ({
                       "gap-10",
                       "px-4",
                       "py-4",
-                      "border-b border-b-gray-200 dark:border-b-gray-600",
                     )}
                   >
                     <Link
@@ -141,49 +119,6 @@ const TutorialModal = ({
                     >
                       Documentation
                     </Link>
-                  </div>
-                  <div
-                    className={clsx(
-                      "flex items-start justify-between",
-                      "px-4",
-                      "py-4",
-                      "bg-gray-100 dark:bg-gray-700",
-                      "flex-col tutorial-sm:flex-row",
-                      "gap-4",
-                    )}
-                  >
-                    <div
-                      className={clsx(
-                        "dark:text-gray-100 text-gray-800",
-                        "text-sm leading-6",
-                      )}
-                    >
-                      Join us on
-                    </div>
-                    <div
-                      className={clsx(
-                        "flex gap-4",
-                        "dark:text-gray-400 text-gray-500",
-                      )}
-                    >
-                      {socialLinks.map(({ href, icon: Icon }, i) => {
-                        return (
-                          <a
-                            key={i}
-                            href={href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={clsx("flex items-center no-underline")}
-                          >
-                            <Icon
-                              className={clsx(
-                                "w-9 h-9 tutorial-sm:w-6 tutorial-sm:h-6",
-                              )}
-                            />
-                          </a>
-                        );
-                      })}
-                    </div>
                   </div>
                 </div>
               </Dialog.Panel>
@@ -211,7 +146,9 @@ const Header = () => {
           "max-w-[656px]",
         )}
       >
-        <TutorialRefineLogo />
+        <Link to="/" aria-label="UniversalCore home" className="hover:no-underline shrink-0">
+          <CoreSealLogo />
+        </Link>
         <div className={clsx("hidden", "tutorial-sm:flex", "flex-1")}>
           <TutorialNavigation />
         </div>
@@ -228,24 +165,6 @@ const Header = () => {
         )}
       >
         <div
-          className={clsx(
-            "hidden tutorial-lg:flex",
-            "flex-1",
-            "items-center",
-            "justify-start",
-            "gap-2",
-          )}
-        >
-          <TutorialParameterDropdown
-            label="Routing"
-            parameter="routerSelection"
-          />
-          <TutorialParameterDropdown
-            label="UI Framework"
-            parameter="uiSelection"
-          />
-        </div>
-        <div
           className={clsx("hidden tutorial-md:flex items-center justify-start")}
         >
           <SearchBar />
@@ -261,14 +180,6 @@ const Header = () => {
             })}
           />
         </div>
-
-        <CommonThemeToggle
-          className={clsx(
-            "scale-75",
-            "tutorial-sm:scale-100",
-            "!hidden tutorial-md:!flex",
-          )}
-        />
 
         <CommonHamburgerIcon
           onClick={() => setIsSidebarOpen(true)}
@@ -305,12 +216,11 @@ export const TutorialHeader = React.memo(function TutorialHeaderComponent() {
       className={clsx(
         "flex items-center justify-center",
         "flex-col",
-        // "h-16",
         "z-10",
         "sticky",
         "top-0",
         "py-4 pb-[15px] tutorial-sm:pt-[15px] tutorial-sm:pb-[16px] px-4 tutorial-md:px-6 tutorial-md:pt-[11px] tutorial-md:pb-[10px]",
-        "bg-gray-0 dark:bg-gray-800",
+        "bg-gray-0 dark:bg-gray-900",
         "border-b border-gray-300 dark:border-gray-700",
       )}
     >

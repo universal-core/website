@@ -2,17 +2,11 @@ import Link from "@docusaurus/Link";
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import React, { type FC, Fragment, type PropsWithChildren } from "react";
-import { useColorMode } from "@docusaurus/theme-common";
-import { openFigma } from "@site/src/utils/open-figma";
 import { CloseIcon } from "../icons/close";
-import { GithubStarIcon } from "../icons/popover";
-import { RefineLogoIcon } from "../icons/refine-logo";
+import { CoreSealLogo } from "../icons/core-seal";
 import { MENU_ITEMS, type NavbarItemType } from "./constants";
 import { MenuItem } from "./menu-item";
 import { MobileNavItem } from "./mobile-nav-item";
-import { TopAnnouncement } from "../top-announcement";
-import { DarkModeIcon } from "../icons/dark-mode";
-import { LightModeIcon } from "../icons/light-mode";
 import { useLocation } from "@docusaurus/router";
 
 type MobileMenuModalProps = {
@@ -79,7 +73,6 @@ const Modal: FC<PropsWithChildren<MobileMenuModalProps>> = ({
               "flex-col",
             )}
           >
-            <TopAnnouncement />
             <div
               className={clsx(
                 "flex items-center justify-between",
@@ -87,10 +80,9 @@ const Modal: FC<PropsWithChildren<MobileMenuModalProps>> = ({
                 "landing-sm:px-8",
               )}
             >
-              <RefineLogoIcon
-                className="dark:text-gray-0 text-gray-900"
-                onContextMenu={openFigma}
-              />
+              <Link to="/" className="hover:no-underline">
+                <CoreSealLogo />
+              </Link>
               <button
                 type="button"
                 className={clsx(
@@ -173,8 +165,6 @@ const Tablet = (props: { className?: string }) => {
           </div>
         );
       })}
-      <ThemeToggle />
-      <Github id="tablet" />
     </div>
   );
 };
@@ -221,84 +211,6 @@ const Phone = (props: { className?: string }) => {
           );
         })}
       </div>
-      <ThemeToggle />
-      <Github id="phone" />
-    </div>
-  );
-};
-
-const Github = (props: { id?: string }) => {
-  return (
-    <Link to="https://github.com/refinedev/refine" className="no-underline">
-      <div
-        className={clsx(
-          "border-t dark:border-gray-700 border-gray-300",
-          "dark:bg-gray-800 bg-gray-100",
-          "flex items-center",
-          "p-4",
-        )}
-      >
-        <GithubStarIcon id={props?.id || ""} />
-        <div className={clsx("ml-4", "dark:text-gray-400 text-gray-600")}>
-          If you like Refine, don’t forget to star us on GitHub!
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-const ThemeToggle = () => {
-  const { colorMode, setColorMode } = useColorMode();
-
-  const toggle = () => {
-    setColorMode(colorMode === "dark" ? "light" : "dark");
-  };
-
-  const isDarkSelected = colorMode === "dark";
-  const isLightSelected = colorMode === "light";
-
-  return (
-    <div className={clsx("not-prose", "p-4", "flex items-center")}>
-      <div
-        className={clsx("text-sm", "mr-10", "dark:text-gray-400 text-gray-600")}
-      >
-        Apperance
-      </div>
-      <button
-        onClick={toggle}
-        className={clsx(
-          "mr-4",
-          "rounded-full",
-          "appearance-none",
-          "select-none",
-          "flex items-center gap-2",
-          "h-[40px] px-3",
-          "text-sm",
-          "border dark:border-gray-700 border-gray-200",
-          "text-gray-500",
-          isLightSelected && "bg-gray-50",
-        )}
-      >
-        <LightModeIcon />
-        Light
-      </button>
-      <button
-        onClick={toggle}
-        className={clsx(
-          "rounded-full",
-          "appearance-none",
-          "select-none",
-          "flex items-center gap-2",
-          "h-[40px] px-3",
-          "text-sm",
-          "border dark:border-gray-700 border-gray-200",
-          isDarkSelected ? "text-gray-400" : "text-gray-500",
-          isDarkSelected && "bg-gray-700",
-        )}
-      >
-        <DarkModeIcon />
-        Dark
-      </button>
     </div>
   );
 };

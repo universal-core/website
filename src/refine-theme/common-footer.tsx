@@ -27,7 +27,7 @@ export const CommonFooter = () => {
             // "mt-4 sm:mt-0",
           )}
         >
-          Refine © 2023
+          © 2026 UniversalCore · MIT
         </div>
 
         <div

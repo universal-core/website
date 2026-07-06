@@ -394,8 +394,6 @@ const TutorialSandpackBase = ({
     classes: options.classes,
   };
 
-  console.log(files as TemplateFiles<SandpackPredefinedTemplate>)
-
   return (
     <SandpackProvider
       key={`${template}-${colorMode}-${mounted}`}
@@ -450,7 +448,11 @@ const SandpackRightSide = ({
   const [resizing, setResizing] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const { previewOnly, hidePreview, showFiles = true } = sandpackProps ?? {};
+  // Live web preview removed: a Metin2 client/server platform has nothing to
+  // run in a browser. Keep the file tree + editor; drop the result iframe.
+  const { showFiles = true } = sandpackProps ?? {};
+  const hidePreview = true;
+  const previewOnly = false;
 
   React.useEffect(() => {
     const handleMouseUp = () => {
@@ -812,21 +814,22 @@ const SolveButton = ({ finalFiles }: { finalFiles: SandpackFiles }) => {
           "flex",
           "justify-center",
           "items-center",
+          "text-[13px] font-semibold",
+          "border border-solid",
           solved && [
-            "text-gray-800 dark:text-gray-100",
-            "bg-gray-300",
-            "hover:bg-gray-200",
-            "dark:bg-gray-600",
+            "text-gray-100",
+            "bg-gray-800 dark:bg-gray-800",
+            "border-gray-700",
+            "hover:bg-gray-700",
           ],
           !solved && [
-            "text-gray-100",
-            "bg-refine-react-light-link",
-            "dark:bg-refine-react-dark-link",
-            "hover:text-gray-0",
+            "text-[#1c1408]",
+            "bg-refine-purple dark:bg-refine-purple",
+            "border-refine-purple",
             "hover:brightness-110",
           ],
           "active:brightness-90",
-          "rounded-[32px]",
+          "rounded-[4px]",
           "group/solve-button",
           "w-full",
           "transition-[filter,color,background-color] duration-200 ease-in-out",

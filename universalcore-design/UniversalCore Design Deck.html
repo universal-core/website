@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UniversalCore — Documentation Design Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="ucd.css" />
+<style>
+  html, body { margin: 0; height: 100%; background: #f0eee9; }
+  #root { height: 100vh; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="logo.js"></script>
+<script src="snippets.js"></script>
+<script src="pages.js"></script>
+<script src="pages2.js"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+/* UniversalCore — design deck composition.
+   Single direction: FORGE (dark, engineered) recolored to violet + light blue.
+   Brand boards + the five page templates on the pan/zoom design canvas. */
+
+const { useState } = React;
+const L = window.UCLogo, P = window.UCP, S = window.SNIP, I = P.I;
+const GOLD = P.GOLD, FAINT = P.FAINT, BLUE = P.BLUE;
+const DIR = "b";                 // Forge only
+const PAGE_BG = "#0c0b09";
+const W = 1320;
+
+// Inject a finished page (HTML string) into the themed wrapper.
+function Page({ html }) {
+  return (
+    <div className="ucd ucd-b" style={{ minHeight: "100%" }}
+      dangerouslySetInnerHTML={{ __html: html }} />
+  );
+}
+
+/* ---------------- BRAND BOARDS ---------------- */
+function logoBoard() {
+  const g = GOLD.b, f = FAINT.b, b = BLUE.b;
+  const concept = (mark, name, note) => `
+    <div style="flex:1;border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--bg2)">
+      <div style="height:64px;display:grid;place-items:center">${mark}</div>
+      <div style="text-align:center"><div style="font-family:var(--font-display);color:var(--text);font-weight:600">${name}</div>
+      <div class="uc-mono" style="font-size:11px;color:var(--faint);margin-top:3px">${note}</div></div>
+    </div>`;
+  const sizeChip = (n) => `<div style="display:flex;flex-direction:column;align-items:center;gap:8px">${L.seal(n, g, f, b)}<span class="uc-mono" style="font-size:10px;color:var(--faint)">${n}px</span></div>`;
+
+  return `<div class="ucd ucd-b" style="min-height:100%;padding:34px;display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
+      <div>
+        <span class="uc-kicker">Identity</span>
+        <div style="font-family:var(--font-display);font-size:30px;color:var(--text);font-weight:600;margin-top:10px;letter-spacing:-0.6px">The Core Seal</div>
+        <p class="uc-p" style="font-size:14px;max-width:46ch;margin-top:8px">An octagon ward enclosing a diamond core — a nod to Metin2's rune &amp; seal vocabulary, built only from clean geometry. Violet ward, light-blue core.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;border:1px solid var(--gold-line);border-radius:var(--radius);background:var(--gold-soft);padding:22px 26px">
+        ${L.seal(72, g, f, b)}
+        <div><div style="font-family:var(--font-display);font-size:26px;color:var(--text);font-weight:600;letter-spacing:0.4px">Universal<span style="color:var(--gold)">Core</span></div>
+        <div class="uc-mono" style="font-size:11px;color:var(--faint);margin-top:4px">primary lockup</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px">
+      ${concept(L.seal(46, g, f, b), "Core Seal", "primary")}
+      ${concept(L.hex(46, g, f), "Hex Core", "app icon")}
+      ${concept(L.rune(46, g, f), "Rune Stack", "favicon")}
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:stretch">
+      <div style="flex:1;border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--bg2)">
+        <div class="uc-mono" style="font-size:11px;color:var(--faint);margin-bottom:16px;text-transform:uppercase;letter-spacing:1px">Scales cleanly</div>
+        <div style="display:flex;gap:24px;align-items:flex-end">${[16, 24, 32, 48].map(sizeChip).join("")}</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+        <div style="flex:1;background:#efeaf6;border-radius:var(--radius);display:flex;align-items:center;gap:12px;padding:0 22px">
+          ${L.seal(34, "#6a4bd0", "rgba(106,75,208,0.3)", "#2a8fc0")}<span style="font-family:'Space Grotesk',sans-serif;font-size:20px;color:#1a1626;font-weight:600">Universal<span style="color:#6a4bd0">Core</span></span>
+          <span class="uc-mono" style="font-size:10px;color:#8b85a0;margin-left:auto">on light</span>
+        </div>
+        <div style="flex:1;border:1px solid var(--line);border-radius:var(--radius);display:flex;align-items:center;gap:12px;padding:0 22px;background:var(--bg)">
+          ${L.seal(34, "#ece8df", "rgba(236,232,223,0.3)", "#ece8df")}<span style="font-family:'Space Grotesk',sans-serif;font-size:20px;color:var(--text);font-weight:600">UniversalCore</span>
+          <span class="uc-mono" style="font-size:10px;color:var(--faint);margin-left:auto">monochrome</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function systemBoard() {
+  const swatches = [
+    ["#0c0b09", "bg"], ["#121110", "surface"], ["#a78bf5", "violet"],
+    ["#c7b2ff", "violet·hi"], ["#5fc4ec", "blue"], ["#ece8df", "text"],
+  ];
+  const sw = (c, l) => `<div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:100%;height:42px;border-radius:var(--radius-sm);background:${c};border:1px solid var(--line)"></div><span class="uc-mono" style="font-size:9.5px;color:var(--faint)">${l}</span></div>`;
+
+  return `<div class="ucd ucd-b" style="min-height:100%;padding:30px;display:flex;flex-direction:column;gap:20px">
+    <div>
+      <span class="uc-kicker">Direction</span>
+      <div style="font-family:var(--font-display);font-size:30px;color:var(--text);font-weight:600;margin-top:10px;letter-spacing:-0.6px">Forge</div>
+      <p class="uc-p" style="font-size:13.5px;margin-top:6px;max-width:42ch">Dark, sharp and engineered. Grotesk display, monospace labels, terminal-style code. Violet leads; light blue answers.</p>
+    </div>
+
+    <div>
+      <div class="uc-mono" style="font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Palette</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">${swatches.map(([c, l]) => sw(c, l)).join("")}</div>
+    </div>
+
+    <div style="border-top:1px solid var(--line);padding-top:16px">
+      <div class="uc-mono" style="font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Type · Space Grotesk / Hanken / JetBrains Mono</div>
+      <div style="font-family:var(--font-display);font-size:34px;color:var(--text);font-weight:600;line-height:1.05;letter-spacing:-0.8px">Compose the client.</div>
+      <p class="uc-p" style="font-size:14px;margin-top:8px">Body copy in Hanken Grotesk keeps long reference pages calm and readable.</p>
+      <div style="display:flex;gap:8px;margin-top:12px"><span class="uc-badge">get_started</span><span class="uc-tag">reactive</span></div>
+    </div>
+
+    <div style="margin-top:auto">
+      ${S.block({ file: "<b>example</b>.html", lang: "UCHTML", body: S.firstPage() })}
+    </div>
+  </div>`;
+}
+
+/* ---------------- TEMPLATE SECTION ---------------- */
+function TemplateSection({ id, title, subtitle, builder, height }) {
+  return (
+    <DCSection id={id} title={title} subtitle={subtitle}>
+      <DCArtboard id="forge" label="Forge" width={W} height={height} style={{ background: PAGE_BG }}>
+        <Page html={builder(DIR)} />
+      </DCArtboard>
+    </DCSection>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas>
+      {/* BRAND */}
+      <DCSection id="brand" title="Identity & system"
+        subtitle="The UniversalCore mark and the Forge design language — dark, engineered, violet + light blue.">
+        <DCArtboard id="logo" label="Logo · concepts" width={760} height={600} style={{ background: PAGE_BG }}>
+          <div dangerouslySetInnerHTML={{ __html: logoBoard() }} style={{ minHeight: "100%" }} />
+        </DCArtboard>
+        <DCArtboard id="sys" label="Forge · tokens" width={520} height={700} style={{ background: PAGE_BG }}>
+          <div dangerouslySetInnerHTML={{ __html: systemBoard() }} style={{ minHeight: "100%" }} />
+        </DCArtboard>
+        <DCPostIt top={-6} right={-150} rotate={2} width={200}>
+          Forge: violet leads, light blue for tips &amp; "live" states. Code is a first-class element.
+        </DCPostIt>
+      </DCSection>
+
+      <TemplateSection id="landing" title="Landing page"
+        subtitle="Hero, feature grid, reactive-zone showcase, CTA." builder={P.landing} height={2440} />
+      <TemplateSection id="docs" title="Documentation article"
+        subtitle="Sidebar · content · on-this-page TOC. Code is a first-class element." builder={P.docs} height={1760} />
+      <TemplateSection id="blog-index" title="Blog index"
+        subtitle="Featured post, filter chips, responsive card grid." builder={P.blogIndex} height={1860} />
+      <TemplateSection id="blog-post" title="Blog post"
+        subtitle="Centered reading column with prose, code and callouts." builder={P.blogPost} height={2740} />
+      <TemplateSection id="tutorial" title="Interactive tutorial"
+        subtitle="Left: narrative with guided action buttons + Solve/Reset. Right: an editable virtual file system (file tree + editor) at the current step." builder={P.tutorial} height={852} />
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+</body>
+</html>

@@ -1,30 +1,36 @@
+/* UniversalCore "Forge" — dark-only neutral ramp (warm near-black).
+   Kept monotonic light(0) → dark(1000) so existing gray-* usage stays sane:
+   dark-mode text picks 0–400, surfaces/bg pick 700–1000.
+   Values are space-separated RGB triplets consumed by Tailwind as
+   rgb(var(--color-gray-N) / <alpha-value>). */
 :root {
-  --color-gray-0: 255 255 255;
-  --color-gray-50: 244 248 251;
-  --color-gray-100: 237 242 247;
-  --color-gray-200: 222 229 237;
-  --color-gray-300: 207 215 226;
-  --color-gray-400: 163 173 194;
-  --color-gray-500: 108 119 147;
-  --color-gray-600: 71 78 107;
-  --color-gray-700: 48 52 80;
-  --color-gray-800: 29 30 48;
-  --color-gray-900: 20 20 31;
-  --color-gray-1000: 0 0 0;
+  --color-gray-0: 236 232 223; /* #ece8df — brightest text */
+  --color-gray-50: 222 217 206;
+  --color-gray-100: 205 199 187;
+  --color-gray-200: 186 180 168;
+  --color-gray-300: 168 161 148;
+  --color-gray-400: 154 148 136; /* #9a9488 — muted */
+  --color-gray-500: 115 109 98; /* #736d62 — faint */
+  --color-gray-600: 74 70 64;
+  --color-gray-700: 26 24 22; /* #1a1816 — surface-2 / lines */
+  --color-gray-800: 18 17 16; /* #121110 — surface */
+  --color-gray-900: 12 11 9; /* #0c0b09 — page bg */
+  --color-gray-1000: 8 7 6;
 }
 
+/* Dark-only: docs/blog wrappers share the same Forge ramp. */
 html.blog-wrapper,
 html.docs-wrapper {
-  --color-gray-0: 255 255 255;
-  --color-gray-50: 246 247 249; /* mising */
-  --color-gray-100: 246 247 249;
-  --color-gray-200: 234 235 239;
-  --color-gray-300: 227 228 229;
-  --color-gray-400: 153 161 179;
-  --color-gray-500: 102 112 132;
-  --color-gray-600: 68 73 85;
-  --color-gray-700: 52 58 70;
-  --color-gray-800: 35 39 47;
-  --color-gray-900: 35 39 47; /* mising */
-  --color-gray-1000: 0 0 0;
+  --color-gray-0: 236 232 223;
+  --color-gray-50: 222 217 206;
+  --color-gray-100: 205 199 187;
+  --color-gray-200: 186 180 168;
+  --color-gray-300: 168 161 148;
+  --color-gray-400: 154 148 136;
+  --color-gray-500: 115 109 98;
+  --color-gray-600: 74 70 64;
+  --color-gray-700: 26 24 22;
+  --color-gray-800: 18 17 16;
+  --color-gray-900: 12 11 9;
+  --color-gray-1000: 8 7 6;
 }

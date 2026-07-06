@@ -36,30 +36,29 @@ const icons = {
 };
 
 const colorTextClasses = {
-  caution: "text-refine-react-light-orange dark:text-refine-react-dark-orange",
-  info: "text-refine-react-light-purple dark:text-refine-react-dark-purple",
-  tip: "text-refine-react-light-green-alt dark:text-refine-react-dark-green-alt",
-  note: "text-refine-react-light-green dark:text-refine-react-dark-green",
-  "info-tip": "text-refine-blue dark:text-[#6EB3F7]",
+  caution: "text-refine-react-dark-orange",
+  info: "text-refine-purple",
+  tip: "text-refine-blue",
+  note: "text-refine-purple",
+  "info-tip": "text-refine-blue",
   danger: "text-refine-red",
   "command-line": "text-refine-purple",
   sourcecode: "text-refine-pink",
-  additional: "text-refine-cyan",
+  additional: "text-refine-blue",
   simple: "text-gray-700 dark:text-gray-100",
 };
 
 const colorWrapperClasses = {
   caution:
-    "bg-refine-react-light-orange bg-opacity-[0.15] dark:bg-refine-react-dark-orange dark:bg-opacity-[0.15] border-l-refine-react-light-orange dark:border-l-refine-dark-orange",
-  info: "bg-refine-react-light-purple bg-opacity-[0.15] dark:bg-refine-react-dark-purple dark:bg-opacity-[0.15] border-l-refine-react-light-purple dark:border-l-refine-react-dark-purple",
-  tip: "bg-refine-react-light-green-alt bg-opacity-[0.05] dark:bg-refine-react-dark-green-alt dark:bg-opacity-[0.05] border-l-refine-react-light-green-alt dark:border-l-refine-react-dark-green-alt",
-  note: "bg-refine-react-light-green-bg dark:bg-refine-react-light-green dark:bg-opacity-[0.2] border-l-refine-react-light-green dark:border-l-refine-react-dark-green",
-  "info-tip":
-    "bg-refine-blue/10 dark:bg-[#6EB3F7]/10 bg-opacity-10  dark:bg-opacity-10 border-l-refine-blue",
-  "command-line": "bg-refine-purple bg-opacity-10 border-l-refine-purple",
-  danger: "bg-refine-red bg-opacity-10 border-l-refine-red",
-  sourcecode: "bg-refine-pink bg-opacity-10 border-l-refine-pink",
-  additional: "bg-refine-cyan bg-opacity-10 border-l-refine-cyan",
+    "bg-refine-react-dark-orange/10 border-l-refine-react-dark-orange",
+  info: "bg-refine-purple/10 border-l-refine-purple",
+  tip: "bg-refine-blue/10 border-l-refine-blue",
+  note: "bg-refine-purple/10 border-l-refine-purple",
+  "info-tip": "bg-refine-blue/10 border-l-refine-blue",
+  "command-line": "bg-refine-purple/10 border-l-refine-purple",
+  danger: "bg-refine-red/10 border-l-refine-red",
+  sourcecode: "bg-refine-pink/10 border-l-refine-pink",
+  additional: "bg-refine-blue/10 border-l-refine-blue",
   simple: "border dark:border-gray-700 border-gray-300",
 };
 
@@ -92,7 +91,7 @@ export const Admonition = ({ type, title, children }: Props) => {
   return (
     <div
       className={clsx(
-        "rounded-lg",
+        "rounded-[4px]",
         "admonition",
         `admonition-${type}`,
         "mb-6",
@@ -145,7 +144,7 @@ const Simple = ({ type, title, children }: Props) => {
   return (
     <div
       className={clsx(
-        "rounded-lg",
+        "rounded-[4px]",
         "admonition",
         `admonition-${type}`,
         "mb-6",

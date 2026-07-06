@@ -1,0 +1,125 @@
+/* ============================================================
+   UniversalCore — "Forge" foundation layer.
+   Loaded LAST in theme.customCss so it wins. Dark-only.
+   Defines --uc-* design tokens and repoints Infima + fonts so the
+   Forge palette/typography cascades across docs, blog and tutorial.
+   Component-level fidelity happens in the swizzled components.
+   ============================================================ */
+
+:root {
+  /* palette (see universalcore-design/ucd.css · .ucd-b) */
+  --uc-bg: #0c0b09;
+  --uc-bg2: #121110;
+  --uc-bg3: #1a1816;
+  --uc-bg-code: #0a0908;
+  --uc-text: #ece8df;
+  --uc-muted: #9a9488;
+  --uc-faint: #736d62;
+  --uc-line: rgba(255, 255, 255, 0.09);
+  --uc-line-strong: rgba(255, 255, 255, 0.16);
+
+  --uc-violet: #a78bf5;
+  --uc-violet2: #c7b2ff;
+  --uc-violet-soft: rgba(167, 139, 245, 0.13);
+  --uc-violet-line: rgba(167, 139, 245, 0.42);
+  --uc-blue: #5fc4ec; /* tips / "live" */
+  --uc-blue-soft: rgba(95, 196, 236, 0.13);
+  --uc-rose: #db7a5e; /* caution */
+
+  /* rgb triplets for Tailwind alpha-aware colors */
+  --uc-violet-rgb: 167 139 245;
+  --uc-violet2-rgb: 199 178 255;
+  --uc-blue-rgb: 95 196 236;
+
+  --uc-radius: 4px;
+  --uc-radius-sm: 3px;
+
+  --uc-font-display: "Space Grotesk", system-ui, sans-serif;
+  --uc-font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --uc-font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* ---- repoint the cascading Infima / theme vars ---- */
+  --primary-font-sans: "Hanken Grotesk";
+  --ifm-font-family-base: var(--uc-font-body);
+  --ifm-heading-font-family: var(--uc-font-display);
+  --ifm-font-family-monospace: var(--uc-font-mono);
+
+  --ifm-color-primary: #a78bf5;
+  --ifm-color-primary-dark: #9a78f3;
+  --ifm-color-primary-darker: #8f6cf2;
+  --ifm-color-primary-darkest: #7550ef;
+  --ifm-color-primary-light: #b49bf7;
+  --ifm-color-primary-lighter: #c1adf9;
+  --ifm-color-primary-lightest: #d4c6fb;
+
+  --ifm-background-color: var(--uc-bg);
+  --ifm-background-surface-color: var(--uc-bg2);
+  --ifm-font-color-base: var(--uc-text);
+  --ifm-heading-color: var(--uc-text);
+  --ifm-link-color: var(--uc-violet2);
+  --ifm-link-hover-color: var(--uc-violet);
+  --ifm-navbar-background-color: var(--uc-bg);
+  --ifm-toc-border-color: var(--uc-line);
+  --ifm-color-content-secondary: var(--uc-muted);
+  --docusaurus-highlighted-code-line-bg: rgba(167, 139, 245, 0.14);
+
+  --uc-radius-lg: 13px;
+}
+
+/* Force the Forge values in dark mode too (dark is the only mode). */
+[data-theme="dark"] {
+  --ifm-font-color-base: var(--uc-text);
+  --ifm-background-color: var(--uc-bg);
+  --ifm-background-surface-color: var(--uc-bg2);
+  --docusaurus-highlighted-code-line-bg: rgba(167, 139, 245, 0.16);
+  --tutorial-toc-bg-color: var(--uc-bg2);
+  --tutorial-toc-text-color: var(--uc-text);
+}
+
+/* ---- base treatments ---- */
+html,
+body {
+  background-color: var(--uc-bg);
+  color: var(--uc-text);
+  font-family: var(--uc-font-body);
+}
+
+/* subtle engineered grid — a Forge motif */
+body {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 47px,
+      rgba(255, 255, 255, 0.022) 47px 48px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 47px,
+      rgba(255, 255, 255, 0.022) 47px 48px
+    );
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  font-family: var(--uc-font-display);
+  letter-spacing: -0.4px;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--uc-font-mono);
+}
+
+::selection {
+  background: var(--uc-violet-soft);
+  color: var(--uc-text);
+}

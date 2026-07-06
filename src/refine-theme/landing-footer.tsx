@@ -1,11 +1,8 @@
 import clsx from "clsx";
 import React from "react";
-import { openFigma } from "../utils/open-figma";
 import { menuItems, secondaryMenuItems, socialLinks } from "./footer-data";
-import { HeartOutlinedIcon } from "./icons/heart-outlined";
 import Link from "@docusaurus/Link";
-import { RefineLogoSingleIcon } from "./icons/refine-logo-single";
-import { PHBadgeIcon } from "./icons/ph-badge";
+import { CoreSealLogo } from "./icons/core-seal";
 
 export type Props = {
   variant?: "landing" | "blog";
@@ -31,7 +28,7 @@ export const LandingFooter = ({ variant = "landing" }: Props) => {
           variant === "blog" && "text-refine-react-8 dark:text-refine-react-3",
         )}
       >
-        Refine Development Inc.
+        UniversalCore
       </div>
       <div
         className={clsx(
@@ -42,22 +39,8 @@ export const LandingFooter = ({ variant = "landing" }: Props) => {
           variant === "blog" && "text-refine-react-5 dark:text-refine-react-4",
         )}
       >
-        256 Chapman Road STE 105-4 Newark, DE 19702
+        An open, modular platform for building and shipping custom features.
       </div>
-      <a
-        href="mailto:info@refine.dev"
-        className={clsx(
-          "font-normal",
-          "text-sm",
-          "leading-5",
-          variant === "landing" && "text-gray-600 dark:text-gray-400",
-          variant === "blog" && "text-refine-react-5 dark:text-refine-react-4",
-          "hover:text-gray-800 dark:hover:text-gray-300",
-          "hover:no-underline",
-        )}
-      >
-        info@refine.dev
-      </a>
     </div>
   );
 
@@ -148,32 +131,9 @@ export const LandingFooter = ({ variant = "landing" }: Props) => {
               "justify-between",
             )}
           >
-            <Link
-              to="/"
-              onContextMenu={openFigma}
-              className={clsx(
-                "hover:no-underline",
-                "text-gray-900 dark:text-gray-0",
-              )}
-            >
-              <RefineLogoSingleIcon />
+            <Link to="/" className={clsx("hover:no-underline")}>
+              <CoreSealLogo />
             </Link>
-            <a
-              href="https://www.producthunt.com/posts/refine-3?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-refine&#0045;3"
-              target="_blank"
-              rel="noreferrer"
-              className={clsx("hover:no-underline")}
-            >
-              <PHBadgeIcon
-                className={clsx(
-                  variant === "landing" && "text-gray-900 dark:text-gray-0",
-                  variant === "blog" && "text-refine-react-5 dark:text-white",
-                  variant === "landing" && "fill-gray-100 dark:fill-gray-700",
-                  variant === "blog" &&
-                    "fill-refine-react-2 dark:fill-refine-react-7",
-                )}
-              />
-            </a>
           </div>
           <div
             className={clsx(
@@ -334,10 +294,7 @@ export const LandingFooter = ({ variant = "landing" }: Props) => {
               "font-normal",
             )}
           >
-            {"© 2024, Refine from San Francisco to wherever you're with "}
-            <HeartOutlinedIcon
-              className={clsx("ml-1", "text-refine-red", "inline", "leading-5")}
-            />
+            {"© 2026 UniversalCore · MIT"}
           </div>
         </div>
       </div>

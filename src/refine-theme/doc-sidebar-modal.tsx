@@ -1,15 +1,12 @@
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
+import Link from "@docusaurus/Link";
 import { CommonHomeButton } from "./common-home-button";
-import { CommonGithubStarButton } from "./common-github-star-button";
-import { RefineLogo } from "./common-refine-logo";
 import { CommonHamburgerIcon } from "./common-hamburger-icon";
 import { useSidebarItems } from "./doc-sidebar";
-import { DocVersionTabs } from "./doc-version-tabs";
-import { DocRefineLogo } from "./doc-refine-logo";
 import { DocVersionDropdown } from "./doc-version-dropdown";
-import { CommonThemeToggleAlt } from "./common-theme-toggle";
+import { CoreSealLogo } from "./icons/core-seal";
 
 type Props = {
   isOpen: boolean;
@@ -60,7 +57,9 @@ export const DocSidebarModal = ({ isOpen, onClose }: Props) => {
                     "flex items-center justify-between",
                   )}
                 >
-                  <DocRefineLogo />
+                  <Link to="/" className="hover:no-underline">
+                    <CoreSealLogo />
+                  </Link>
                   <div className={clsx("flex items-center gap-4")}>
                     <CommonHamburgerIcon onClick={onClose} active={true} />
                   </div>
@@ -123,25 +122,6 @@ export const DocSidebarModal = ({ isOpen, onClose }: Props) => {
                 <div className={clsx("flex", "flex-col", "gap-0")}>
                   <div
                     className={clsx(
-                      "flex items-center justify-start",
-                      "gap-10",
-                      "px-2",
-                      "py-4",
-                    )}
-                  >
-                    <span
-                      className={clsx(
-                        "text-sm",
-                        "text-gray-800",
-                        "dark:text-gray-100",
-                      )}
-                    >
-                      Appearance
-                    </span>
-                    <CommonThemeToggleAlt />
-                  </div>
-                  <div
-                    className={clsx(
                       "border-t",
                       "border-t-gray-300 dark:border-t-gray-700",
                       "px-4",
@@ -152,7 +132,6 @@ export const DocSidebarModal = ({ isOpen, onClose }: Props) => {
                     )}
                   >
                     <CommonHomeButton />
-                    <CommonGithubStarButton />
                   </div>
                 </div>
               </Dialog.Panel>
