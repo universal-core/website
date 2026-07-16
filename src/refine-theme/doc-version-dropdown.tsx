@@ -32,6 +32,12 @@ export const DocVersionDropdown = ({ className, wrapperClassName }: Props) => {
   const docContext = useActiveDocContext();
   const { links } = useVersionLinks();
 
+  // No active version (e.g. the tutorial docs instance is unversioned) — render
+  // nothing rather than crashing on activeVersion.label.
+  if (!docContext?.activeVersion) {
+    return null;
+  }
+
   return (
     <div className={wrapperClassName}>
       <Menu>

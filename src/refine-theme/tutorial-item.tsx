@@ -5,7 +5,7 @@ import DocItemMetadata from "@theme/DocItem/Metadata";
 import TutorialItemLayout from "@theme/TutorialItem/Layout";
 
 import { TutorialHeader } from "./tutorial-header";
-import { TutorialFooter } from "./tutorial-footer";
+import { CommonFooter } from "./common-footer";
 
 export const TutorialItem = (props) => {
   const MDXComponent = props.content;
@@ -26,7 +26,7 @@ export const TutorialItem = (props) => {
           <MDXComponent />
         </TutorialItemLayout>
       </div>
-      <TutorialFooter />
+      <CommonFooter />
     </DocProvider>
   );
 };

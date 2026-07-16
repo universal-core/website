@@ -8,10 +8,13 @@ import { DocSidebarModal } from "./doc-sidebar-modal";
 import { DocVersionDropdown } from "./doc-version-dropdown";
 import { CoreSealLogo } from "./icons/core-seal";
 import { Menu } from "./common-header/menu";
+import { MobileMenuModal } from "./common-header/mobile-menu-modal";
 
 export const HEADER_HEIGHT = 65;
 
-const Desktop = () => {
+type Variant = "docs" | "tutorial";
+
+const Desktop = ({ variant }: { variant: Variant }) => {
   return (
     <div className={clsx("w-full", "hidden lg:flex items-center gap-6", "mx-auto")}>
       <Link
@@ -22,22 +25,24 @@ const Desktop = () => {
         <CoreSealLogo />
       </Link>
 
+      <div className="flex-1" />
+
+      {/* Nav on the right, matching the tutorial header. */}
       <nav className={clsx("hidden lg:flex items-center gap-1")}>
         <Menu variant="landing" />
       </nav>
 
-      <div className="flex-1" />
-
       <div className={clsx("flex items-center gap-3")}>
         <SearchBar />
-        <DocVersionDropdown />
+        {/* Version dropdown only makes sense on the versioned docs instance. */}
+        {variant === "docs" && <DocVersionDropdown />}
       </div>
     </div>
   );
 };
 
-export const Mobile = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+const Mobile = ({ variant }: { variant: Variant }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div
@@ -56,19 +61,22 @@ export const Mobile = () => {
           })}
         />
         <CommonHamburgerIcon
-          onClick={() => setIsSidebarOpen(true)}
-          active={isSidebarOpen}
+          onClick={() => setIsOpen(true)}
+          active={isOpen}
         />
       </div>
-      <DocSidebarModal
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
+      {/* Tutorial has no docs sidebar → use the standard nav menu instead of
+          DocSidebarModal (which calls useDocsSidebar and would throw). */}
+      {variant === "tutorial" ? (
+        <MobileMenuModal isModalOpen={isOpen} setIsModalOpen={setIsOpen} />
+      ) : (
+        <DocSidebarModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      )}
     </div>
   );
 };
 
-export const DocHeader = () => {
+export const DocHeader = ({ variant = "docs" }: { variant?: Variant }) => {
   return (
     <div
       className={clsx(
@@ -82,8 +90,8 @@ export const DocHeader = () => {
         "border-b border-gray-300 dark:border-gray-700",
       )}
     >
-      <Desktop />
-      <Mobile />
+      <Desktop variant={variant} />
+      <Mobile variant={variant} />
     </div>
   );
 };

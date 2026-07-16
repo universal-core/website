@@ -10,7 +10,7 @@ export const TutorialFooter = () => {
         "hidden tutorial-md:block",
         "py-4",
         "px-4",
-        "dark:bg-gray-800 bg-gray-0",
+        "dark:bg-gray-900 bg-gray-0",
         "border-t dark:border-t-gray-700 border-t-gray-300",
       )}
     >
@@ -29,7 +29,7 @@ export const TutorialFooter = () => {
             // "mt-4 sm:mt-0",
           )}
         >
-          Refine © {new Date().getFullYear()}
+          © {new Date().getFullYear()} UniversalCore · MIT
         </div>
 
         <div
@@ -50,7 +50,7 @@ export const TutorialFooter = () => {
               "dark:hover:text-refine-link-dark",
             )}
           >
-            Refine Home
+            Home
           </Link>
           <Link
             to="/docs"

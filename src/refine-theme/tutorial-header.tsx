@@ -8,6 +8,7 @@ import { DocSearchButton } from "./doc-search-button";
 import { TutorialNavigation } from "./tutorial-navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { CoreSealLogo } from "./icons/core-seal";
+import { Menu } from "./common-header/menu";
 
 import Link from "@docusaurus/Link";
 
@@ -164,6 +165,14 @@ const Header = () => {
           "gap-2",
         )}
       >
+        <nav
+          className={clsx(
+            "hidden tutorial-lg:flex items-center gap-1",
+            "mr-2",
+          )}
+        >
+          <Menu variant="landing" />
+        </nav>
         <div
           className={clsx("hidden tutorial-md:flex items-center justify-start")}
         >

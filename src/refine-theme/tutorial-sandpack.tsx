@@ -145,6 +145,7 @@ export const TutorialSandpack = ({
             width: contentOnly
               ? "100%"
               : `calc(${contentPercentage}% - (0.625rem / 2))`,
+            height: "inherit",
           }}
         >
           <div
