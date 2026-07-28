@@ -55,7 +55,7 @@ export const TOCItem = ({
           "bg-refine-blue-2-light dark:bg-refine-blue-2 dark:bg-opacity-10",
         activeId === id &&
           "text-refine-react-light-link dark:text-refine-react-dark-link",
-        activeId !== id && "text-refine-600 dark:text-refine-300",
+        activeId !== id && "text-gray-600 dark:text-gray-300",
         activeId !== id && "hover:bg-gray-100 dark:hover:bg-gray-700",
         activeId !== id && "hover:text-gray-600 dark:hover:text-gray-300",
         "rounded-[18px]",

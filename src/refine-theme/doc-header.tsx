@@ -29,7 +29,7 @@ const Desktop = ({ variant }: { variant: Variant }) => {
 
       {/* Nav on the right, matching the tutorial header. */}
       <nav className={clsx("hidden lg:flex items-center gap-1")}>
-        <Menu variant="landing" />
+        <Menu variant="landing" align="right" />
       </nav>
 
       <div className={clsx("flex items-center gap-3")}>

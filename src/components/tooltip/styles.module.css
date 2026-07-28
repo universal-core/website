@@ -2,6 +2,10 @@
     --ifm-background-color: #fff;
 }
 
+[data-theme="dark"] {
+    --ifm-background-color: #121110;
+}
+
 .tooltip {
     z-index: var(--ifm-z-index-overlay);
     @apply relative flex flex-col items-center;

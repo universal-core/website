@@ -9,10 +9,12 @@ import type { NavbarPopoverItemType } from "./constants";
 type NavbarPopoverItemProps = {
   item: NavbarPopoverItemType;
   variant?: "landing" | "blog";
+  align?: "left" | "right";
 };
 
 export const NavbarPopoverItem: React.FC<NavbarPopoverItemProps> = ({
   item,
+  align = "left",
   children,
 }) => {
   const [isShowing, setIsShowing] = useState(false);
@@ -73,7 +75,13 @@ export const NavbarPopoverItem: React.FC<NavbarPopoverItemProps> = ({
           >
             <Popover.Panel
               static
-              className={clsx("absolute", "z-50", "left-0", "top-full", "pt-3")}
+              className={clsx(
+                "absolute",
+                "z-50",
+                align === "right" ? "right-0" : "left-0",
+                "top-full",
+                "pt-3",
+              )}
             >
               <div
                 className={clsx(

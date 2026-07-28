@@ -237,7 +237,7 @@ export const TutorialSandpack = ({
               mobileVisiblePanel === "tutorial" && [
                 "text-gray-800 dark:text-gray-100",
                 "bg-gray-0 dark:bg-gray-600",
-                "shadow-[0px_1px_0px_0px_#E3E4E5] dark:shadow-[0px_-1px_0px_0px_#667084]",
+                "shadow-[0px_1px_0px_0px_#dedede] dark:shadow-[0px_-1px_0px_0px_#4a4640]",
               ],
               "transition-colors",
               "ease-in-out",
@@ -263,7 +263,7 @@ export const TutorialSandpack = ({
               mobileVisiblePanel === "editor" && [
                 "text-gray-800 dark:text-gray-100",
                 "bg-gray-0 dark:bg-gray-600",
-                "shadow-[0px_1px_0px_0px_#E3E4E5] dark:shadow-[0px_-1px_0px_0px_#667084]",
+                "shadow-[0px_1px_0px_0px_#dedede] dark:shadow-[0px_-1px_0px_0px_#4a4640]",
               ],
               "transition-colors",
               "ease-in-out",

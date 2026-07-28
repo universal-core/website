@@ -8,9 +8,10 @@ import { NavbarPopoverItem } from "./navbar-popover-item";
 
 type Props = {
   variant?: "landing" | "blog";
+  align?: "left" | "right";
 };
 
-export const Menu: React.FC<Props> = ({ variant = "landing" }) => {
+export const Menu: React.FC<Props> = ({ variant = "landing", align = "left" }) => {
   return (
     <>
       {MENU_ITEMS.map((item) => {
@@ -20,6 +21,7 @@ export const Menu: React.FC<Props> = ({ variant = "landing" }) => {
               key={`navbar-${item.label}`}
               item={item}
               variant={variant}
+              align={align}
             >
               <div
                 className={clsx(

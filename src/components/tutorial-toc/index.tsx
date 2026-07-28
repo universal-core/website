@@ -148,7 +148,7 @@ const TocLink: React.FC<TocLinkProps> = ({ item, activeId, setActiveId }) => {
       // biome-ignore lint/security/noDangerouslySetInnerHtml: explicitly disabled
       dangerouslySetInnerHTML={{ __html: item.value }}
       className={clsx(
-        "text-gray-800 dark:text-gray-0 hover:!text-refine-link active:!text-refine-link dark:hover:!text-refine-link-dark dark:active:!text-refine-link-dark",
+        "text-gray-800 dark:text-gray-0 hover:!text-refine-purple active:!text-refine-purple dark:hover:!text-refine-link-dark dark:active:!text-refine-link-dark",
         activeId === item.id &&
           "!text-refine-link-light dark:!text-refine-link-dark",
       )}

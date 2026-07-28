@@ -96,7 +96,7 @@ export const DocThumbsUpDownFeedbackWidget = (
           "gap-5",
           "w-max h-[40px]",
           "pt-1 pr-1 pb-1 pl-4",
-          "bg-[#99A1B31A] dark:bg-[#2F333C]",
+          "bg-gray-100 dark:bg-gray-800",
           "rounded-[28px]",
           "transition-all duration-300 ease-in-out",
           !isPopoverVisible && "opacity-0",
@@ -107,7 +107,7 @@ export const DocThumbsUpDownFeedbackWidget = (
           className={clsx(
             "text-xs",
             "whitespace-nowrap",
-            "text-[#23272F] dark:text-[#E3E4E5]",
+            "text-gray-900 dark:text-gray-100",
           )}
         >
           Was this helpful?
@@ -177,8 +177,8 @@ export const DocThumbsUpDownFeedbackWidget = (
                 value={feedbackText}
                 className={clsx(
                   "w-full",
-                  "bg-white dark:bg-[#343A46]",
-                  "text-[#23272F] dark:text-[#E3E4E5]",
+                  "bg-white dark:bg-gray-700",
+                  "text-gray-900 dark:text-gray-100",
                   "resize-none",
                   "rounded-xl",
                   "text-xs",
@@ -287,8 +287,8 @@ const FeedbackTextPopover = (
             {...getFloatingProps()}
             className={clsx(
               "w-[320px]",
-              "bg-[#EAEBEF] dark:bg-refine-react-dark-code",
-              "border border-[#E3E4E5] dark:border-[#343A46]",
+              "bg-gray-100 dark:bg-refine-react-dark-code",
+              "border border-gray-300 dark:border-gray-700",
               "rounded-[20px]",
               "relative",
             )}
@@ -327,7 +327,7 @@ const PopoverPointer = (props: SVGProps<SVGSVGElement>) => {
     >
       <title>Popover Pointer</title>
       <path
-        fill={isDarkTheme ? "#16181D" : "#EAEBEF"}
+        fill={isDarkTheme ? "#0a0908" : "#f4f8fb"}
         stroke="url(#a)"
         d="M18.303 2.077C18.892 1.105 19.9.5 21 .5s2.108.605 2.697 1.577l3.026 4.992c.928 1.532 2.476 2.431 4.11 2.431H41.5v8H.5v-8h10.667c1.634 0 3.182-.899 4.11-2.431l3.026-4.992Z"
       />
@@ -340,10 +340,10 @@ const PopoverPointer = (props: SVGProps<SVGSVGElement>) => {
           y2={16}
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset={0.59} stopColor={isDarkTheme ? "#343A46" : "#E3E4E5"} />
+          <stop offset={0.59} stopColor={isDarkTheme ? "#1a1816" : "#dedede"} />
           <stop
             offset={0.602}
-            stopColor={isDarkTheme ? "#343A46" : "#E3E4E5"}
+            stopColor={isDarkTheme ? "#1a1816" : "#dedede"}
             stopOpacity={0}
           />
         </linearGradient>

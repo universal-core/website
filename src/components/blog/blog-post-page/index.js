@@ -118,14 +118,14 @@ export const BlogPostPageView = ({ children }) => {
         <div className="mt-6 blog-lg:mt-10 mb-6 text-sm">
           <div
             className={clsx(
-              "flex items-center gap-2 text-refine-reac-5 dark:text-refine-react-4 not-prose",
+              "flex items-center gap-2 text-refine-react-5 dark:text-refine-react-4 not-prose",
               "ml-4 blog-md:ml-0",
             )}
           >
             <Date date={date} formattedDate={formattedDate} />
             {typeof readingTime !== "undefined" && (
               <>
-                <span className="w-[4px] h-[4px] rounded-full bg-refine-reac-5 dark:bg-refine-react-4 " />
+                <span className="w-[4px] h-[4px] rounded-full bg-refine-react-5 dark:bg-refine-react-4 " />
                 <ReadingTime readingTime={readingTime} />
               </>
             )}

@@ -93,7 +93,7 @@ const DrawerComponent: FC<PropsWithChildren<Props>> = ({
           variant === "templates" && "bg-gray-0 dark:bg-gray-900 ",
           variant === "blog" && "bg-white dark:bg-refine-react-7",
           "border-l dark:border-gray-800",
-          "dark:shadow-[0_0_72px_24px_#14141F]",
+          "dark:shadow-[0_0_72px_24px_#0c0b09]",
           "shadow-[0_0_72px_24px_rgba(20, 20, 31, 0.50)]",
         )}
         show={open}

@@ -171,7 +171,7 @@ const Header = () => {
             "mr-2",
           )}
         >
-          <Menu variant="landing" />
+          <Menu variant="landing" align="right" />
         </nav>
         <div
           className={clsx("hidden tutorial-md:flex items-center justify-start")}

@@ -37,7 +37,7 @@ export const TutorialCircle: React.FC<Props> = ({
   const strokeWidth = 6;
   const standardOffsetLength = 20;
   const emptyColor = "#6C7793";
-  const completedColor = "#48bb78";
+  const completedColor = "#a78bf5";
 
   const parts = tutorialCheckStatuses.length;
 

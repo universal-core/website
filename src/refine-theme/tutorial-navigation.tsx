@@ -53,7 +53,7 @@ const NavigationCheckFilled = (props: React.SVGProps<SVGSVGElement>) => (
     viewBox="0 0 24 24"
     fill="none"
     {...props}
-    className={clsx(props.className, "fill-refine-tutorial-green")}
+    className={clsx(props.className, "fill-refine-purple")}
   >
     <rect width={16} height={16} x={4} y={4} fill="currentFill" rx={8} />
     <path
