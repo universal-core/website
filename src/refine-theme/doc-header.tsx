@@ -3,9 +3,7 @@ import clsx from "clsx";
 import Link from "@docusaurus/Link";
 import React, { useState } from "react";
 import { CommonHamburgerIcon } from "./common-hamburger-icon";
-import { DocSearchButton } from "./doc-search-button";
 import { DocSidebarModal } from "./doc-sidebar-modal";
-import { DocVersionDropdown } from "./doc-version-dropdown";
 import { CoreSealLogo } from "./icons/core-seal";
 import { Menu } from "./common-header/menu";
 import { MobileMenuModal } from "./common-header/mobile-menu-modal";
@@ -34,8 +32,6 @@ const Desktop = ({ variant }: { variant: Variant }) => {
 
       <div className={clsx("flex items-center gap-3")}>
         <SearchBar />
-        {/* Version dropdown only makes sense on the versioned docs instance. */}
-        {variant === "docs" && <DocVersionDropdown />}
       </div>
     </div>
   );
@@ -52,14 +48,7 @@ const Mobile = ({ variant }: { variant: Variant }) => {
         <CoreSealLogo />
       </Link>
       <div className={clsx("flex items-center gap-4")}>
-        <SearchBar
-          CustomButton={React.forwardRef<
-            HTMLButtonElement,
-            React.PropsWithChildren<{}>
-          >(function CustomButton(props, ref) {
-            return <DocSearchButton ref={ref} {...props} iconOnly />;
-          })}
-        />
+        <SearchBar />
         <CommonHamburgerIcon
           onClick={() => setIsOpen(true)}
           active={isOpen}

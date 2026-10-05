@@ -87,6 +87,24 @@ const siteConfig = {
       },
     ],
   ],
+  themes: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        language: ["en"],
+        indexDocs: true,
+        docsDir: ["docs", "manifesto", "tutorials"],
+        docsRouteBasePath: ["docs", "manifesto", "tutorials"],
+        indexBlog: true,
+        blogDir: "blog",
+        blogRouteBasePath: "blog",
+        indexPages: false,
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
   plugins: [
     async function tailwindcss() {
       return {

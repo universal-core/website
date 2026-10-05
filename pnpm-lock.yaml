@@ -31,13 +31,13 @@ importers:
         version: 3.6.0(@algolia/client-search@4.23.3)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.13.0)
       '@docusaurus/core':
         specifier: 2.4.0
-        version: 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+        version: 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-client-redirects':
         specifier: 2.4.0
         version: 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-content-docs':
         specifier: 2.4.0
-        version: 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+        version: 2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/preset-classic':
         specifier: 2.4.0
         version: 2.4.0(@algolia/client-search@4.23.3)(@swc/core@1.5.5)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.13.0)(typescript@5.4.5)
@@ -53,6 +53,9 @@ importers:
       '@docusaurus/utils-common':
         specifier: 2.4.0
         version: 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
+      '@easyops-cn/docusaurus-search-local':
+        specifier: 0.40.1
+        version: 0.40.1(@docusaurus/theme-common@2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5))(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@floating-ui/react':
         specifier: ^0.26.9
         version: 0.26.13(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -1201,6 +1204,26 @@ packages:
       '@docusaurus/types':
         optional: true
 
+  '@easyops-cn/autocomplete.js@0.38.1':
+    resolution: {integrity: sha512-drg76jS6syilOUmVNkyo1c7ZEBPcPuK+aJA7AksM5ZIIbV57DMHCywiCr+uHyv8BE5jUTU98j/H7gVrkHrWW3Q==}
+
+  '@easyops-cn/docusaurus-search-local@0.40.1':
+    resolution: {integrity: sha512-4HMFZMpKKdd5qq1nFB8cvrAkgzZ1kNxphVciI64YHtmDYGIthVGZVG6+Ci7AAhzCR+ixLJkYwtVekvuMLjr2ZQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@docusaurus/theme-common': ^2 || ^3
+      react: ^16.14.0 || ^17 || ^18
+      react-dom: ^16.14.0 || 17 || ^18
+
+  '@emnapi/core@1.11.3':
+    resolution: {integrity: sha512-zLpS5asjEb7lq8jYLq37N6XKaE41DIexlY1rF/z4/tIl3wo13Sqm28fRyfIsKZD+NZ8mM5RoKkpW/rBcuoSZSg==}
+
+  '@emnapi/runtime@1.11.3':
+    resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
+
+  '@emnapi/wasi-threads@1.2.3':
+    resolution: {integrity: sha512-ELEBe8PsLvvJ6QMr0zLt8ffvOHW/dc1m3CEzNMg7aJUv3bMaoDtw2TXyDAwkYBuroxxuHEwhRTLJSe5sya547g==}
+
   '@emotion/is-prop-valid@0.8.8':
     resolution: {integrity: sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==}
 
@@ -1392,6 +1415,96 @@ packages:
 
   '@motionone/utils@10.17.0':
     resolution: {integrity: sha512-bGwrki4896apMWIj9yp5rAS2m0xyhxblg6gTB/leWDPt+pb410W8lYWsxyurX+DH+gO1zsQsfx2su/c1/LtTpg==}
+
+  '@napi-rs/wasm-runtime@0.2.12':
+    resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
+
+  '@node-rs/jieba-android-arm-eabi@1.10.4':
+    resolution: {integrity: sha512-MhyvW5N3Fwcp385d0rxbCWH42kqDBatQTyP8XbnYbju2+0BO/eTeCCLYj7Agws4pwxn2LtdldXRSKavT7WdzNA==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  '@node-rs/jieba-android-arm64@1.10.4':
+    resolution: {integrity: sha512-XyDwq5+rQ+Tk55A+FGi6PtJbzf974oqnpyCcCPzwU3QVXJCa2Rr4Lci+fx8oOpU4plT3GuD+chXMYLsXipMgJA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@node-rs/jieba-darwin-arm64@1.10.4':
+    resolution: {integrity: sha512-G++RYEJ2jo0rxF9626KUy90wp06TRUjAsvY/BrIzEOX/ingQYV/HjwQzNPRR1P1o32a6/U8RGo7zEBhfdybL6w==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@node-rs/jieba-darwin-x64@1.10.4':
+    resolution: {integrity: sha512-MmDNeOb2TXIZCPyWCi2upQnZpPjAxw5ZGEj6R8kNsPXVFALHIKMa6ZZ15LCOkSTsKXVC17j2t4h+hSuyYb6qfQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@node-rs/jieba-freebsd-x64@1.10.4':
+    resolution: {integrity: sha512-/x7aVQ8nqUWhpXU92RZqd333cq639i/olNpd9Z5hdlyyV5/B65LLy+Je2B2bfs62PVVm5QXRpeBcZqaHelp/bg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@node-rs/jieba-linux-arm-gnueabihf@1.10.4':
+    resolution: {integrity: sha512-crd2M35oJBRLkoESs0O6QO3BBbhpv+tqXuKsqhIG94B1d02RVxtRIvSDwO33QurxqSdvN9IeSnVpHbDGkuXm3g==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@node-rs/jieba-linux-arm64-gnu@1.10.4':
+    resolution: {integrity: sha512-omIzNX1psUzPcsdnUhGU6oHeOaTCuCjUgOA/v/DGkvWC1jLcnfXe4vdYbtXMh4XOCuIgS1UCcvZEc8vQLXFbXQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@node-rs/jieba-linux-arm64-musl@1.10.4':
+    resolution: {integrity: sha512-Y/tiJ1+HeS5nnmLbZOE+66LbsPOHZ/PUckAYVeLlQfpygLEpLYdlh0aPpS5uiaWMjAXYZYdFkpZHhxDmSLpwpw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@node-rs/jieba-linux-x64-gnu@1.10.4':
+    resolution: {integrity: sha512-WZO8ykRJpWGE9MHuZpy1lu3nJluPoeB+fIJJn5CWZ9YTVhNDWoCF4i/7nxz1ntulINYGQ8VVuCU9LD86Mek97g==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@node-rs/jieba-linux-x64-musl@1.10.4':
+    resolution: {integrity: sha512-uBBD4S1rGKcgCyAk6VCKatEVQb6EDD5I40v/DxODi5CuZVCANi9m5oee/MQbAoaX7RydA2f0OSCE9/tcwXEwUg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@node-rs/jieba-wasm32-wasi@1.10.4':
+    resolution: {integrity: sha512-Y2umiKHjuIJy0uulNDz9SDYHdfq5Hmy7jY5nORO99B4pySKkcrMjpeVrmWXJLIsEKLJwcCXHxz8tjwU5/uhz0A==}
+    engines: {node: '>=14.0.0'}
+    cpu: [wasm32]
+
+  '@node-rs/jieba-win32-arm64-msvc@1.10.4':
+    resolution: {integrity: sha512-nwMtViFm4hjqhz1it/juQnxpXgqlGltCuWJ02bw70YUDMDlbyTy3grCJPpQQpueeETcALUnTxda8pZuVrLRcBA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@node-rs/jieba-win32-ia32-msvc@1.10.4':
+    resolution: {integrity: sha512-DCAvLx7Z+W4z5oKS+7vUowAJr0uw9JBw8x1Y23Xs/xMA4Em+OOSiaF5/tCJqZUCJ8uC4QeImmgDFiBqGNwxlyA==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@node-rs/jieba-win32-x64-msvc@1.10.4':
+    resolution: {integrity: sha512-+sqemSfS1jjb+Tt7InNbNzrRh1Ua3vProVvC4BZRPg010/leCbGFFiQHpzcPRfpxAXZrzG5Y0YBTsPzN/I4yHQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@node-rs/jieba@1.10.4':
+    resolution: {integrity: sha512-GvDgi8MnBiyWd6tksojej8anIx18244NmIOc1ovEw8WKNUejcccLfyu8vj66LWSuoZuKILVtNsOy4jvg3aoxIw==}
+    engines: {node: '>= 10'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1661,6 +1774,9 @@ packages:
 
   '@tsconfig/docusaurus@1.0.7':
     resolution: {integrity: sha512-ffTXxGIP/IRMCjuzHd6M4/HdIrw1bMfC7Bv8hMkTadnePkpe0lG0oDSdbRpSDZb2rQMAgpbWiR10BvxvNYwYrg==}
+
+  '@tybys/wasm-util@0.10.4':
+    resolution: {integrity: sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A==}
 
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
@@ -3518,6 +3634,9 @@ packages:
     engines: {node: '>=16.x'}
     hasBin: true
 
+  immediate@3.3.0:
+    resolution: {integrity: sha512-HR7EVodfFUdQCTIeySw+WDRFJlPcLOJbXfwwZ7Oom6tjsvZ3bOkCDJHehQC3nxJrv7+f9XecwazynjU8e4Vw3Q==}
+
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
 
@@ -4044,6 +4163,9 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
+  klaw-sync@6.0.0:
+    resolution: {integrity: sha512-nIeuVSzdCCs6TDPTqI8w1Yre34sSq7AkZ4B3sfOBbI2CgVSB4Du4aLQijFU2+lhAFCwt9+42Hel6lQNIv6AntQ==}
+
   kleur@3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
@@ -4161,6 +4283,12 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  lunr-languages@1.22.0:
+    resolution: {integrity: sha512-zNog8491aJ5Fl4WGe+aiMcc851d7d5s31nuDjfR0qv5zoVFSBB8/nq/WLMP9Xrtx+UeLX7jDvKFEmus4V5aKZA==}
+
+  lunr@2.3.9:
+    resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
+
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
@@ -4182,6 +4310,9 @@ packages:
 
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
+
+  mark.js@8.11.1:
+    resolution: {integrity: sha512-1I+1qpDt4idfgLQG+BNWmrqku+7/2bi5nLf4YwF8y8zXvmfiTBY3PV3ZibfrjBueCByROpuBjLLFCajqkgYoLQ==}
 
   markdown-escapes@1.0.4:
     resolution: {integrity: sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==}
@@ -7483,7 +7614,7 @@ snapshots:
     transitivePeerDependencies:
       - '@algolia/client-search'
 
-  '@docusaurus/core@2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
+  '@docusaurus/core@2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
       '@babel/core': 7.24.5
       '@babel/generator': 7.24.5
@@ -7552,10 +7683,10 @@ snapshots:
       tslib: 2.6.2
       update-notifier: 5.1.0
       url-loader: 4.1.1(file-loader@6.2.0(webpack@5.91.0(@swc/core@1.5.5)))(webpack@5.91.0(@swc/core@1.5.5))
-      wait-on: 6.0.1
+      wait-on: 6.0.1(debug@4.3.4)
       webpack: 5.91.0(@swc/core@1.5.5)
       webpack-bundle-analyzer: 4.10.2
-      webpack-dev-server: 4.15.2(webpack@5.91.0(@swc/core@1.5.5))
+      webpack-dev-server: 4.15.2(debug@4.3.4)(webpack@5.91.0(@swc/core@1.5.5))
       webpack-merge: 5.10.0
       webpackbar: 5.0.2(webpack@5.91.0(@swc/core@1.5.5))
     transitivePeerDependencies:
@@ -7638,7 +7769,7 @@ snapshots:
 
   '@docusaurus/plugin-client-redirects@2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/logger': 2.4.0
       '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
       '@docusaurus/utils-common': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
@@ -7670,7 +7801,7 @@ snapshots:
 
   '@docusaurus/plugin-content-blog@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/logger': 2.4.0
       '@docusaurus/mdx-loader': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -7706,9 +7837,9 @@ snapshots:
       - vue-template-compiler
       - webpack-cli
 
-  '@docusaurus/plugin-content-docs@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
+  '@docusaurus/plugin-content-docs@2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/logger': 2.4.0
       '@docusaurus/mdx-loader': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/module-type-aliases': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -7746,7 +7877,7 @@ snapshots:
 
   '@docusaurus/plugin-content-pages@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/mdx-loader': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
@@ -7776,7 +7907,7 @@ snapshots:
 
   '@docusaurus/plugin-debug@2.4.0(@swc/core@1.5.5)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
       fs-extra: 10.1.0
@@ -7806,7 +7937,7 @@ snapshots:
 
   '@docusaurus/plugin-google-analytics@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/utils-validation': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
       react: 17.0.2
@@ -7832,7 +7963,7 @@ snapshots:
 
   '@docusaurus/plugin-google-gtag@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/utils-validation': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
       react: 17.0.2
@@ -7858,7 +7989,7 @@ snapshots:
 
   '@docusaurus/plugin-google-tag-manager@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/utils-validation': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
       react: 17.0.2
@@ -7884,7 +8015,7 @@ snapshots:
 
   '@docusaurus/plugin-sitemap@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/logger': 2.4.0
       '@docusaurus/types': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
@@ -7915,9 +8046,9 @@ snapshots:
 
   '@docusaurus/preset-classic@2.4.0(@algolia/client-search@4.23.3)(@swc/core@1.5.5)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.13.0)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-content-blog': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
-      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-content-pages': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-debug': 2.4.0(@swc/core@1.5.5)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-google-analytics': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
@@ -7960,11 +8091,11 @@ snapshots:
 
   '@docusaurus/theme-classic@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/mdx-loader': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/module-type-aliases': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/plugin-content-blog': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
-      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-content-pages': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/theme-common': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/theme-translations': 2.4.0
@@ -8010,7 +8141,7 @@ snapshots:
       '@docusaurus/mdx-loader': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/module-type-aliases': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       '@docusaurus/plugin-content-blog': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
-      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/plugin-content-pages': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
       '@docusaurus/utils-common': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
@@ -8047,9 +8178,9 @@ snapshots:
   '@docusaurus/theme-search-algolia@2.4.0(@algolia/client-search@4.23.3)(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.13.0)(typescript@5.4.5)':
     dependencies:
       '@docsearch/react': 3.6.0(@algolia/client-search@4.23.3)(@types/react@17.0.80)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(search-insights@2.13.0)
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/logger': 2.4.0
-      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/theme-common': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       '@docusaurus/theme-translations': 2.4.0
       '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
@@ -8156,6 +8287,66 @@ snapshots:
       - supports-color
       - uglify-js
       - webpack-cli
+
+  '@easyops-cn/autocomplete.js@0.38.1':
+    dependencies:
+      cssesc: 3.0.0
+      immediate: 3.3.0
+
+  '@easyops-cn/docusaurus-search-local@0.40.1(@docusaurus/theme-common@2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5))(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)':
+    dependencies:
+      '@docusaurus/plugin-content-docs': 2.4.0(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/theme-common': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/theme-translations': 2.4.0
+      '@docusaurus/utils': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
+      '@docusaurus/utils-common': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))
+      '@docusaurus/utils-validation': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)
+      '@easyops-cn/autocomplete.js': 0.38.1
+      '@node-rs/jieba': 1.10.4
+      cheerio: 1.0.0-rc.12
+      clsx: 1.2.1
+      debug: 4.3.4
+      fs-extra: 10.1.0
+      klaw-sync: 6.0.0
+      lunr: 2.3.9
+      lunr-languages: 1.22.0
+      mark.js: 8.11.1
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      tslib: 2.6.2
+    transitivePeerDependencies:
+      - '@docusaurus/types'
+      - '@parcel/css'
+      - '@rspack/core'
+      - '@swc/core'
+      - '@swc/css'
+      - bufferutil
+      - csso
+      - esbuild
+      - eslint
+      - lightningcss
+      - supports-color
+      - typescript
+      - uglify-js
+      - utf-8-validate
+      - vue-template-compiler
+      - webpack-cli
+
+  '@emnapi/core@1.11.3':
+    dependencies:
+      '@emnapi/wasi-threads': 1.2.3
+      tslib: 2.6.2
+    optional: true
+
+  '@emnapi/runtime@1.11.3':
+    dependencies:
+      tslib: 2.6.2
+    optional: true
+
+  '@emnapi/wasi-threads@1.2.3':
+    dependencies:
+      tslib: 2.6.2
+    optional: true
 
   '@emotion/is-prop-valid@0.8.8':
     dependencies:
@@ -8507,6 +8698,74 @@ snapshots:
       hey-listen: 1.0.8
       tslib: 2.6.2
 
+  '@napi-rs/wasm-runtime@0.2.12':
+    dependencies:
+      '@emnapi/core': 1.11.3
+      '@emnapi/runtime': 1.11.3
+      '@tybys/wasm-util': 0.10.4
+    optional: true
+
+  '@node-rs/jieba-android-arm-eabi@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-android-arm64@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-darwin-arm64@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-darwin-x64@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-freebsd-x64@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-linux-arm-gnueabihf@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-linux-arm64-gnu@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-linux-arm64-musl@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-linux-x64-gnu@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-linux-x64-musl@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-wasm32-wasi@1.10.4':
+    dependencies:
+      '@napi-rs/wasm-runtime': 0.2.12
+    optional: true
+
+  '@node-rs/jieba-win32-arm64-msvc@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-win32-ia32-msvc@1.10.4':
+    optional: true
+
+  '@node-rs/jieba-win32-x64-msvc@1.10.4':
+    optional: true
+
+  '@node-rs/jieba@1.10.4':
+    optionalDependencies:
+      '@node-rs/jieba-android-arm-eabi': 1.10.4
+      '@node-rs/jieba-android-arm64': 1.10.4
+      '@node-rs/jieba-darwin-arm64': 1.10.4
+      '@node-rs/jieba-darwin-x64': 1.10.4
+      '@node-rs/jieba-freebsd-x64': 1.10.4
+      '@node-rs/jieba-linux-arm-gnueabihf': 1.10.4
+      '@node-rs/jieba-linux-arm64-gnu': 1.10.4
+      '@node-rs/jieba-linux-arm64-musl': 1.10.4
+      '@node-rs/jieba-linux-x64-gnu': 1.10.4
+      '@node-rs/jieba-linux-x64-musl': 1.10.4
+      '@node-rs/jieba-wasm32-wasi': 1.10.4
+      '@node-rs/jieba-win32-arm64-msvc': 1.10.4
+      '@node-rs/jieba-win32-ia32-msvc': 1.10.4
+      '@node-rs/jieba-win32-x64-msvc': 1.10.4
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -8764,6 +9023,11 @@ snapshots:
   '@trysound/sax@0.2.0': {}
 
   '@tsconfig/docusaurus@1.0.7': {}
+
+  '@tybys/wasm-util@0.10.4':
+    dependencies:
+      tslib: 2.6.2
+    optional: true
 
   '@types/aria-query@5.0.4': {}
 
@@ -9254,9 +9518,9 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios@0.25.0:
+  axios@0.25.0(debug@4.3.4):
     dependencies:
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.6(debug@4.3.4)
     transitivePeerDependencies:
       - debug
 
@@ -10123,7 +10387,7 @@ snapshots:
 
   docusaurus-plugin-copy@0.1.1(@docusaurus/core@2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5))(webpack@5.91.0(@swc/core@1.5.5)):
     dependencies:
-      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
+      '@docusaurus/core': 2.4.0(@docusaurus/types@2.4.0(@swc/core@1.5.5)(react-dom@17.0.2(react@17.0.2))(react@17.0.2))(@swc/core@1.5.5)(debug@4.3.4)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)(typescript@5.4.5)
       copy-webpack-plugin: 5.1.2(webpack@5.91.0(@swc/core@1.5.5))
     transitivePeerDependencies:
       - webpack
@@ -10489,7 +10753,9 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  follow-redirects@1.15.6: {}
+  follow-redirects@1.15.6(debug@4.3.4):
+    optionalDependencies:
+      debug: 4.3.4
 
   for-each@0.3.3:
     dependencies:
@@ -10895,10 +11161,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@2.0.6(@types/express@4.17.21):
+  http-proxy-middleware@2.0.6(@types/express@4.17.21)(debug@4.3.4):
     dependencies:
       '@types/http-proxy': 1.17.14
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1(debug@4.3.4)
       is-glob: 4.0.3
       is-plain-obj: 3.0.0
       micromatch: 4.0.5
@@ -10907,10 +11173,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  http-proxy@1.18.1:
+  http-proxy@1.18.1(debug@4.3.4):
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.6(debug@4.3.4)
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -10947,6 +11213,8 @@ snapshots:
   image-size@1.1.1:
     dependencies:
       queue: 6.0.2
+
+  immediate@3.3.0: {}
 
   immer@9.0.21: {}
 
@@ -11630,6 +11898,10 @@ snapshots:
 
   kind-of@6.0.3: {}
 
+  klaw-sync@6.0.0:
+    dependencies:
+      graceful-fs: 4.2.11
+
   kleur@3.0.3: {}
 
   kleur@4.1.5: {}
@@ -11725,6 +11997,10 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
+  lunr-languages@1.22.0: {}
+
+  lunr@2.3.9: {}
+
   lz-string@1.5.0: {}
 
   make-dir@2.1.0:
@@ -11745,6 +12021,8 @@ snapshots:
   makeerror@1.0.12:
     dependencies:
       tmpl: 1.0.5
+
+  mark.js@8.11.1: {}
 
   markdown-escapes@1.0.4: {}
 
@@ -14070,9 +14348,9 @@ snapshots:
     dependencies:
       xml-name-validator: 4.0.0
 
-  wait-on@6.0.1:
+  wait-on@6.0.1(debug@4.3.4):
     dependencies:
-      axios: 0.25.0
+      axios: 0.25.0(debug@4.3.4)
       joi: 17.13.1
       lodash: 4.17.21
       minimist: 1.2.8
@@ -14130,7 +14408,7 @@ snapshots:
       schema-utils: 4.2.0
       webpack: 5.91.0(@swc/core@1.5.5)
 
-  webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.5.5)):
+  webpack-dev-server@4.15.2(debug@4.3.4)(webpack@5.91.0(@swc/core@1.5.5)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
@@ -14149,7 +14427,7 @@ snapshots:
       express: 4.19.2
       graceful-fs: 4.2.11
       html-entities: 2.5.2
-      http-proxy-middleware: 2.0.6(@types/express@4.17.21)
+      http-proxy-middleware: 2.0.6(@types/express@4.17.21)(debug@4.3.4)
       ipaddr.js: 2.2.0
       launch-editor: 2.6.1
       open: 8.4.2

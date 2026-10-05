@@ -8,7 +8,7 @@ import { CoreSealLogo } from "./icons/core-seal";
 
 import { Menu } from "./common-header/menu";
 import { MobileMenuModal } from "./common-header/mobile-menu-modal";
-import SearchBar from "../theme/SearchBar";
+import SearchBar from "@theme/SearchBar";
 
 type Props = {
   hasSticky?: boolean;
@@ -104,7 +104,7 @@ export const CommonHeader = ({
               "gap-2",
             )}
           >
-            <SearchBar variant="landing" />
+            <SearchBar />
           </div>
 
           {/* mobile hamburger */}

@@ -44,6 +44,7 @@
     "@docusaurus/theme-common": "2.4.0",
     "@docusaurus/theme-search-algolia": "2.4.0",
     "@docusaurus/utils-common": "2.4.0",
+    "@easyops-cn/docusaurus-search-local": "0.40.1",
     "@floating-ui/react": "^0.26.9",
     "@headlessui/react": "^1.7.15",
     "@mdx-js/react": "^1.6.22",

@@ -5,7 +5,6 @@ import Link from "@docusaurus/Link";
 import { CommonHomeButton } from "./common-home-button";
 import { CommonHamburgerIcon } from "./common-hamburger-icon";
 import { useSidebarItems } from "./doc-sidebar";
-import { DocVersionDropdown } from "./doc-version-dropdown";
 import { CoreSealLogo } from "./icons/core-seal";
 
 type Props = {
@@ -77,29 +76,6 @@ export const DocSidebarModal = ({ isOpen, onClose }: Props) => {
                     "border border-gray-300 dark:border-gray-600",
                   )}
                 >
-                  <div
-                    className={clsx(
-                      "h-12",
-                      "rounded-tl-lg rounded-tr-lg",
-                      "bg-gray-100 dark:bg-gray-700",
-                      "border-b border-gray-300 dark:border-gray-600",
-                      "flex items-center gap-2",
-                      "px-4 py-2",
-                      "justify-end",
-                    )}
-                  >
-                    <span
-                      className={clsx(
-                        "text-sm",
-                        "text-gray-500 dark:text-gray-400",
-                      )}
-                    >
-                      Version
-                    </span>
-                    <DocVersionDropdown />
-                    {/* <DocVersionTabs /> */}
-                  </div>
-
                   <div
                     className={clsx("flex-1", "overflow-hidden", "relative")}
                   >

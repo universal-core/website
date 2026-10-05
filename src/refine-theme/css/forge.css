@@ -123,3 +123,32 @@ pre {
   background: var(--uc-violet-soft);
   color: var(--uc-text);
 }
+
+/* Local search (@easyops-cn/docusaurus-search-local) on Forge tokens. */
+html {
+  --search-local-modal-background: var(--uc-bg2);
+  --search-local-modal-shadow: 0 0 0 1px var(--uc-line-strong);
+  --search-local-hit-background: var(--uc-bg3);
+  --search-local-hit-color: var(--uc-text);
+  --search-local-hit-active-color: var(--uc-bg);
+  --search-local-hit-shadow: none;
+  --search-local-highlight-color: var(--uc-violet2);
+  --search-local-muted-color: var(--uc-muted);
+}
+
+.navbar__search-input {
+  background-color: var(--uc-bg2);
+  border: 1px solid var(--uc-line-strong);
+  border-radius: var(--uc-radius);
+  color: var(--uc-text);
+  font-family: var(--uc-font-body);
+}
+
+.navbar__search-input::placeholder {
+  color: var(--uc-faint);
+}
+
+.navbar__search-input:focus {
+  border-color: var(--uc-violet-line);
+  outline: none;
+}
