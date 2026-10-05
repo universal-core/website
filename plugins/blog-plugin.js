@@ -22,7 +22,8 @@ function paginateBlogPosts({
   const postsPerPage =
     postsPerPageOption === "ALL" ? totalCount : postsPerPageOption;
 
-  const numberOfPages = Math.ceil(totalCount / postsPerPage);
+  // An empty blog still needs its index page, or every link to /blog breaks.
+  const numberOfPages = Math.max(1, Math.ceil(totalCount / (postsPerPage || 1)));
 
   const pages = [];
 

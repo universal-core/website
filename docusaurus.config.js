@@ -7,9 +7,22 @@
 
 require("dotenv").config();
 
-const redirectJson = require("./redirects.json");
-const tutorialData = require("./tutorial-units");
-const thumbsUpDownFeedbackWidget = require("./plugins/thumbs-up-down-feedback-widget");
+
+const admonitions = {
+  tag: ":::",
+  keywords: [
+    "additional",
+    "note",
+    "tip",
+    "info-tip",
+    "info",
+    "caution",
+    "danger",
+    "sourcecode",
+    "create-example",
+    "simple",
+  ],
+};
 
 // UniversalCore "Forge" syntax theme — token colors from universalcore-design.
 const forgePrism = {
@@ -31,7 +44,7 @@ const forgePrism = {
 /** @type {import('@docusaurus/types/src/index').DocusaurusConfig} */
 const siteConfig = {
   title: "UniversalCore",
-  tagline: "An open, modular platform for building and shipping custom features",
+  tagline: "Extend the game without touching the engine",
   url: "http://universalcore.mentalgone.com",
   deploymentBranch: "gh-pages",
   baseUrl: "/",
@@ -39,35 +52,8 @@ const siteConfig = {
   organizationName: "universal-core",
   trailingSlash: true,
   favicon: "img/favicon.ico",
-  // Transitional: docs/blog are still the trimmed refine corpus with residual
-  // cross-links. Revisit once content is finalized.
-  onBrokenLinks: "warn",
-  onBrokenMarkdownLinks: "warn",
-  scripts: [
-    "https://platform.twitter.com/widgets.js",
-    {
-      src: "https://widget.kapa.ai/kapa-widget.bundle.js",
-      "data-website-id": "fa91d75a-5c82-4272-a893-a21d92245578",
-      "data-project-name": "Refine",
-      "data-project-color": "#303450",
-      "data-modal-header-bg-color": "#303450",
-      "data-modal-title-color": "#ffffff",
-      "data-button-border-radius": "100%",
-      "data-button-text-font-size": "0px",
-      "data-button-text-color": "#303450",
-      "data-button-bg-color": "transparent",
-      "data-button-text": "",
-      "data-button-box-shadow": "none",
-      "data-button-image-height": "60px",
-      "data-button-image-width": "60px",
-      "data-modal-title": "",
-      "data-modal-image":
-        "https://refine.ams3.cdn.digitaloceanspaces.com/assets/refine-white-icon.png",
-      "data-project-logo":
-        "https://refine.ams3.cdn.digitaloceanspaces.com/assets/refine-ai-bot-logo.png",
-      async: true,
-    },
-  ],
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "throw",
   presets: [
     [
       "@docusaurus/preset-classic",
@@ -80,30 +66,8 @@ const siteConfig = {
               // editUrl intentionally omitted until the public repo is decided.
               showLastUpdateAuthor: true,
               showLastUpdateTime: true,
-              disableVersioning: process.env.DISABLE_VERSIONING === "true",
-              versions: {
-                current: {
-                  label: "4.xx.xx",
-                },
-              },
-              lastVersion: "current",
-              admonitions: {
-                tag: ":::",
-                keywords: [
-                  "additional",
-                  "note",
-                  "tip",
-                  "info-tip",
-                  "info",
-                  "caution",
-                  "danger",
-                  "sourcecode",
-                  "create-example",
-                  "simple",
-                ],
-              },
+              admonitions,
               exclude: ["**/**/_*.md"],
-              remarkPlugins: [thumbsUpDownFeedbackWidget.plugin],
             },
         blog: false,
         theme: {
@@ -117,9 +81,6 @@ const siteConfig = {
             require.resolve("./src/refine-theme/css/forge.css"),
           ],
         },
-        gtag: {
-          trackingID: "G-27Z1WY952H",
-        },
         sitemap: {
           ignorePatterns: ["**/_*.md"],
         },
@@ -127,33 +88,6 @@ const siteConfig = {
     ],
   ],
   plugins: [
-    [
-      "@docusaurus/plugin-client-redirects",
-      {
-        // Drop redirects whose target was removed with the blog trim — the
-        // client-redirects plugin hard-fails the build on invalid `to` paths.
-        redirects: redirectJson.redirects.filter(
-          (r) => !String(r.to).startsWith("/blog/"),
-        ),
-        createRedirects(existingPath) {
-          if (existingPath.includes("/api-reference/core/")) {
-            return [
-              existingPath.replace("/api-reference/core/", "/api-references/"),
-            ];
-          }
-          return undefined; // Return a falsy value: no redirect created
-        },
-      },
-    ],
-    [
-      "docusaurus-plugin-copy",
-      {
-        id: "Copy Workers",
-        path: "static/workers",
-        context: "workers",
-        include: ["**/*.{js}"],
-      },
-    ],
     async function tailwindcss() {
       return {
         name: "docusaurus-tailwindcss",
@@ -173,24 +107,6 @@ const siteConfig = {
             resolve: {
               alias: {
                 ...config.resolve?.alias,
-                // docgen plugin is disabled (no sibling monorepo). Resolve
-                // @docgen to an empty stub so require("@docgen/…") compiles;
-                // requireDocgen()'s try/catch returns null at runtime.
-                "@docgen": require("path").resolve(__dirname, "src/docgen-stub"),
-                // The live CodeSandbox bundler was removed; a Metin2
-                // client/server platform has nothing to run in a browser. Every
-                // runtime `@codesandbox/sandpack-react` import resolves to a
-                // static shim (file tree + read-only editor, no execution).
-                "@codesandbox/sandpack-react": require("path").resolve(
-                  __dirname,
-                  "src/sandpack-static/shim.tsx",
-                ),
-                // Defensive: nothing imports the themes anymore, but keep a
-                // stub so a stray import can't re-introduce the dependency.
-                "@codesandbox/sandpack-themes": require("path").resolve(
-                  __dirname,
-                  "src/sandpack-static/themes-stub.ts",
-                ),
               },
               fallback: {
                 ...config.resolve?.fallback,
@@ -223,7 +139,6 @@ const siteConfig = {
         },
       };
     },
-    // "./plugins/docgen.js",
     ...(process.env.DISABLE_BLOG
       ? []
       : [
@@ -244,34 +159,24 @@ const siteConfig = {
             },
           ],
         ]),
-    "./plugins/clarity.js",
-    "./plugins/example-redirects.js",
-    "./plugins/tutorial-navigation.js",
     [
       "@docusaurus/plugin-content-docs",
       {
-        id: "tutorial",
-        path: "tutorial",
-        routeBasePath: "tutorial",
-        sidebarPath: false,
-        docLayoutComponent: "@theme/TutorialPage",
-        docItemComponent: "@theme/TutorialItem",
-        include: ["**/index.md"],
-        admonitions: {
-          tag: ":::",
-          keywords: [
-            "additional",
-            "note",
-            "tip",
-            "info-tip",
-            "info",
-            "caution",
-            "danger",
-            "sourcecode",
-            "create-example",
-            "simple",
-          ],
-        },
+        id: "manifesto",
+        path: "manifesto",
+        routeBasePath: "manifesto",
+        sidebarPath: require.resolve("./sidebars-manifesto.js"),
+        admonitions,
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "tutorials",
+        path: "tutorials",
+        routeBasePath: "tutorials",
+        sidebarPath: require.resolve("./sidebars-tutorials.js"),
+        admonitions,
       },
     ],
   ],
@@ -304,150 +209,19 @@ const siteConfig = {
       ],
     },
     image: "img/uc-social.png",
-    algolia: {
-      appId: "KRR9VEUPCT",
-      apiKey: "cd0188125dcd31fb4b011b5e536d963a",
-      indexName: "refine",
-      contextualSearch: true,
-      searchParameters: {
-        attributesToHighlight: ["hierarchy.lvl0", "hierarchy"],
-      },
-    },
     metadata: [
       {
         name: "keywords",
-        content:
-          "react-admin, react-framework, internal-tool, admin-panel, ant-design, material ui, mui",
+        content: "metin2, mmorpg, game engine, lua, server, scripting",
       },
     ],
     navbar: {
-      logo: {
-        alt: "refine",
-        src: "img/refine_logo.png",
-      },
+      title: "UniversalCore",
       items: [
+        { to: "docs", label: "Docs", position: "left" },
+        { to: "manifesto", label: "Manifesto", position: "left" },
+        { to: "tutorials", label: "Tutorials", position: "left" },
         { to: "blog", label: "Blog", position: "left" },
-        {
-          type: "docsVersionDropdown",
-          position: "right",
-          dropdownActiveClassDisabled: true,
-        },
-        {
-          href: "https://github.com/refinedev/refine",
-          position: "right",
-          className: "header-icon-link header-github-link",
-        },
-        {
-          href: "https://discord.gg/refine",
-          position: "right",
-          className: "header-icon-link header-discord-link",
-        },
-        {
-          href: "https://twitter.com/refine_dev",
-          position: "right",
-          className: "header-icon-link header-twitter-link",
-        },
-      ],
-    },
-    footer: {
-      logo: {
-        alt: "refine",
-        src: "/img/refine_logo.png",
-      },
-      links: [
-        {
-          title: "Resources",
-          items: [
-            {
-              label: "Getting Started",
-              to: "docs",
-            },
-            {
-              label: "Tutorials",
-              to: "tutorial",
-            },
-            {
-              label: "Blog",
-              to: "blog",
-            },
-          ],
-        },
-        {
-          title: "Product",
-          items: [
-            {
-              label: "Examples",
-              to: "examples",
-            },
-            {
-              label: "Integrations",
-              to: "integrations",
-            },
-            {
-              label: "Become an Expert",
-              to: "become-a-refine-expert",
-            },
-          ],
-        },
-        {
-          title: "Company",
-          items: [
-            {
-              label: "About",
-              to: "about",
-            },
-            {
-              label: "Store 🎁",
-              to: "https://store.refine.dev",
-            },
-          ],
-        },
-        {
-          title: "__LEGAL",
-          items: [
-            {
-              label: "License",
-              to: "https://github.com/refinedev/refine/blob/master/LICENSE",
-            },
-            // {
-            //     label: "Terms",
-            //     to: "/enterprise",
-            // },
-            // {
-            //     label: "Privacy",
-            //     to: "/privacy-policy",
-            // },
-            // {
-            //     label: "info@refine.dev",
-            //     to: "mailto:info@refine.dev",
-            // },
-          ],
-        },
-        {
-          title: "__SOCIAL",
-          items: [
-            {
-              href: "https://github.com/refinedev/refine",
-              label: "github",
-            },
-            {
-              href: "https://discord.gg/refine",
-              label: "discord",
-            },
-            {
-              href: "https://reddit.com/r/refine",
-              label: "reddit",
-            },
-            {
-              href: "https://twitter.com/refine_dev",
-              label: "twitter",
-            },
-            {
-              href: "https://www.linkedin.com/company/refine-dev",
-              label: "linkedin",
-            },
-          ],
-        },
       ],
     },
     docs: {
@@ -460,23 +234,6 @@ const siteConfig = {
       disableSwitch: true,
       respectPrefersColorScheme: false,
     },
-  },
-  customFields: {
-    /** Footer Fields */
-    footerDescription:
-      '<strong style="font-weight:700;">refine</strong> is a React-based framework for the rapid development of web applications. It eliminates the repetitive tasks demanded by <strong style="font-weight:700;">CRUD</strong> operations and provides industry standard solutions.',
-    contactTitle: "Contact",
-    contactDescription: [
-      "Refine Development Inc.",
-      "256 Chapman Road STE 105-4 Newark, DE 19702",
-    ],
-    contactEmail: "info@refine.dev",
-    /** ---- */
-    /** Live Preview */
-    LIVE_PREVIEW_URL:
-      process.env.LIVE_PREVIEW_URL ?? "http://localhost:3030/preview",
-    /** ---- */
-    tutorial: tutorialData,
   },
   webpack: {
     jsLoader: (isServer) => ({

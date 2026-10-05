@@ -4,7 +4,6 @@ import {
   ExamplesIcon,
   IntegrationsIcon,
   TutorialIcon,
-  ContributeIcon,
 } from "../icons/popover";
 
 export type NavbarPopoverItemType = {
@@ -27,56 +26,52 @@ export type NavbarItemType = {
 
 export type MenuItemType = NavbarPopoverItemType | NavbarItemType;
 
-/* "Docs" opens a mega-menu of the platform's macro-categories.
-   Links point at /docs for now — repoint to each category root as the
-   documentation is authored. */
 export const MENU_ITEMS: MenuItemType[] = [
   {
     isPopover: true,
     label: "Docs",
     items: [
       {
-        label: "Getting Started",
-        description: "Install, configure and ship your first feature.",
-        link: "/docs/getting-started/quickstart",
+        label: "Overview",
+        description: "How the documentation is organised, layer by layer.",
+        link: "/docs/",
         icon: DocumentsIcon,
       },
       {
         label: "Foundations",
-        description: "The scripting core, messaging and extension model.",
-        link: "/docs/",
+        description: "Luna, Forge, the simulator, the render pipeline, UCHTML.",
+        link: "/docs/foundations/",
         icon: AwesomeIcon,
       },
       {
-        label: "Subsystems",
-        description: "Avatars, dungeons, skills — built on the core.",
-        link: "/docs/",
+        label: "Building blocks",
+        description: "Affects, traits, skills, policies, arbiters, rankings.",
+        link: "/docs/building-blocks/",
         icon: ExamplesIcon,
       },
       {
-        label: "Declarative Config",
-        description: "Drops, affects and UI as YAML + Lua.",
-        link: "/docs/",
+        label: "Gameplay systems",
+        description: "Arena, avatar, guild war and the rest, built on top.",
+        link: "/docs/gameplay/",
         icon: IntegrationsIcon,
       },
       {
-        label: "Developer Experience",
-        description: "Compiler, source maps and the remote debugger.",
-        link: "/docs/",
+        label: "In-game wiki",
+        description: "UCHTML pages, Jinja2 context and component tags.",
+        link: "/docs/wiki/",
         icon: TutorialIcon,
-      },
-      {
-        label: "Operations",
-        description: "Logging, profiling and the server backoffice.",
-        link: "/docs/",
-        icon: ContributeIcon,
       },
     ],
   },
   {
     isPopover: false,
-    label: "Tutorial",
-    href: "/tutorial/essentials/intro",
+    label: "Manifesto",
+    href: "/manifesto/",
+  },
+  {
+    isPopover: false,
+    label: "Tutorials",
+    href: "/tutorials/",
   },
   {
     isPopover: false,

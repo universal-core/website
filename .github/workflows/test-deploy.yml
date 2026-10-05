@@ -25,5 +25,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check content frontmatter and disclosure
+        run: pnpm test
+
       - name: Test build website
         run: pnpm build

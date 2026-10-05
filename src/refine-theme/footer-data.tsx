@@ -4,60 +4,33 @@ import { FooterGithubIcon } from "./icons/footer-github";
 
 export const menuItems = [
   {
-    label: "Resources",
+    label: "Read",
     items: [
-      {
-        label: "Getting Started",
-        href: "/docs/getting-started/quickstart",
-      },
-      {
-        label: "Tutorial",
-        href: "/tutorial/essentials/intro",
-      },
-      {
-        label: "Blog",
-        href: "/blog",
-      },
+      { label: "Manifesto", href: "/manifesto/" },
+      { label: "Blog", href: "/blog" },
     ],
   },
   {
-    label: "Project",
+    label: "Build",
     items: [
-      {
-        label: "Documentation",
-        href: "/docs/",
-      },
-      {
-        label: "Contributing",
-        href: "/docs/guides-concepts/contributing/",
-      },
+      { label: "Documentation", href: "/docs/" },
+      { label: "Tutorials", href: "/tutorials/" },
     ],
   },
   {
     label: "Community",
     items: [
       // TODO: point at the real community links once disclosure is decided.
-      {
-        label: "GitHub",
-        href: "#",
-      },
-      {
-        label: "Discord",
-        href: "#",
-      },
+      { label: "GitHub", href: "#" },
+      { label: "Discord", href: "#" },
     ],
   },
 ];
 
-export const secondaryMenuItems = [
-  {
-    label: "Privacy Policy",
-    href: "/privacy-policy",
-  },
-];
+export const secondaryMenuItems: { label: string; href: string }[] = [];
 
 export const footerDescription =
-  "An open, modular platform for building and shipping custom features — foundations, subsystems, developer experience and operations.";
+  "A Metin2-lineage MMORPG engine where gameplay lives in Lua and Forge, not in engine patches.";
 
 export const socialLinks = [
   {
