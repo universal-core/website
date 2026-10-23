@@ -86,7 +86,7 @@ export const DocSidebarModal = ({ isOpen, onClose }: Props) => {
                         "h-full",
                         "px-8",
                         "absolute",
-                        "flex flex-col gap-6",
+                        "flex flex-col gap-0.5",
                         "py-6",
                       )}
                     >

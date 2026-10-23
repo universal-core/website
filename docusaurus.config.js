@@ -64,7 +64,7 @@ const siteConfig = {
               path: "./docs",
               sidebarPath: require.resolve("./sidebars.js"),
               // editUrl intentionally omitted until the public repo is decided.
-              showLastUpdateAuthor: true,
+              showLastUpdateAuthor: false,
               showLastUpdateTime: true,
               admonitions,
               exclude: ["**/**/_*.md"],
@@ -87,7 +87,9 @@ const siteConfig = {
       },
     ],
   ],
+  markdown: { mermaid: true },
   themes: [
+    "@docusaurus/theme-mermaid",
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       {
@@ -221,6 +223,45 @@ const siteConfig = {
     ],
   ],
   themeConfig: {
+    mermaid: {
+      theme: { light: "base", dark: "base" },
+      options: {
+        // A top-level fontFamily makes mermaid 9 drop every themeVariables entry.
+        themeVariables: {
+          fontFamily: '"Hanken Grotesk", system-ui, sans-serif',
+          darkMode: true,
+          background: "transparent",
+          primaryColor: "#1f1b2e",
+          primaryBorderColor: "#a78bf5",
+          primaryTextColor: "#cfc8bb",
+          secondaryColor: "#16222a",
+          secondaryBorderColor: "#6fc0e0",
+          tertiaryColor: "#151419",
+          tertiaryBorderColor: "#837f8c",
+          lineColor: "#837f8c",
+          textColor: "#cfc8bb",
+          noteBkgColor: "#2a2433",
+          noteTextColor: "#cfc8bb",
+          noteBorderColor: "#e3799b",
+          actorBkg: "#1f1b2e",
+          actorBorder: "#a78bf5",
+          actorTextColor: "#cfc8bb",
+          signalColor: "#cfc8bb",
+          signalTextColor: "#cfc8bb",
+          labelBoxBkgColor: "#1f1b2e",
+          labelBoxBorderColor: "#a78bf5",
+          labelTextColor: "#cfc8bb",
+          loopTextColor: "#cfc8bb",
+          activationBkgColor: "#2a2433",
+          activationBorderColor: "#c9b4ff",
+          clusterBkg: "#121110",
+          clusterBorder: "rgba(255, 255, 255, 0.16)",
+          titleColor: "#9a9488",
+          edgeLabelBackground: "#0c0b09",
+          nodeTextColor: "#cfc8bb",
+        },
+      },
+    },
     prism: {
       theme: forgePrism,
       darkTheme: forgePrism,

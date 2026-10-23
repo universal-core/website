@@ -119,7 +119,8 @@ const SidebarCategory = ({
     });
   }, []);
 
-  const Comp = !isHeader && item.href && !isSame ? Link : "button";
+  // A section header links to its index page when it has one.
+  const Comp = item.href && !isSame ? Link : "button";
 
   return (
     <div
@@ -134,7 +135,7 @@ const SidebarCategory = ({
     >
       <Comp
         type="button"
-        onClick={isHeader ? () => 0 : toggle}
+        onClick={isHeader ? undefined : toggle}
         {...(Comp === "button"
           ? {}
           : {
@@ -143,7 +144,8 @@ const SidebarCategory = ({
         href={item.href}
         className={clsx(
           // isHeader && item.label !== "Getting Started" && "mt-6",
-          isHeader && "cursor-default",
+          isHeader && !item.href && "cursor-default",
+          isHeader && item.href && "hover:text-gray-300 dark:hover:text-gray-200",
           "w-full",
           "min-h-[28px]",
           "border-0",
@@ -155,7 +157,7 @@ const SidebarCategory = ({
           !isHeader && "hover:text-gray-600 dark:hover:text-gray-300",
           "font-normal",
           "flex items-center",
-          isHeader ? "pt-2 pb-4" : "py-2",
+          isHeader ? "mt-5 pt-2 pb-2" : "py-2",
           "pr-2",
           isHeader && "pl-2",
           !isHeader && "pl-0.5",
@@ -566,7 +568,7 @@ export const DocSidebar = () => {
           "px-4",
           "py-4",
           "border-r border-r-gray-300 dark:border-r-gray-700",
-          "flex flex-col gap-6",
+          "flex flex-col gap-0.5",
         )}
       >
         {renderItems({

@@ -10,8 +10,17 @@ import { DocTOC } from "./doc-toc";
 import { DocTOCMobile } from "./doc-toc-mobile";
 import { DocVersionBadge } from "./doc-version-badge";
 import { FULL_WIDTH_TABLE_VARIABLE_NAME } from "./common-table";
+import { ManifestoLayout } from "./manifesto-layout";
 
 export const DocItemLayout = ({ children }) => {
+  const { pluginId } = useDocsVersion();
+  if (pluginId === "manifesto") {
+    return <ManifestoLayout>{children}</ManifestoLayout>;
+  }
+  return <ReferenceDocItemLayout>{children}</ReferenceDocItemLayout>;
+};
+
+const ReferenceDocItemLayout = ({ children }) => {
   const { badge, label } = useDocsVersion();
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -52,6 +61,7 @@ export const DocItemLayout = ({ children }) => {
           "px-4 sm:px-0 py-4 sm:py-14",
           "relative",
           "w-full",
+          "uc-doc-column",
         )}
       >
         <div className={clsx("max-w-screen-content w-full")}>
@@ -63,9 +73,10 @@ export const DocItemLayout = ({ children }) => {
             </div>
           </div>
           <DocTOCMobile />
-          <div className={clsx("refine-prose")}>
+          {/* The local search indexes headings and text inside <article> only. */}
+          <article className={clsx("refine-prose")}>
             <DocItemContent>{children}</DocItemContent>
-          </div>
+          </article>
           <DocItemFooter />
         </div>
         <div className={clsx("max-w-screen-content", "w-full")}>

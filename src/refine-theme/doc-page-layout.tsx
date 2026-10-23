@@ -1,3 +1,4 @@
+import { useDocsVersion } from "@docusaurus/theme-common/internal";
 import clsx from "clsx";
 import React from "react";
 import { CommonFooter } from "./common-footer";
@@ -7,6 +8,7 @@ import { DocSidebar } from "./doc-sidebar";
 type Props = React.PropsWithChildren<{}>;
 
 export const DocPageLayout = ({ children }: Props) => {
+  const { pluginId } = useDocsVersion();
   return (
     <>
       <DocHeader />
@@ -18,7 +20,7 @@ export const DocPageLayout = ({ children }: Props) => {
           "mx-auto",
         )}
       >
-        <DocSidebar />
+        {pluginId !== "manifesto" && <DocSidebar />}
         {children}
       </div>
       <CommonFooter />

@@ -76,7 +76,7 @@ export const DocTOC = () => {
   const location = useLocation();
   const history = useHistory();
 
-  const { toc, hasTOC, activeId, setActiveId } = useTOC();
+  const { toc, hasTOC, hidden, activeId, setActiveId } = useTOC();
 
   const onIdChange = (id) => {
     if (id !== `${location.hash ?? ""}`.replace("#", "")) {
@@ -88,6 +88,8 @@ export const DocTOC = () => {
       window.history.replaceState({}, "", `#${id}`);
     }
   };
+
+  if (hidden) return null;
 
   return (
     <div
@@ -138,12 +140,14 @@ export const useTOC = () => {
     setActiveId(baseActiveId);
   }, [baseActiveId]);
 
-  const { toc } = useDoc();
+  const { toc, frontMatter } = useDoc();
 
-  const hasTOC = toc?.length > 0;
+  const hidden = !!frontMatter.hide_table_of_contents;
+  const hasTOC = !hidden && toc?.length > 0;
 
   return {
     toc,
+    hidden,
     activeId,
     setActiveId,
     hasTOC,

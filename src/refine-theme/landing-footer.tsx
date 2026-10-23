@@ -76,10 +76,10 @@ export const LandingFooter = ({ variant = "landing" }: Props) => {
             "justify-start",
           )}
         >
-          {socialLinks.map(({ href, icon: Icon }) => (
+          {socialLinks.map(({ href, icon: Icon }, index) => (
             <a
               href={href}
-              key={href}
+              key={index}
               target="_blank"
               rel="noreferrer"
               className={clsx(

@@ -137,18 +137,367 @@ html {
 }
 
 .navbar__search-input {
+  width: 15rem;
+  height: 2.125rem;
+  padding: 0 4.25rem 0 2.25rem;
   background-color: var(--uc-bg2);
-  border: 1px solid var(--uc-line-strong);
+  background-position: 0.75rem 50%;
+  background-size: 0.875rem;
+  border: 1px solid var(--uc-line);
   border-radius: var(--uc-radius);
   color: var(--uc-text);
   font-family: var(--uc-font-body);
+  font-size: 0.875rem;
+  transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
 }
 
 .navbar__search-input::placeholder {
   color: var(--uc-faint);
 }
 
+.navbar__search-input:hover {
+  border-color: var(--uc-line-strong);
+  background-color: var(--uc-bg3);
+}
+
 .navbar__search-input:focus {
   border-color: var(--uc-violet-line);
+  background-color: var(--uc-bg3);
+  box-shadow: 0 0 0 3px var(--uc-violet-soft);
   outline: none;
+}
+
+[class*="searchHintContainer"] {
+  right: 0.5rem;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+[class*="searchHintContainer"] kbd {
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--uc-bg3);
+  border: 1px solid var(--uc-line);
+  border-radius: var(--uc-radius-sm);
+  box-shadow: none;
+  color: var(--uc-muted);
+  font-family: var(--uc-font-mono);
+  font-size: 0.6875rem;
+  line-height: 1;
+}
+
+.navbar__search-input:focus ~ [class*="searchHintContainer"] {
+  display: none;
+}
+
+/* Inline code sits in the line instead of standing out as a block. */
+.refine-prose :not(pre) > code {
+  display: inline;
+  padding: 0.1em 0.35em;
+  font-size: 0.875em;
+  line-height: inherit;
+  color: var(--uc-violet2);
+  background: var(--uc-violet-soft);
+  border-radius: var(--uc-radius-sm);
+  overflow-wrap: anywhere;
+}
+
+.refine-prose a > code {
+  color: inherit;
+}
+
+.refine-prose h1 > code,
+.refine-prose h2 > code,
+.refine-prose h3 > code,
+.refine-prose h4 > code {
+  font-size: 0.9em;
+  background: none;
+  padding: 0;
+}
+
+/* Reference tables: compact, left-aligned, readable at a glance. */
+.refine-prose .table-container {
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0;
+  border: 1px solid var(--uc-line);
+  border-radius: var(--uc-radius);
+}
+
+.refine-prose .table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.refine-prose table th,
+.refine-prose table td {
+  border: 0;
+  border-bottom: 1px solid var(--uc-line);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--uc-text);
+}
+
+.refine-prose table th {
+  font-family: var(--uc-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--uc-muted);
+  background: var(--uc-bg2);
+}
+
+.refine-prose table tbody tr:nth-child(odd),
+.refine-prose table tbody tr:nth-child(even),
+.refine-prose table thead {
+  background: transparent;
+}
+
+.refine-prose table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.refine-prose table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.refine-prose table td:first-child {
+  white-space: nowrap;
+}
+
+.refine-prose table td > code,
+.refine-prose table th > code {
+  font-size: 0.8125rem;
+  padding: 0.05em 0.3em;
+}
+
+/* Tables use the gutters of the doc column, measured as a container, when there is room. */
+.uc-doc-column {
+  container-type: inline-size;
+}
+
+@container (min-width: 760px) {
+  .refine-prose .table-container {
+    --uc-table-bleed: max(-140px, min(0px, calc((100% - 100cqw) / 2 + 24px)));
+    margin-left: var(--uc-table-bleed);
+    margin-right: var(--uc-table-bleed);
+    max-width: none;
+  }
+}
+
+/* Manifesto: a long-read essay, not a reference page. */
+.uc-essay {
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem 6rem;
+}
+
+.uc-essay__header {
+  margin-bottom: 3.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--uc-line);
+}
+
+.uc-essay__eyebrow {
+  margin: 0 0 1.5rem;
+  font-family: var(--uc-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--uc-violet);
+}
+
+.uc-essay__eyebrow a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.uc-essay__eyebrow a:hover {
+  color: var(--uc-violet2);
+}
+
+.uc-essay__title {
+  margin: 0;
+  font-family: var(--uc-font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--uc-text);
+}
+
+.uc-essay__lede {
+  margin: 1.5rem 0 0;
+  font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+  line-height: 1.55;
+  color: var(--uc-muted);
+}
+
+.uc-essay__byline {
+  margin: 1.75rem 0 0;
+  font-family: var(--uc-font-mono);
+  font-size: 0.8125rem;
+  color: var(--uc-faint);
+}
+
+.uc-essay__byline::before {
+  content: "by ";
+}
+
+/* The essay header carries the title; the markdown one would repeat it. */
+.uc-essay__body .markdown > header:first-child,
+.uc-essay__body .markdown > h1:first-child {
+  display: none;
+}
+
+.uc-essay__body.refine-prose {
+  font-size: 1.1875rem;
+  line-height: 1.8;
+}
+
+.uc-essay__body.refine-prose p {
+  margin: 0 0 1.5em;
+}
+
+.uc-essay__body.refine-prose h2 {
+  margin: 3.5rem 0 1.25rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.uc-essay__body.refine-prose h2::before {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 2px;
+  margin-bottom: 1.25rem;
+  background: var(--uc-violet);
+}
+
+.uc-essay__body .markdown > h2:first-of-type {
+  margin-top: 0;
+}
+
+.uc-essay__body.refine-prose a.hash-link {
+  display: none;
+}
+
+.uc-essay__next {
+  display: block;
+  margin-top: 4rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--uc-line);
+  border-radius: var(--uc-radius);
+  text-decoration: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.uc-essay__next:hover {
+  border-color: var(--uc-violet-line);
+  background: var(--uc-violet-soft);
+  text-decoration: none;
+}
+
+.uc-essay__next-label {
+  display: block;
+  font-family: var(--uc-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--uc-faint);
+}
+
+.uc-essay__next-title {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--uc-font-display);
+  font-size: 1.375rem;
+  color: var(--uc-text);
+}
+
+.uc-essay-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--uc-line);
+}
+
+.uc-essay-list__item {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: 1.5rem 0.25rem;
+  border-bottom: 1px solid var(--uc-line);
+  text-decoration: none;
+  color: var(--uc-text);
+}
+
+.uc-essay-list__item:hover {
+  text-decoration: none;
+  color: var(--uc-violet2);
+}
+
+.uc-essay-list__number {
+  font-family: var(--uc-font-mono);
+  font-size: 0.8125rem;
+  color: var(--uc-violet);
+}
+
+.uc-essay-list__title {
+  flex: 1;
+  font-family: var(--uc-font-display);
+  font-size: clamp(1.25rem, 3vw, 1.625rem);
+  line-height: 1.25;
+}
+
+.uc-essay-list__arrow {
+  color: var(--uc-faint);
+  transition: transform 0.15s;
+}
+
+.uc-essay-list__item:hover .uc-essay-list__arrow {
+  transform: translateX(4px);
+  color: var(--uc-violet2);
+}
+
+@media (max-width: 996px) {
+  .navbar__search-input {
+    width: 8rem;
+    padding-right: 0.75rem;
+  }
+
+  .navbar__search-input ~ [class*="searchHintContainer"] {
+    display: none;
+  }
+}
+
+/* Heading anchors are a hover affordance; on touch widths they only push long headings past the edge. */
+@media (max-width: 996px) {
+  .refine-prose a.hash-link {
+    display: none;
+  }
+}
+
+/* Diagrams keep a readable size on phones and scroll sideways instead of shrinking. */
+.docusaurus-mermaid-container {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .docusaurus-mermaid-container svg {
+    width: max(100%, 36rem) !important;
+    max-width: none !important;
+    height: auto;
+  }
 }

@@ -8,7 +8,7 @@ export const DocPaginator = (props) => {
   const { previous, next } = props;
 
   return (
-    <div className={clsx("grid grid-cols-2", "gap-4 2xl:gap-8", "w-full")}>
+    <div className={clsx("grid grid-cols-2", "gap-4 2xl:gap-8", "w-full", "mt-12")}>
       {previous && (
         <Link
           href={previous.permalink}
