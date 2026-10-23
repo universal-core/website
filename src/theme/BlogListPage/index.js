@@ -45,7 +45,9 @@ function BlogListPageContent(props) {
 
   return (
     <BlogLayout showSidebarBanner={false} showHero>
-      {isFirstPage && <FeaturedBlogPostItems items={featuredPosts} />}
+      {isFirstPage && featuredPosts.length > 0 && (
+        <FeaturedBlogPostItems items={featuredPosts} />
+      )}
       <BlogPostItems items={paginatedPosts} tags={tags} metadata={metadata} />
       <div
         className={clsx(

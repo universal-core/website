@@ -62,10 +62,8 @@ export const BlogHero: FC<Props> = ({ className }) => {
             "pb-2",
           )}
         >
-          A resource for Refine, front-end ecosystem, and web development. Here,
-          we publish insightful articles that demystify complex concepts,
-          explore new trends, and provide helpful tips to enhance your coding
-          journey.
+          Engineering notes from building Universal Core: what broke in the
+          engine, what we moved out of it, and what that cost.
         </p>
       </div>
     </div>
