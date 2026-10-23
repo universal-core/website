@@ -84,6 +84,7 @@ const schemas: {
       return [];
     },
   },
+  { dir: "foundations", allowed: SECTION_KEYS, required: ["title"] },
   { dir: "manifesto", allowed: SECTION_KEYS, required: ["title"] },
   { dir: "tutorials", allowed: SECTION_KEYS, required: ["title"] },
   {
@@ -136,13 +137,13 @@ describe("content frontmatter", () => {
 const DISCLOSURE = [
   {
     name: "repository path",
-    pattern: /\b(Server|Client|Client-Files|Locale|Doc|Tools|Prototypes|Sql-script)\/[\w./-]+/,
+    pattern: /\b(Server|Client|Launcher|Doc|Tools|Prototypes|Sql-script)\/[\w./-]+/,
   },
   { name: "engine source file", pattern: /\b[\w-]+\.(cpp|cc|cxx|h|hpp|hlsl)\b/ },
 ];
 
 describe("content disclosure", () => {
-  const files = ["docs", "manifesto", "tutorials", "blog"].flatMap((d) =>
+  const files = ["docs", "foundations", "manifesto", "tutorials", "blog"].flatMap((d) =>
     walk(path.join(ROOT, d)),
   );
   test.each(files.map((f) => [rel(f), f]))(`%s`, (_name, file) => {

@@ -38,22 +38,16 @@ export const MENU_ITEMS: MenuItemType[] = [
         icon: DocumentsIcon,
       },
       {
-        label: "Foundations",
-        description: "Luna, Forge, the simulator, the render pipeline, UCHTML.",
-        link: "/docs/foundations/",
+        label: "Core",
+        description: "Forge modules, UCHTML and the in-game wiki.",
+        link: "/docs/core/",
         icon: AwesomeIcon,
       },
       {
         label: "Building blocks",
-        description: "Affects, traits, skills, policies, arbiters, rankings.",
+        description: "Policies and arbiters built on the core.",
         link: "/docs/building-blocks/",
         icon: ExamplesIcon,
-      },
-      {
-        label: "Gameplay systems",
-        description: "Arena, avatar, guild war and the rest, built on top.",
-        link: "/docs/gameplay/",
-        icon: IntegrationsIcon,
       },
       {
         label: "In-game wiki",
@@ -62,6 +56,11 @@ export const MENU_ITEMS: MenuItemType[] = [
         icon: TutorialIcon,
       },
     ],
+  },
+  {
+    isPopover: false,
+    label: "Foundations",
+    href: "/foundations/",
   },
   {
     isPopover: false,

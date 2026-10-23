@@ -4,10 +4,11 @@ module.exports = {
     "index",
     {
       type: "category",
-      label: "Foundations",
+      label: "Core",
       className: "category-as-header",
-      link: { type: "doc", id: "foundations/index" },
+      link: { type: "doc", id: "core/index" },
       items: [
+        "core/luna-forge",
         {
           type: "category",
           label: "UCHTML and the in-game wiki",
@@ -30,14 +31,9 @@ module.exports = {
       label: "Building blocks",
       className: "category-as-header",
       link: { type: "doc", id: "building-blocks/index" },
-      items: [],
-    },
-    {
-      type: "category",
-      label: "Gameplay systems",
-      className: "category-as-header",
-      link: { type: "doc", id: "gameplay/index" },
-      items: [],
+      items: [
+        "building-blocks/battle-arbiter",
+      ],
     },
   ],
 };

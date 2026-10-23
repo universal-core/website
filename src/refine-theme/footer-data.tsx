@@ -7,6 +7,7 @@ export const menuItems = [
     label: "Read",
     items: [
       { label: "Manifesto", href: "/manifesto/" },
+      { label: "Foundations", href: "/foundations/" },
       { label: "Blog", href: "/blog" },
     ],
   },

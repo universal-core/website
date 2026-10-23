@@ -94,8 +94,8 @@ const siteConfig = {
         hashed: true,
         language: ["en"],
         indexDocs: true,
-        docsDir: ["docs", "manifesto", "tutorials"],
-        docsRouteBasePath: ["docs", "manifesto", "tutorials"],
+        docsDir: ["docs", "foundations", "manifesto", "tutorials"],
+        docsRouteBasePath: ["docs", "foundations", "manifesto", "tutorials"],
         indexBlog: true,
         blogDir: "blog",
         blogRouteBasePath: "blog",
@@ -178,6 +178,28 @@ const siteConfig = {
           ],
         ]),
     [
+      "@docusaurus/plugin-client-redirects",
+      {
+        // The docs layer "Foundations" became "Core" when Foundations became its own section.
+        createRedirects(existingPath) {
+          if (existingPath.startsWith("/docs/core")) {
+            return [existingPath.replace("/docs/core", "/docs/foundations")];
+          }
+          return undefined;
+        },
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "foundations",
+        path: "foundations",
+        routeBasePath: "foundations",
+        sidebarPath: require.resolve("./sidebars-foundations.js"),
+        admonitions,
+      },
+    ],
+    [
       "@docusaurus/plugin-content-docs",
       {
         id: "manifesto",
@@ -237,6 +259,7 @@ const siteConfig = {
       title: "UniversalCore",
       items: [
         { to: "docs", label: "Docs", position: "left" },
+        { to: "foundations", label: "Foundations", position: "left" },
         { to: "manifesto", label: "Manifesto", position: "left" },
         { to: "tutorials", label: "Tutorials", position: "left" },
         { to: "blog", label: "Blog", position: "left" },

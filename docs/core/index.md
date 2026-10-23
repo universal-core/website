@@ -1,9 +1,9 @@
 ---
-title: Foundations
+title: Core
 displayed_sidebar: mainSidebar
 ---
 
-# Foundations
+# Core
 
 The runtime every other layer depends on. A page here never assumes you have
 read a building block or a gameplay page.

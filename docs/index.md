@@ -16,6 +16,6 @@ first time; later, jump straight to the page you need.
 
 | Layer | What it covers |
 | --- | --- |
-| [Foundations](./foundations/) | The runtime everything else stands on: Luna, Forge and its compiler, the headless simulator, the render pipeline, UCHTML, player virtualization, observability |
+| [Core](./core/) | The runtime everything else stands on: Luna, Forge and its compiler, the headless simulator, the render pipeline, UCHTML, player virtualization, observability |
 | [Building blocks](./building-blocks/) | Subsystems gameplay is assembled from: affects, traits, skills, policies, the battle arbiter, the death manager, teams, rankings, events |
 | [Gameplay systems](./gameplay/) | Features a player sees, each marked as framework-native, migrated, or legacy |
