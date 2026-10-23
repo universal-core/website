@@ -1,0 +1,50 @@
+forge friendly_empires begin
+    environment game begin
+        local registry = forge.sys.game.battle_arbiter_registry
+        local VERDICT = registry.BATTLE_VERDICT
+
+        local Friendly = {}
+        Friendly.__index = Friendly
+
+        function Friendly:new()
+            return setmetatable({ handle = nil, map_index = 0 }, Friendly)
+        end
+
+        ---@param map_index integer
+        ---@param empire_a integer
+        ---@param empire_b integer
+        function Friendly:enable(map_index, empire_a, empire_b)
+            self.handle = registry.register(
+                "friendly:" .. map_index,
+                function(att, vic)
+                    return att:get_map_index() == map_index and vic:get_map_index() == map_index
+                end,
+                function(att, vic)
+                    if not (att:is_pc() and vic:is_pc()) then
+                        return VERDICT.Pass
+                    end
+                    local a, b = att:get_empire(), vic:get_empire()
+                    if (a == empire_a and b == empire_b) or (a == empire_b and b == empire_a) then
+                        return VERDICT.Deny
+                    end
+                    return VERDICT.Pass
+                end)
+            self.map_index = map_index
+            forge.sys.log(0, "on for map " .. map_index .. ", handle " .. self.handle)
+        end
+
+        local friendly = Friendly:new()
+
+        local cmd = forge.sys.game.cmd
+        cmd.register_router("friendly", cmd.new_router(nil, {
+            on = cmd.new_implementor_route("/friendly on <empire> <empire>", { "number", "number" },
+                function(ch, empire_a, empire_b)
+                    friendly:enable(ch:get_map_index(), empire_a, empire_b)
+                    ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Empires " .. empire_a .. " and " .. empire_b .. " are friendly on this map")
+                end),
+        }))
+
+        forge.sys.log(0, "loaded")
+        return friendly
+    end
+end

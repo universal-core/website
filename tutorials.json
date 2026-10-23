@@ -1,0 +1,19 @@
+{
+  "units": [
+    {
+      "id": "forge-basics",
+      "title": "Forge basics",
+      "items": [
+        "forge-basics/tut-first-forge",
+        "forge-basics/tut-luna-message"
+      ]
+    },
+    {
+      "id": "building-blocks",
+      "title": "Building blocks",
+      "items": [
+        "building-blocks/tut-battle-arbiter-rule"
+      ]
+    }
+  ]
+}

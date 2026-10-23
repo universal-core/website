@@ -1,0 +1,138 @@
+---
+title: Your first Forge module
+description: Build a login counter as a Forge module in three steps, compile it, restart the game core and watch it count in the chat and in the log.
+slug: /first-forge-module
+sidebar_position: 1
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import loginCounter1 from "!!raw-loader!./_tut-first-forge/login_counter-1.forge";
+import loginCounter2 from "!!raw-loader!./_tut-first-forge/login_counter-2.forge";
+import loginCounter3 from "!!raw-loader!./_tut-first-forge/login_counter-3.forge";
+
+export const start = { "share/locale/italy/system/tutorial/login_counter.forge": loginCounter1 };
+export const solution = { "share/locale/italy/system/tutorial/login_counter.forge": loginCounter3 };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/tutorial/login_counter.forge">
+
+You build a Forge module named `login_counter`. Every time a player logs in, it counts the login, writes a chat line to the player and a line to the game core log. When the player logs out it drops its reference to the character. The count itself stays in the module until the core stops.
+
+## Before you start
+
+- A runtime you can compile and restart: the folder that holds `share/`, `qc.sh`, `run.sh` and `shutdown.sh`, and a game core you can log in to.
+- A rough idea of what a Forge is: the [Forge API reference](/docs/core/luna-forge) lists the API, and [How Forge modules work](/foundations/luna/forge) explains what happens underneath.
+- A text editor. The workbench on the right only shows the files; you create the real one in `share/locale/italy/system/tutorial/`.
+
+## Step 1: a module that loads and says so
+
+A forge file is a `forge <name> begin` block. Inside it, `environment game begin` holds Lua that runs once, when the game core boots, and it must return a table or an object. That return value is what the rest of the server sees as `forge.game.login_counter`. The module here is a small class with two tables keyed by player id: `logins` for the counts and `online` for the live characters.
+
+<ShowFile path="share/locale/italy/system/tutorial/login_counter.forge" lines="4-11" />
+
+Create `share/locale/italy/system/tutorial/login_counter.forge` with exactly this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+```text
+../system/tutorial/login_counter.forge
+```
+
+Without that line, `--f` compiles the file but the next full compile deletes the result and does not rebuild it. Then compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/login_counter.forge
+```
+
+The path is relative to the quest folder, the same form `quest_list` uses.
+
+**Check.** The compiler prints no error, and `share/locale/italy/quest/forge/login_counter.game` exists. There is nothing under `object/` yet for this forge, because the file has no `state` block.
+
+Restart the game cores so the forge loads (see Run it below), then search the log:
+
+```bash
+grep login_counter logs/syslog
+```
+
+You should see:
+
+```text
+[Forge-login_counter]: loaded
+```
+
+## Step 2: count logins from a `when login` hook
+
+A hook is a `when` block in a `state` block. It runs as a quest, with the player who triggered it as the current player, so `pc.get_player_id()` works there. Keep the hook short: read the player id, find the character, call into the module, return. The module keeps the state, the hook does not.
+
+<UpdateFile path="share/locale/italy/system/tutorial/login_counter.forge" code={loginCounter2} />
+
+Replace the whole file with this version. Three things to notice:
+
+- `Counter:on_login` is called with `:`, because the environment returned an instance and the method needs `self`.
+- The module logs with `forge.sys.log(0, ...)`. Level 0 always prints, and the line always carries the `[Forge-login_counter]:` prefix.
+- The hook never waits. A `when login` block must run to the end.
+
+**Check.** Compile again, and `share/locale/italy/quest/object/notarget/login/login_counter.start` and `object/state/login_counter` now exist. Restart, log in, and the chat shows:
+
+```text
+Login 1 on this core since it started
+```
+
+The log shows a line like this one (your name will differ):
+
+```text
+[Forge-login_counter]: Alice login 1, online 1
+```
+
+Log out: nothing in the log, and the table still holds the old character. Log in again: the chat says `Login 2`, and the log says `online 1` although you were offline in between. The entry is only replaced because it has the same player id; for the whole time you were out it pointed at a character the engine has already destroyed. That is the bug for step 3. It is harmless here because `count_online` never touches the stored character, but any code that used it would be reading freed memory.
+
+## Step 3: drop the reference on logout
+
+A character pointer that outlives the character is the classic trap in a forge. Clean up in `when logout`, and pass the player id, not the character: the hook then needs no nil check and the module never holds on to anything it did not have to.
+
+<UpdateFile path="share/locale/italy/system/tutorial/login_counter.forge" code={loginCounter3} />
+
+Replace the whole file again. `on_logout` removes the entry from `online`. It leaves `logins` alone, so the count survives a logout.
+
+**Check.** Compile, restart, log in and out. The log shows:
+
+```text
+[Forge-login_counter]: pid 1234 logout, online 0
+[QUEST_LOGOUT][INFO][1234] Logout PC OK!
+```
+
+Log in again: the chat says `Login 2` and the log says `login 2, online 1`. The module name appears in three roles in this file: the quest name behind `object/state/login_counter`, the module you reach as `forge.game.login_counter`, and the output file name. The quest table and the module are different tables.
+
+## Run it
+
+The loop is the same after every change:
+
+1. Compile the file: `./qc.sh --f ../system/tutorial/login_counter.forge`. A syntax error aborts with `<file>:<line>:syntax error : ...` on stderr. For an error inside the `environment` body the reported line is where the environment ends, not where the mistake is.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`. The db does not need a restart for a game-only forge. In the local docker runtime, restart the containers.
+3. Read `logs/syslog` of a game core. At boot the forge prints `[Forge-login_counter]: loaded`; at login and logout it prints the lines above. `logs/syserr` should have nothing about `login_counter`.
+
+There is no hot reload for forges. A changed forge is picked up only at the next core start, and a core restarts with its counts back at zero. A player who warps to another core starts at `Login 1` there, because each game core has its own copy of the module.
+
+If the module returns nothing, the file compiles, and the core refuses to start. The error is in `logs/syserr`:
+
+```text
+Forge::ExcecuteSources result is nil for forge[login_counter]. Each environment should return a table or a class instance
+could not load Forge: [./locale/italy/quest/forge]
+```
+
+Every forge after it in the load order is not loaded either. Put `return Counter:new()` back.
+
+## Pitfalls
+
+- `state` and `with` are reserved words in `.forge` files, as are `quest`, `when`, `define` and `begin`. The compiler rejects them as names, even after a dot. `local state = {}` or `self.with` fails the compile with `syntax error :` and the word. Rename the field, or write `t["state"]` for a field you do not own.
+- Global `sys_log(1, ...)` prints nothing on a live server: any level of 1 or more is dropped unless the server is a test server. Use `forge.sys.log(0, ...)` in a module.
+- Do not wait inside a hook. `wait()`, `select(...)` or `input()` in `when login` ends with `QUEST NOT END RUNNING on Login/Logout` in `logs/syserr`, and the block is closed. A module that has to wait starts a coroutine owned by the player.
+- A typo in `forge.game.login_countr:on_login(ch)` compiles, because the compiler does not check calls. It fails at the first login with `attempt to index a nil value (field 'login_countr')`, and the server keeps running.
+- `forge.game.login_counter.on_login(ch)` with a dot instead of a colon passes the character as `self`, and the first access to `self.logins` fails.
+- Do not read another forge's module in the body of `environment game`. Forges load in directory order, which is not guaranteed, so it works on one machine and kills the core on another.
+
+## Where to go next
+
+- [Forge API reference](/docs/core/luna-forge): files, environments, boot order and the full surface.
+- [How Forge modules work](/foundations/luna/forge): how a forge is loaded, why state lives in the environment and how it differs from a quest.
+- Make the counter survive a restart: it needs a db or a quest flag, which this module deliberately avoids.
+
+</Tutorial>

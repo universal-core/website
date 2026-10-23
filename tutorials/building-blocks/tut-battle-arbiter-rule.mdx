@@ -1,0 +1,192 @@
+---
+title: Write a battle arbiter rule
+description: Register a guard and verdict pair from a Forge so two empires cannot hurt each other, switch it on and off with a GM command, then break it twice on purpose to see the logs.
+slug: /battle-arbiter-rule
+sidebar_position: 3
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import friendly1 from "!!raw-loader!./_tut-battle-arbiter-rule/friendly_empires-1.forge";
+import friendly2 from "!!raw-loader!./_tut-battle-arbiter-rule/friendly_empires-2.forge";
+import friendly3 from "!!raw-loader!./_tut-battle-arbiter-rule/friendly_empires-3.forge";
+import friendly4 from "!!raw-loader!./_tut-battle-arbiter-rule/friendly_empires-4.forge";
+
+export const start = { "share/locale/italy/system/tutorial/friendly_empires.forge": friendly1 };
+export const solution = { "share/locale/italy/system/tutorial/friendly_empires.forge": friendly2 };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/tutorial/friendly_empires.forge">
+
+You build a Forge module named `friendly_empires`. A GM types `/friendly on 1 2` and from then on, on the map the GM stands on, a player of empire 1 cannot hurt a player of empire 2, and the other way round. `/friendly off` takes the rule away again. Everyone else fights as before.
+
+The rule is one battle arbiter: a guard that says which attacks it cares about, and a verdict that says yes, no or no opinion. Then you break it twice on purpose, once with a wrong return value and once with a stale handle, and read what the server logs.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), and the way you compile, register and restart from that page. This module uses the same loop.
+- The [battle arbiter reference](/docs/building-blocks/battle-arbiter) open beside you. It lists the dispatch order and the verdicts; this page uses them without repeating them.
+- The [Forge API reference](/docs/core/luna-forge) for the forge file layout.
+- A GM account, and two test characters of two different empires. Empire ids are 1, 2 and 3. Put both characters on the same map, and keep a third character of the remaining empire if you want to see the rule leave it alone.
+- A text editor. The workbench on the right only shows the files; you create the real one in `share/locale/italy/system/tutorial/`.
+
+## Step 1: register an arbiter from a command
+
+An arbiter is a `(name, guard, can_attack)` triple. `forge.sys.game.battle_arbiter_registry.register` takes the three and returns a handle, a number greater than 0. The registry asks every arbiter in registration order. If the guard returns `true`, it calls the verdict; the first `Allow` or `Deny` wins, and `Pass` hands the question to the next one.
+
+This guard owns the pair when both characters stand on the map the GM chose. The verdict denies the attack only if both are players and their empires are exactly the two the GM named, in either order. Everything else is `Pass`: mobs, NPCs, the third empire, a player on another map.
+
+<ShowFile path="share/locale/italy/system/tutorial/friendly_empires.forge" lines="16-34" />
+
+The guard and the verdict are closures over `map_index`, `empire_a` and `empire_b`, so one arbiter carries its own rule. The module keeps the handle in `self.handle`; you need it later to remove the arbiter.
+
+The switch is a GM command. `cmd.register_router` adds `/friendly`, and `cmd.new_implementor_route` adds the `on` route with two `number` arguments. The callback receives the GM as `ch` first. `new_implementor_route` fixes the permission level: only implementor-level GMs can run the route.
+
+Create `share/locale/italy/system/tutorial/friendly_empires.forge` with exactly this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+```text
+../system/tutorial/friendly_empires.forge
+```
+
+Then compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/friendly_empires.forge
+```
+
+**Check.** The compiler prints no error, and `share/locale/italy/quest/forge/friendly_empires.game` exists. There is no `state` block, so nothing is created under `object/`. Restart the game cores and search the log:
+
+```bash
+grep friendly logs/syslog
+```
+
+You should see:
+
+```text
+[OK] cmd.register_router : [friendly]
+[Forge-friendly_empires]: loaded
+```
+
+## Step 2: see the rule work
+
+Before the command, put your two characters of empires 1 and 2 next to each other on one map and hit one with the other. The hit lands. Two players of different empires are attackable on any map unless one of them is in Protect mode on its own empire's map or on a start map, so use a map where neither is.
+
+Log in with the GM account on that map and type:
+
+```text
+/friendly on 1 2
+```
+
+**Check.** The GM gets the chat line `Empires 1 and 2 are friendly on this map`, and the log shows the registration. The handle number varies, because other arbiters registered earlier take the lower ones:
+
+```text
+[OK] CBattleArbiterRegistry::Register : [friendly:<map_index>] handle=<n>
+[Forge-friendly_empires]: on for map <map_index>, handle <n>
+```
+
+Now hit again, in both directions. What you see:
+
+- No damage. The victim's HP does not move.
+- `Deny` beats every PK mode. The verdict is asked before the PK rules, so a duel, a PK mode switch or a killer flag changes nothing.
+- The client still shows the attack cursor and the swing. The arbiter sends nothing to the client, and the client only knows that a player of another empire is a valid target. A team session would broadcast a message that hides the cursor; an arbiter does not.
+- A targeted skill that is for enemies only is refused. On a test server the caster also gets the chat line `<skill name>: this skill cannot be cast on that target`.
+- The two empires still cannot buff each other. The buff check asks the arbiter too, but `Deny` only means "not attackable"; it then falls back to "same empire", which is false for these two, so no buff. "Friendly" here means "cannot hurt", not "allied".
+- The third empire fights both of them, and mobs fight everyone, because the verdict answered `Pass`.
+
+Poison, fire and bleeding already running between the two characters also stop on their next tick.
+
+Now the flaw. Type `/friendly on 1 2` a second time: the log gets a second `Register` line with a new handle, and the first handle is lost, because `self.handle` was overwritten. Nothing can remove that first arbiter any more except a core restart. A forge has no unload hook and no hot reload, so the rule would live until the core stops. Step 3 fixes both.
+
+## Step 3: unregister on `/friendly off`
+
+A registered arbiter stays until you drop it, and its handle is the only way to do that. Handles are never reused, and names are not compared, so `enable` has to refuse a second registration and `disable` has to give the handle back to the registry.
+
+<UpdateFile path="share/locale/italy/system/tutorial/friendly_empires.forge" code={friendly2} />
+
+Replace the whole file with this version. `enable` returns `false` when `self.handle` is already set. `disable` calls `registry.unregister`, which returns `true` when it found and removed the arbiter, logs only on success, then clears the handle. The `off` route reports the result in chat.
+
+Compile and restart as before.
+
+**Check.** Type `/friendly on 1 2`, then `/friendly off`. The chat shows `Empires fight again`, and the log shows:
+
+```text
+[OK] CBattleArbiterRegistry::Unregister : [friendly:<map_index>] handle=<n>
+[Forge-friendly_empires]: off for map <map_index>, handle <n>
+```
+
+Hits land again at once. The registry is asked on every attack, so nothing needs a restart. Type `/friendly off` once more: the chat shows `Nothing to turn off` and `logs/syserr` stays empty. Type `/friendly on 1 2` twice: the second time the chat shows `Already on for map <map_index>, use /friendly off first` and the log has one `Register` line.
+
+## Step 4: break the verdict on purpose
+
+The verdict must return one of the three `BATTLE_VERDICT` numbers. This version returns the boolean `false` where it denies. It compiles, it loads, and it does not work.
+
+<UpdateFile path="share/locale/italy/system/tutorial/friendly_empires.forge" code={friendly3} />
+
+Replace `return VERDICT.Deny` with `return false` (the button does it), compile, restart, and type `/friendly on 1 2`. Then hit.
+
+**Check.** The hits land. The wrong type makes the call count as `Pass`, so the two empires fight under the ordinary rules, and `logs/syserr` fills on every check that reaches the verdict:
+
+```text
+Bridge::ValidateProcessorInvocation wrong return: expected [number], got [boolean]
+[battle_arbiter_registry friendly:<map_index> can_attack] lua callback error
+```
+
+A verdict that falls off the end without a `return` gives `got nothing` in the same place. A guard that returns something other than a boolean is logged the same way, with `guard` in the second line, and counts as `false`, so the arbiter never applies. Do not use `return 0` or `return 1` either: the numbers are `Allow = 0`, `Deny = 1`, `Pass = 2`, and the names are the only safe way to write them.
+
+Put `VERDICT.Deny` back with the next button, compile and restart.
+
+## Step 5: break the handle on purpose
+
+A handle that the registry no longer knows is not an exception. This version of `disable` forgets to clear `self.handle` after the unregister, so the second `/friendly off` presents a stale handle.
+
+<UpdateFile path="share/locale/italy/system/tutorial/friendly_empires.forge" code={friendly4} />
+
+Compile, restart, type `/friendly on 1 2`, then `/friendly off` twice.
+
+**Check.** The first `off` behaves as in step 3. The second one returns `false` and writes to `logs/syserr`:
+
+```text
+CBattleArbiterRegistry::Unregister : unknown handle=<n>
+```
+
+The chat shows `Nothing to turn off`, and no `off for map` line appears, because the function logs only on success. After the first `off`, `/friendly on 1 2` answers `Already on`, because the module still believes it holds a handle. Nothing is damaged, but the module no longer knows what it has registered.
+
+Restore the clean version with the last button: `friendly_empires-2.forge` is also what the Solve view shows.
+
+<UpdateFile path="share/locale/italy/system/tutorial/friendly_empires.forge" code={friendly2} />
+
+## Run it
+
+The loop is the same after every change:
+
+1. Compile: `./qc.sh --f ../system/tutorial/friendly_empires.forge`.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`.
+3. Read `logs/syslog` for the `Register`, `Unregister` and `[Forge-friendly_empires]` lines, and `logs/syserr` for the errors above.
+
+The command needs implementor level. A player gets silence, and so does a lower-level GM who types a valid route. Anyone above player level who types it wrong gets usage in chat, with the routes in key order:
+
+```text
+wrong sub command. Usage:
+/friendly off
+/friendly on <empire> <empire>
+```
+
+`/friendly on 1` prints `wrong arguments. Usage:` and the usage line, and a non-number prints `need a number as 1 parameter. got <arg>`. If another forge already owns `/friendly`, `logs/syserr` shows `cmd.register_router : [friendly] already registered; keeping the first`.
+
+## Pitfalls
+
+- A forge has no unload hook, so nothing unregisters your arbiter for you. Tie `unregister` to the end of the thing being judged: a command here, an event teardown, a war end. The registry lives as long as the core, and on restart the rule is gone.
+- Keep the handle. Without it the arbiter can never be removed, and a second `register` without an `unregister` adds a second arbiter instead of replacing the first.
+- Guard and verdict must return what they promise: a boolean from the guard, a `BATTLE_VERDICT` number from the verdict. A wrong type is logged on every check and fails safe, and the log floods.
+- Keep the guard cheap. It runs for every attack check on the core, and each arbiter is asked in registration order.
+- Never register or unregister from inside a guard or a verdict. The registry walks its list while it calls them, and nothing protects that walk.
+- The rule is per core. A `/friendly on` lands on the core that hosts the GM's map; other cores are untouched.
+- The command does not validate empire ids. `/friendly on 1 1` registers a rule that denies attacks between two players of empire 1.
+- The arbiter changes the server's answer only. Players of the two empires still see each other as targets, and every swing is wasted.
+
+## Where to go next
+
+- [Battle arbiter reference](/docs/building-blocks/battle-arbiter): dispatch order, verdicts and the rest of the chain.
+- [Forge API reference](/docs/core/luna-forge): files, environments, boot order and the full surface.
+- [Your first Forge module](/tutorials/first-forge-module): the module loop this page reuses.
+
+</Tutorial>

@@ -1,0 +1,161 @@
+---
+title: Send a message from the server to a client window
+description: Define a protobuf message, push it from a Forge on login and receive it in a Python window that registers its own handler, then break the match on purpose to see what silence looks like.
+slug: /server-to-client-message
+sidebar_position: 2
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import loginCounter1 from "!!raw-loader!./_tut-luna-message/login_counter-1.forge";
+import loginCounter2 from "!!raw-loader!./_tut-luna-message/login_counter-2.forge";
+import loginCountProto from "!!raw-loader!./_tut-luna-message/login_counter.proto";
+import uiLoginCounter1 from "!!raw-loader!./_tut-luna-message/uilogincounter-1.py";
+import uiLoginCounter2 from "!!raw-loader!./_tut-luna-message/uilogincounter-2.py";
+
+export const start = { "share/locale/italy/system/tutorial/login_counter.forge": loginCounter1 };
+export const solution = { "protobuf/ue/login_counter.proto": loginCountProto, "share/locale/italy/system/tutorial/login_counter.forge": loginCounter2, "root/uilogincounter.py": uiLoginCounter1 };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/tutorial/login_counter.forge">
+
+You extend the `login_counter` Forge from the first tutorial. On every login it sends the player's login count to that player's client as a protobuf message, and a small Python window shows it: `Login 2, online 1`. Then you break the match between server and window on purpose and see that the message disappears without a single error.
+
+Three files make the trip: a `.proto` both sides compile, the forge that sends, and the window that receives.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), compiled and registered in `quest_list`, and the way you restart the game cores from that page.
+- Docker, to run the protobuf generator, and a client whose `root` folder you can edit and repack with your packing tool.
+- The [Forge API reference](/docs/core/luna-forge) for `send_client`. [How messages travel](/foundations/luna/transport) and [How the client receives them](/foundations/luna/client) explain what happens underneath.
+- A text editor. The workbench on the right only shows the files; you create the real ones in your server tree and in the client `root`.
+
+## Step 1: define the message and generate the bindings
+
+Server and client must agree on the bytes of a message. A `.proto` file is that agreement: field names, types and, above all, field numbers. The folder under `protobuf/` becomes the import path on both sides, so `protobuf/ue/login_counter.proto` is `require("ue.login_counter_pb")` in Lua and `from luna.protobuf.ue import login_counter_pb2` in Python.
+
+<CreateFile path="protobuf/ue/login_counter.proto" code={loginCountProto} />
+
+Create `protobuf/ue/login_counter.proto` with exactly this content. File and folder names may only use letters, digits, hyphens and underscores. `required` fields must be set before the message serializes; the numbers `1` and `2` are what travels on the wire.
+
+Run the generator from the folder that holds `protobuf_config.yaml`. The `protobuf/` folder with your `.proto` files sits next to it, and both scripts read the config and resolve paths relative to it. Its `python_path` and `lua_path` keys say where the two outputs land. Build the image once, then generate:
+
+```bash
+sh protobuf_build_image.sh
+sh protoc.sh
+```
+
+On Windows use `protobuf_build_image.bat` and `protoc.bat`. Run `protoc` again after every `.proto` change.
+
+The generator wipes and rebuilds. It deletes both output folders first and regenerates every `.proto` in the tree, so a file you placed by hand in `root/luna/protobuf/` or `share/locale/protobuf/` is gone after the next run.
+
+**Check.** Two outputs exist: `root/luna/protobuf/ue/login_counter_pb2.py` for the client, and `share/locale/protobuf/ue/login_counter_pb.lua` for the server. The Lua file defines `GCLoginCount`:
+
+```bash
+grep GCLoginCount share/locale/protobuf/ue/login_counter_pb.lua
+```
+
+The server reads the Lua file at boot, so it must sit in the `share/locale/protobuf/` folder your game core runs with. If your `protobuf_config.yaml` writes somewhere else, copy the folder across.
+
+## Step 2: send it from the forge
+
+The send call is `forge.sys.game.send_client(ch, header, message)`. The message is the serialized protobuf, the header is a string of your choice, and the namespace is not an argument at all: it is the name of the forge that makes the call. For `forge login_counter begin`, the namespace on the wire is `login_counter`. It is not the proto package (`LoginCounter`), not the file name and not `game`.
+
+The call must be made from a function defined inside the forge's environment, so it goes into `Counter:on_login`, not into the `when login` hook. A call made straight from the hook fails with `ForgeGame::SendClientPacket called from a non-forge script`.
+
+<UpdateFile path="share/locale/italy/system/tutorial/login_counter.forge" code={loginCounter2} />
+
+Replace the whole file with this version. Two lines at the top load the generated module, and the end of `on_login` builds a `GCLoginCount`, fills both required fields and sends it under the header `count`. A required field left unset makes `SerializeToString` raise `Message is missing required fields`, and a misspelled field name raises `<name> not found`. Both are logged with a stack trace and the core keeps running.
+
+**Check.** Compile and restart as in the first tutorial:
+
+```bash
+./qc.sh --f ../system/tutorial/login_counter.forge
+```
+
+Log in. The chat line `Login 1 on this core since it started` and the `[Forge-login_counter]:` log line are the same as before, and `logs/syserr` has nothing new. If the core refuses to start and `logs/syserr` names `ue.login_counter_pb`, the Lua file from step 1 is not under `share/locale/protobuf/ue/`.
+
+The client shows nothing yet. The message arrived, no window listens for it, and it was dropped without a word. Keep that in mind for step 4.
+
+## Step 3: a window that registers its handler
+
+The client does not route by itself. A window says "send me `login_counter` messages with the header `count`" by calling `luna.RegisterHandler` with its own window handle, the namespace, the header and a callback. When a message arrives, the engine looks for callbacks registered for exactly that namespace and header and calls them with the payload.
+
+<CreateFile path="root/uilogincounter.py" code={uiLoginCounter1} />
+
+Create `root/uilogincounter.py` with exactly this content. Four things carry the lesson:
+
+- `FORGE_NAME` and `HEADER` must equal the forge name and the header in `send_client`, character for character.
+- The handle comes from `self.GetWindowHandle()`, which exists only after the base `__init__` has run. Register after it.
+- The callback is wrapped in `ui.__mem_func__`. The engine holds the callable you register; wrapped, it holds a weak reference to the window, so the window can still be freed. A raw bound method keeps the window alive forever and `__del__` never runs.
+- The window unregisters in `Destroy` and in `__del__`, then calls the base `__del__`. `luna.UnregisterHandler(handle)` removes every registration that handle made.
+
+The handler gets the payload as a string. `utils.Deserialize` parses it into a `GCLoginCount` and returns `None` on a bad payload, so the handler returns early.
+
+Now create the window when the interface is built. In `root/interfacemodule.py`, make five small edits:
+
+- Import it with the other windows: `import uilogincounter as uiLoginCounter`.
+- Set `self.wndLoginCounter = None` in `__Initialize`.
+- Create it in `__MakeWindows`: `self.wndLoginCounter = uiLoginCounter.LoginCounterWindow()`.
+- In `Close`, call `self.wndLoginCounter.Destroy()` when it is set.
+- At the end of `Close`, run `del self.wndLoginCounter` with the other windows.
+
+Repack the client with your packing tool and restart it. The packed `root` is read at startup.
+
+**Check.** Log in. A small board titled `Login counter` appears with `Login 1, online 1` (online is every player on the core, so expect a higher number if others are logged in). Log out and in again: `Login 2, online 1`, because the forge keeps the count until the core stops. The server log line still reads `login 2, online 1`.
+
+## Step 4: break the match on purpose
+
+Registration is an exact string match on namespace and header. Change one letter and the window never hears from the server again. This version registers the header `counts`, while the forge sends `count`.
+
+<UpdateFile path="root/uilogincounter.py" code={uiLoginCounter2} />
+
+Change `HEADER` in `root/uilogincounter.py` to `"counts"`, repack the client and log in.
+
+**Check.** The board does not appear. The server log shows its normal line, `logs/syserr` on the server and `syserr.txt` on the client are empty, and no window complains. This is the whole rule of delivery:
+
+- A push from the server carries no target window (handler 0). It reaches every window registered for that namespace and header, not just one.
+- If no callback ran, the message falls back to the game window's `BINARY_LunaMessage`. That function has no branch for `login_counter`, so the message is dropped silently.
+
+Put it back: press the button below, which restores `HEADER = "count"`, repack, restart and log in. The board returns.
+
+<UpdateFile path="root/uilogincounter.py" code={uiLoginCounter1} />
+
+## Run it
+
+The loop after every change:
+
+1. Proto change: run `sh protoc.sh`, then repack the client and recompile the forge.
+2. Forge change: `./qc.sh --f ../system/tutorial/login_counter.forge`, then restart the game cores.
+3. Window change: repack the client with your packing tool and restart it.
+
+When all three files agree, a login shows the board with `Login N, online M`, and the server log shows `[Forge-login_counter]: <name> login N, online M`. The client logs nothing on a successful delivery.
+
+When something is off, find the symptom here:
+
+| What you see | Cause |
+| --- | --- |
+| Nothing, no error anywhere | Namespace or header differs between `send_client` and `RegisterHandler`, the window is not registered, or it was destroyed without unregistering. |
+| The board shows `Login 0` | The field numbers in the two compiled `.proto` copies differ, for example a client that was not repacked after a number changed. The protobuf decoder keeps the unknown number aside and reads the known field as 0. |
+| `ImportError: No module named login_counter_pb2` | The generated Python was not packed into the client. |
+| `Luna protobuf Deserialization error: ...` in `syserr.txt`, then `AttributeError` | The payload does not parse as the class you passed to `utils.Deserialize`. |
+| `ForgeGame::SendClientPacket called from a non-forge script` | `send_client` was called from the `when login` block instead of a forge method. |
+| Core does not start, `ue.login_counter_pb` in `logs/syserr` | The generated Lua file is missing from `share/locale/protobuf/ue/`. |
+
+## Pitfalls
+
+- The namespace is the forge name. The proto package, the file name and the environment name (`game`) are all wrong guesses, and all of them fail silently.
+- Field numbers are the contract, not field names or declaration order. Change one side and the other side shows 0 or swapped values without an error. Regenerate and repack both sides together.
+- The generator rebuilds every proto and empties its output folders. Never keep hand-written files in them.
+- A window that dies without unregistering still counts as having handled the message. The dead callback returns without doing anything, the game window fallback is skipped, and the message is swallowed. Unregister in `Destroy` and in `__del__`.
+- Registering the same window, namespace and header twice is harmless: the second call replaces the first. Two different windows registered for the same pair both receive every push.
+- An exception inside the callback prints a traceback to `syserr.txt` and nothing else happens. The fallback does not run.
+- `luna.ClearHandlers()` runs when the interface is torn down, so every registration is gone after you return to character select. A window built on the next login registers again.
+
+## Where to go next
+
+- [Forge API reference](/docs/core/luna-forge): `send_client`, calling context and errors.
+- [How messages travel](/foundations/luna/transport): the packet, the namespace and the handler id.
+- [How the client receives them](/foundations/luna/client): registration, the lifetime of handlers and the game window fallback.
+- [Your first Forge module](/tutorials/first-forge-module): the module this one extends.
+
+</Tutorial>

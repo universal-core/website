@@ -1,0 +1,7 @@
+syntax = "proto2";
+package LoginCounter;
+
+message GCLoginCount {
+    required int32 count = 1;
+    required int32 online = 2;
+}

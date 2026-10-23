@@ -1,0 +1,79 @@
+forge friendly_empires begin
+    environment game begin
+        local registry = forge.sys.game.battle_arbiter_registry
+        local VERDICT = registry.BATTLE_VERDICT
+
+        local Friendly = {}
+        Friendly.__index = Friendly
+
+        function Friendly:new()
+            return setmetatable({ handle = nil, map_index = 0 }, Friendly)
+        end
+
+        ---@param map_index integer
+        ---@param empire_a integer
+        ---@param empire_b integer
+        ---@return boolean
+        function Friendly:enable(map_index, empire_a, empire_b)
+            if self.handle ~= nil then
+                return false
+            end
+            self.handle = registry.register(
+                "friendly:" .. map_index,
+                function(att, vic)
+                    return att:get_map_index() == map_index and vic:get_map_index() == map_index
+                end,
+                function(att, vic)
+                    if not (att:is_pc() and vic:is_pc()) then
+                        return VERDICT.Pass
+                    end
+                    local a, b = att:get_empire(), vic:get_empire()
+                    if (a == empire_a and b == empire_b) or (a == empire_b and b == empire_a) then
+                        return VERDICT.Deny
+                    end
+                    return VERDICT.Pass
+                end)
+            self.map_index = map_index
+            forge.sys.log(0, "on for map " .. map_index .. ", handle " .. self.handle)
+            return true
+        end
+
+        ---@return boolean
+        function Friendly:disable()
+            if self.handle == nil then
+                return false
+            end
+            local removed = registry.unregister(self.handle)
+            if removed then
+                forge.sys.log(0, "off for map " .. self.map_index .. ", handle " .. self.handle)
+            end
+            self.map_index = 0
+            return removed
+        end
+
+        local friendly = Friendly:new()
+
+        local cmd = forge.sys.game.cmd
+        cmd.register_router("friendly", cmd.new_router(nil, {
+            on = cmd.new_implementor_route("/friendly on <empire> <empire>", { "number", "number" },
+                function(ch, empire_a, empire_b)
+                    if friendly:enable(ch:get_map_index(), empire_a, empire_b) then
+                        ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Empires " .. empire_a .. " and " .. empire_b .. " are friendly on this map")
+                    else
+                        ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Already on for map " .. friendly.map_index .. ", use /friendly off first")
+                    end
+                end),
+            off = cmd.new_implementor_route("/friendly off", {},
+                function(ch)
+                    if friendly:disable() then
+                        ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Empires fight again")
+                    else
+                        ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Nothing to turn off")
+                    end
+                end),
+        }))
+
+        forge.sys.log(0, "loaded")
+        return friendly
+    end
+end

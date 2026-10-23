@@ -1,0 +1,13 @@
+forge login_counter begin
+    environment game begin
+        local Counter = {}
+        Counter.__index = Counter
+
+        function Counter:new()
+            return setmetatable({ logins = {}, online = {} }, Counter)
+        end
+
+        forge.sys.log(0, "loaded")
+        return Counter:new()
+    end
+end

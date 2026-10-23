@@ -1,0 +1,59 @@
+forge login_counter begin
+    environment game begin
+        local pb_loader = require("pb_loader")
+        local messages = require("ue.login_counter_pb")
+
+        local Counter = {}
+        Counter.__index = Counter
+
+        function Counter:new()
+            return setmetatable({ logins = {}, online = {} }, Counter)
+        end
+
+        ---@param ch LPCHARACTER
+        function Counter:on_login(ch)
+            local pid = ch:get_player_id()
+            local count = (self.logins[pid] or 0) + 1
+            self.logins[pid] = count
+            self.online[pid] = ch
+
+            ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Login " .. count .. " on this core since it started")
+            forge.sys.log(0, ch:get_name() .. " login " .. count .. ", online " .. self:count_online())
+
+            local msg = pb_loader.new(messages.GCLoginCount)
+            msg.count = count
+            msg.online = self:count_online()
+            forge.sys.game.send_client(ch, "count", msg:SerializeToString())
+        end
+
+        ---@param pid integer
+        function Counter:on_logout(pid)
+            self.online[pid] = nil
+            forge.sys.log(0, "pid " .. pid .. " logout, online " .. self:count_online())
+        end
+
+        function Counter:count_online()
+            local n = 0
+            for _ in pairs(self.online) do
+                n = n + 1
+            end
+            return n
+        end
+
+        forge.sys.log(0, "loaded")
+        return Counter:new()
+    end
+
+    state start begin
+        when login begin
+            local ch = forge.sys.game.char_manager.find_by_pid(pc.get_player_id())
+            if ch ~= nil then
+                forge.game.login_counter:on_login(ch)
+            end
+        end
+
+        when logout begin
+            forge.game.login_counter:on_logout(pc.get_player_id())
+        end
+    end
+end
