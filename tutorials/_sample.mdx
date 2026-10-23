@@ -1,0 +1,51 @@
+---
+title: Tutorial component sample
+hide_table_of_contents: true
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import helloStart from "!!raw-loader!./_sample/hello-start.quest";
+import helloFinal from "!!raw-loader!./_sample/hello-final.quest";
+import greet from "!!raw-loader!./_sample/greet.lua";
+import config from "!!raw-loader!./_sample/hello.yml";
+
+export const start = {
+  "quest/hello.quest": helloStart,
+  "config/hello.yml": config,
+};
+
+export const solution = {
+  "quest/hello.quest": helloFinal,
+  "quest/lib/greet.lua": greet,
+  "config/hello.yml": config,
+};
+
+<Tutorial files={start} solution={solution} active="quest/hello.quest">
+
+This page is not published. It shows every tutorial component once; see
+`tutorials/_README.md` for how to write one.
+
+## A shared greeting
+
+The quest on the right greets the player with a fixed line. Move the text into
+a small Lua module so other quests can reuse it.
+
+<CreateFile path="quest/lib/greet.lua" code={greet} />
+
+## Use it from the quest
+
+Call the module from the login trigger. The changed lines are marked in the
+editor.
+
+<UpdateFile path="quest/hello.quest" code={helloFinal} />
+
+## The config
+
+The command that repeats the greeting lives in the YAML config.
+
+<ShowFile path="config/hello.yml" lines="3-4" />
+
+Edit any file on the right; **Reset** brings back the state of the last step,
+**Solve** shows the finished files.
+
+</Tutorial>

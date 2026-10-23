@@ -1,0 +1,456 @@
+/* The tutorial page is an app: header, a split that fills the viewport, footer. Nothing scrolls
+   but the text column and the editor. */
+.uc-tutorial-page {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.uc-tutorial-main {
+  overflow: hidden;
+}
+
+/* A chapter without a workbench still scrolls. */
+.uc-tutorial-main > :not(.uc-tutorial) {
+  overflow-y: auto;
+}
+
+.uc-tutorial {
+  display: grid;
+  grid-template-columns: var(--uc-tutorial-split, 50%) 10px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background: var(--uc-bg2);
+}
+
+.uc-tutorial__text {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--uc-bg);
+  border-right: 1px solid var(--uc-line);
+}
+
+.uc-tutorial__article {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 2rem 2.5rem;
+}
+
+.uc-tutorial__article > h1:first-child {
+  margin-top: 0;
+}
+
+.uc-tutorial__handle {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.uc-tutorial__handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 4px;
+  height: 32px;
+  margin-top: -16px;
+  border-radius: 2px;
+  background: var(--uc-line);
+  transition: background-color 0.15s ease;
+}
+
+.uc-tutorial__handle:hover::after,
+.uc-tutorial__handle:active::after {
+  background: var(--uc-violet-line);
+}
+
+.uc-tutorial__bench {
+  grid-column: 3;
+  grid-row: 1;
+  margin: 10px 10px 10px 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--uc-bg-code);
+  border: 1px solid var(--uc-line);
+  border-radius: var(--uc-radius);
+  font-family: var(--uc-font-body);
+}
+
+.uc-tutorial__switch {
+  display: none;
+}
+
+.uc-tutorial__bar {
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  min-height: 36px;
+  background: var(--uc-bg2);
+  border-bottom: 1px solid var(--uc-line);
+}
+
+.uc-tutorial__tabs {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.uc-tutorial__tab {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  border-right: 1px solid var(--uc-line);
+  box-shadow: inset 0 -2px 0 transparent;
+  color: var(--uc-muted);
+  font-family: var(--uc-font-mono);
+  font-size: 12px;
+}
+
+.uc-tutorial__tab button {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.uc-tutorial__tab > button:first-child {
+  padding: 0 4px 0 12px;
+  height: 100%;
+}
+
+.uc-tutorial__tab-close {
+  display: flex;
+  padding: 4px 8px 4px 4px;
+  opacity: 0.5;
+}
+
+.uc-tutorial__tab-close:hover {
+  opacity: 1;
+}
+
+.uc-tutorial__tab--active {
+  background: var(--uc-bg-code);
+  color: var(--uc-text);
+  box-shadow: inset 0 -2px 0 var(--uc-violet);
+}
+
+.uc-tutorial__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.uc-tutorial__actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  appearance: none;
+  padding: 3px 10px;
+  border: 1px solid var(--uc-line-strong);
+  border-radius: var(--uc-radius-sm);
+  background: transparent;
+  color: var(--uc-text);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.uc-tutorial__actions button:hover:not(:disabled) {
+  border-color: var(--uc-violet-line);
+}
+
+.uc-tutorial__actions button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.uc-tutorial__actions .uc-tutorial__solve--on {
+  background: var(--uc-violet-soft);
+  border-color: var(--uc-violet-line);
+  color: var(--uc-violet2);
+}
+
+.uc-tutorial__body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(120px, 168px) minmax(0, 1fr);
+}
+
+.uc-tutorial__files {
+  overflow: auto;
+  padding: 6px 0;
+  background: var(--uc-bg2);
+  border-right: 1px solid var(--uc-line);
+}
+
+.uc-tutorial__tree {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.uc-tutorial__node {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 3px 8px;
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--uc-muted);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uc-tutorial__node svg {
+  flex-shrink: 0;
+}
+
+.uc-tutorial__node:hover {
+  background: var(--uc-bg3);
+  color: var(--uc-text);
+}
+
+.uc-tutorial__node--active,
+.uc-tutorial__node--active:hover {
+  background: var(--uc-violet-soft);
+  color: var(--uc-violet2);
+}
+
+.uc-tutorial__chevron {
+  display: inline-flex;
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.uc-tutorial__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uc-tutorial__editor {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.uc-tutorial__cm {
+  flex: 1;
+  min-height: 0;
+}
+
+.uc-tutorial__cm:empty {
+  display: none;
+}
+
+.uc-tutorial__fallback {
+  flex: 1;
+  margin: 0;
+  padding: 12px 16px 12px 52px;
+  overflow: auto;
+  background: transparent;
+  color: #cfc8bb;
+  font-family: var(--uc-font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.uc-tutorial__empty {
+  padding: 16px;
+  color: var(--uc-muted);
+  font-size: 13px;
+}
+
+.uc-tutorial__status {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border-top: 1px solid var(--uc-line);
+  background: var(--uc-violet-soft);
+  color: var(--uc-violet2);
+  font-size: 12px;
+}
+
+.uc-tutorial__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0.25rem 0 1.25rem;
+  padding: 6px 12px;
+  appearance: none;
+  border: 1px solid var(--uc-violet-line);
+  border-radius: var(--uc-radius);
+  background: var(--uc-violet-soft);
+  color: var(--uc-violet2);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.uc-tutorial__step:hover:not(:disabled) {
+  border-color: var(--uc-violet);
+  background: rgba(167, 139, 245, 0.2);
+}
+
+.uc-tutorial__step:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.uc-tutorial__step code {
+  font-family: var(--uc-font-mono);
+  font-size: 13px;
+  color: var(--uc-text);
+}
+
+@media (max-width: 959px) {
+  .uc-tutorial {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .uc-tutorial-page__footer {
+    display: none;
+  }
+
+  .uc-tutorial__text,
+  .uc-tutorial__bench {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .uc-tutorial__text {
+    border-right: 0;
+  }
+
+  .uc-tutorial__article {
+    padding: 1.5rem 1rem 2rem;
+  }
+
+  .uc-tutorial__bench {
+    margin: 8px;
+  }
+
+  .uc-tutorial__handle {
+    display: none;
+  }
+
+  .uc-tutorial[data-mode="text"] .uc-tutorial__bench,
+  .uc-tutorial[data-mode="files"] .uc-tutorial__text {
+    display: none;
+  }
+
+  .uc-tutorial__switch {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    background: var(--uc-bg);
+    border-top: 1px solid var(--uc-line);
+  }
+
+  .uc-tutorial__switch-track {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    max-width: 340px;
+    padding: 4px;
+    border-radius: 40px;
+    background: var(--uc-bg2);
+  }
+
+  .uc-tutorial__switch button {
+    flex: 1;
+    appearance: none;
+    padding: 6px;
+    border: 0;
+    border-radius: 32px;
+    background: transparent;
+    color: var(--uc-muted);
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .uc-tutorial__switch .uc-tutorial__switch--active {
+    background: var(--uc-violet-soft);
+    color: var(--uc-violet2);
+  }
+}
+
+@media (max-width: 559px) {
+  .uc-tutorial__body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .uc-tutorial__files {
+    max-height: 9rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--uc-line);
+  }
+}
+
+/* The text column sits beside the workbench, too narrow for side-by-side cells: each row stacks. */
+.uc-tutorial__text .table-container {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: 100% !important;
+}
+
+.uc-tutorial__text table,
+.uc-tutorial__text tbody,
+.uc-tutorial__text tr,
+.uc-tutorial__text td {
+  display: block;
+  width: 100%;
+}
+
+.uc-tutorial__text thead {
+  display: none;
+}
+
+.uc-tutorial__text tr {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--uc-line);
+}
+
+.uc-tutorial__text tr:last-child {
+  border-bottom: 0;
+}
+
+.uc-tutorial__text td {
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.uc-tutorial__text td:first-child {
+  margin-bottom: 6px;
+  color: var(--uc-text);
+}
+
+.uc-tutorial__text td code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

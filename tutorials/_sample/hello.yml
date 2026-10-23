@@ -1,0 +1,4 @@
+quest: hello
+enabled: true
+greeting:
+  repeat_command: /hello

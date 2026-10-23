@@ -217,7 +217,10 @@ const siteConfig = {
         id: "tutorials",
         path: "tutorials",
         routeBasePath: "tutorials",
-        sidebarPath: require.resolve("./sidebars-tutorials.js"),
+        // Chapters are ordered by tutorials.js and browsed from the tutorial header, not a sidebar.
+        sidebarPath: false,
+        docLayoutComponent: "@theme/TutorialPage",
+        docItemComponent: "@theme/TutorialItem",
         admonitions,
       },
     ],

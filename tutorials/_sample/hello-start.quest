@@ -1,0 +1,7 @@
+quest hello begin
+	state start begin
+		when login begin
+			say("Welcome back.")
+		end
+	end
+end

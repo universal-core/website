@@ -1,0 +1,9 @@
+quest hello begin
+	state start begin
+		when login begin
+			say(greet.line(pc.get_name()))
+			say("")
+			say("Type /hello to see this again.")
+		end
+	end
+end
