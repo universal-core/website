@@ -1,0 +1,37 @@
+name: Imperial Stride
+type: GUILD
+subject: empire
+maxLevel: 7
+cooldownPoly: '30'
+costType: SUBJECT_GOLD
+costPoly: '100000'
+range: 0
+useTimeout: 2500
+flags:
+- SELFONLY
+- CAN_USE_FOR_ME
+client:
+  job: GUILD
+  icon: skill/shaman/jeungryeok
+  motionIndex: 203
+  gradeCount: 4
+desc:
+  vars:
+    speed: { ref: node.stride.amountPoly }
+resolve:
+  by: server
+  bound: { targets: '0', hitsPerTarget: '1' }
+per_use:
+- type: AFFECT
+  id: stride
+  point: MOV_SPEED
+  amountPoly: 5+3*skill_level
+  affect: KWAESOK
+  durationPoly: '60'
+  collect:
+    from: map
+    search: { take: 0 }
+    scalePoly: '1.0'
+  accept:
+    of: ALLY
+    kind: PLAYER

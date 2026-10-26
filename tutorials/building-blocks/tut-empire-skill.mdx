@@ -1,0 +1,183 @@
+---
+title: A map-wide empire skill
+description: Build skill 360 in three pieces, a map-wide empire skill file, its description and a forge that puts it on the support page, then set its level with eskill, pay from the monarch purse and cast it on one map.
+slug: /empire-skill
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, ShowFile } from "@site/src/components/tutorial";
+import skill from "!!raw-loader!./_tut-empire-skill/360.ucskill.yaml";
+import desc from "!!raw-loader!./_tut-empire-skill/360.ucskilldesc.yaml";
+import stride from "!!raw-loader!./_tut-empire-skill/imperial_stride.forge";
+import model156 from "!!raw-loader!./_tut-empire-skill/156.ucskill.yaml";
+
+export const start = { "Locale/conf/skill/156.ucskill.yaml": model156 };
+export const solution = { "Locale/conf/skill/156.ucskill.yaml": model156, "Locale/conf/skill/360.ucskill.yaml": skill, "Client-Files/locale/locale/universal/skill_desc/360.ucskilldesc.yaml": desc, "share/locale/italy/system/tutorial/imperial_stride.forge": stride };
+
+<Tutorial files={start} solution={solution} active="Locale/conf/skill/156.ucskill.yaml">
+
+You build skill 360, Imperial Stride. It belongs to an empire, not to a character. One cast gives every player of your empire on your map a movement speed buff for 60 seconds, and the cost comes out of the monarch purse. The skill is three pieces: a skill file, a description file for the client, and a forge that puts the skill on your support page with an on/off command.
+
+You set its level with `eskill`, press it, and read the purse, the cooldown and the affect list to see that it worked.
+
+## Before you start
+
+- The client reads two files for the skill: a copy of the skill file in the locale pack's `skill/` folder and the description in `skill_desc/`, side by side (`locale/universal/skill/360.ucskill.yaml` and `locale/universal/skill_desc/360.ucskilldesc.yaml`). After you write either file, repack the client locale and restart the client. Without them the support page shows a dead cell.
+- The loadout replaces your support page while it is on. The skills you keep there leave the bar until you type `/istride off`.
+- The finished module of [Your first Forge module](/tutorials/first-forge-module) and its loop to compile, register and restart, and the router pattern of [A bonus that only counts when](/tutorials/first-trait).
+- A test server, where every character can use GM commands, and one character whose empire you know, 1 to 3. Off a test server `eskill` needs the high wizard GM level and `/istride` the low one.
+- Optional, for the last check: a second client with a second character of the same empire.
+
+## Why a loadout
+
+The client has no slot for a new vnum. Its guild and empire slots are a fixed list compiled into the client: 150 to 158, and a new vnum is in none of them. The server has no idea of a slot at all.
+
+The one door from the server is the [skill loadout](/docs/building-blocks/loadout-policy): a rule that sends the client `(page, position, vnum)` and the client installs it. So the tutorial puts 360 on the `SUPPORT` page. It is server Lua and needs no client build.
+
+## Step 1: the skill file
+
+The shape is a map-wide empire skill: the AFFECT of the [skill file reference](/docs/building-blocks/skill-file) with `collect.from: map` and `accept.of: ALLY`. The affect is a movement speed point, `5+3*skill_level`, for 60 seconds.
+
+The model is 156, a shipped map-wide empire skill. Its top node sweeps the caster's map and its affect lands on every player it accepts:
+
+<ShowFile path="Locale/conf/skill/156.ucskill.yaml" lines="1-50" />
+
+Four lines carry the idea:
+
+- `subject: empire` makes the empire the owner. Its level is a number the empire holds, not one a character learns, and any player of an empire that holds the skill at level 1 or more may cast it.
+- `costType: SUBJECT_GOLD` takes the cost from the monarch purse of the caster's empire. The cost is a constant, `'100000'`, and the reason is in Pitfalls.
+- `collect.from: map` sweeps every player of the caster's map on this core, not the neighbourhood of the caster. `search: { take: 0 }` must stay: with no `search` block the sweep collects nobody.
+- `accept` takes `of: ALLY`, `kind: PLAYER`. Players of your own empire are allies. The cast is seeded with the caster, who is his own ally, so he is buffed too and no `seed: false` is needed.
+
+The vnum is 360, in the band for skills nothing grants and clear of the guild war list. The file name is the vnum.
+
+<CreateFile path="Locale/conf/skill/360.ucskill.yaml" code={skill} />
+
+Create `Locale/conf/skill/360.ucskill.yaml` with exactly this content. Restart the game cores: skill files load at boot.
+
+**Check.** Search the log:
+
+```bash
+grep "vnum 360" logs/syslog
+```
+
+You should see:
+
+```text
+[SkillBuild]: Building Imperial Stride (vnum 360)
+```
+
+`logs/syserr` says nothing starting with `Skill[360]`. A file that fails to build stops the boot, and the game core does not start.
+
+## Step 2: the description
+
+The client builds the skill tooltip from a description file. The `$speed` in it is the `speed` variable of the skill file: it reads the node's `amountPoly` at the empire's level, so the tooltip always shows the real number. The colour codes are the client's `|c...|r` form. See [Skill descriptions](/docs/building-blocks/skill-descriptions).
+
+<CreateFile path="Client-Files/locale/locale/universal/skill_desc/360.ucskilldesc.yaml" code={desc} />
+
+Create `Client-Files/locale/locale/universal/skill_desc/360.ucskilldesc.yaml` with this content. Repack the client locale, with a copy of the skill file from step 1 in the pack's `skill/` folder, and restart the client.
+
+**Check.** The client log has no line about skill 360. A description without its skill file is skipped with the message `CPythonSkill: skill 360 has a description but no config`.
+
+## Step 3: give it to the empire and fill the purse
+
+The level is the empire's. No loadout and no character table row holds it. Use your empire number for `<e>`:
+
+```text
+/eskill <e> set 360 1
+/eskill <e> show 360
+/eskill <e> gold 1000000
+/eskill <e> gold
+```
+
+**Check.** The replies, in order:
+
+```text
+Empire 1 skill 360 set to level 1.
+Empire 1 skill 360: level 1, cooldown 0s.
+Empire 1 gold: 0.
+Empire 1 gold: 1000000.
+```
+
+The number after the add is the balance before it, so the first `gold` line shows what the purse held. The second one shows the balance after. The numbers are an example. The level and the purse are written through the database core and come back to the cores a moment later, so a `show` or `gold` typed in the same breath can still print the old value. Wait a moment before you cast.
+
+`eskill set` checks nothing: not that a skill file exists, and not that the level is within `maxLevel`. This file takes 1 to 7. `/eskill 1 set 361 1` succeeds and writes a flag nothing reads.
+
+## Step 4: put it on the support page
+
+The forge registers one loadout rule. Its guard answers "did this character ask for it": a table filled by the command. The builder returns a plan with the `SUPPORT` page and one entry: vnum 360 in slot 1, with `level = 0`.
+
+The level in an entry is written to the character's own record for that vnum, and 360 is not the character's. So the entry says 0, and the empire's level from step 3 is what the server casts with and what the client draws on the slot. That a level-0 entry for an owned skill casts is what the code does: the character level is never asked for an empire skill. No loadout that ships carries an owned skill.
+
+The router is the one from the first trait: `/istride on` records the wish and refreshes the loadout, `/istride off` clears it and refreshes again, which brings back the page the loadout displaced.
+
+<CreateFile path="share/locale/italy/system/tutorial/imperial_stride.forge" code={stride} />
+
+Create `share/locale/italy/system/tutorial/imperial_stride.forge` with this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+```text
+../system/tutorial/imperial_stride.forge
+```
+
+Compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/imperial_stride.forge
+```
+
+Restart the game cores. The `wanted` table is in memory, so every restart forgets who asked: type `/istride on` again.
+
+**Check.** The log shows:
+
+```text
+[OK] cmd.register_router : [istride]
+[Forge-imperial_stride]: loaded, skill 360
+```
+
+Type `/istride on`. The chat says `imperial stride on the support page`, and the first cell of the support page in the character window shows the Imperial Stride icon at level 1. The tooltip shows the cost, 100000 Yang of the empire.
+
+## Step 5: cast it
+
+Press the cell. Your character plays the motion, the effect of the speed buff appears and you run faster. Then read three things.
+
+```text
+/affect_remove <your name>
+/eskill <e> gold
+/eskill <e> show 360
+```
+
+**Check.** The affect list has a row that starts with type `360`, point `19`, value `8` (5+3*1) and a duration counting down from 60. The purse reads 900000: 100000 lower. `show 360` reports a cooldown of about 30 seconds. Press the cell again before it runs out: the press is refused and nothing is paid (a test server prints `Cooltime not finished Imperial Stride`).
+
+To see "every ally on the map" and not "around me", cast with the second client logged in anywhere on the same map, far outside view range. `/affect_remove <second name>` shows the same 360 row. A character of another empire on that map gets none.
+
+## Run it
+
+The loop after each server change:
+
+1. Compile the forge: `./qc.sh --f ../system/tutorial/imperial_stride.forge`. A skill file change needs no `qc`.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`.
+3. Read `logs/syslog` for the `[SkillBuild]` and `[Forge-imperial_stride]` lines and `logs/syserr` for errors.
+4. After a change to the skill file or the description, repack the client locale and restart the client.
+
+A forge that fails to load makes the quest manager initialisation fail, and the game core does not start.
+
+## Pitfalls
+
+- Take a vnum from 151 to 157 and the war-only rule refuses the cast off a war map: the player sees "Puoi abilitare questa abilità solo in guerra." above the character, nothing is paid and no cooldown starts. That is the rule the shipped empire skills 154 to 157 live under today. Those vnums are also shipped skill files, so you would overwrite one. 360 is outside the list.
+- A cost that reads `skill_level` is priced at a stale level. The cost is charged before the cast takes its level from the empire, so the first cast after a restart prices at level 0 and the later ones at the level of the previous cast. A constant is exact. This is read from the call order, not observed.
+- The purse is debited on one core only. The cast takes the money from the memory of the core that ran it. `/eskill <e> gold` on that core shows the drop, other cores do not, and a restart brings back the value of the database. For this tutorial, on one core, the check holds. Do not read it as the empire's treasury being charged for good.
+- `collect.from: map` with no `search:` collects nobody. You get your own buff and no one else's. The seed, the caster, is still processed, so the cast looks fine on one client.
+- `search.radius` does nothing on a map sweep. The skill still loads and syserr says `` `search.radius` is ignored when `collect.from` is not sectree ``. A misspelled `from:` value is logged and falls back to the neighbourhood of the caster. Read `logs/syserr` after every restart.
+- A skill with no level shows level 0 and the client refuses the press itself. Run `/eskill <e> set 360 1`.
+- An empty purse is not checked by the client. The press goes out and the server refuses it; on a test server the chat says `Imperial Stride: You can't cast the skill because the costs aren't redeemable`.
+- A client without the skill file fails when it draws the page: `skill.GetSkillType - Failed to find skill by 360`, and the cell is dead. A server without it casts nothing.
+- The loadout empties the whole support page. `/istride off` puts the page back.
+- The vnum must stay under 400. At 400 and above the server logs `vnum overflow (vnum <n>)` to `logs/syserr` and the character never gets the slot's level.
+
+## Where to go next
+
+- [Skill file reference](/docs/building-blocks/skill-file): every key, `collect.from`, `accept` and the loader errors.
+- [Loadout policy](/docs/building-blocks/loadout-policy): the pages, the rule order and what a loadout saves.
+- [Skills: owned by a character, a guild or an empire](/foundations/skills/owners): the subject, the purse and `eskill`.
+
+</Tutorial>

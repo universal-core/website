@@ -1,0 +1,50 @@
+name: Ira del drago
+type: GUILD
+subject: empire
+maxLevel: 7
+cooldownPoly: '300'
+costType: SUBJECT_GOLD
+costPoly: 100000+50000*skill_level
+range: 0
+useTimeout: 2500
+flags:
+- SELFONLY
+- CAN_USE_FOR_ME
+- ATTACK_SKILL
+client:
+  job: GUILD
+  icon: skill/shaman/jeungryeok
+  motionIndex: 205
+  gradeCount: 4
+desc:
+  vars:
+    sunder: { ref: node.wrath_sunder.amountPoly, as: '(0-value)' }
+    dmg:    { ref: node.wrath_hit.amountPoly }
+resolve:
+  by: server
+  bound: { targets: '0', hitsPerTarget: '1' }
+# Not intracore: the performer is present, so damage keeps the crit roll, the
+# attacker's bonuses, damage_intent, the trait hooks and a real killer. A fight
+# happens on ONE map, so nothing here wants to cross a core.
+per_use:
+- type: AFFECT
+  id: wrath_sunder
+  point: PHYSICAL_RESISTANCE
+  amountPoly: 0-(3+2*skill_level)
+  affect: JUMAGAP
+  durationPoly: '30'
+  collect:
+    from: map
+    search: { take: 0 }
+    scalePoly: '1.0'
+  accept:
+    # The cast is seeded with the caster, who is not his own enemy: without
+    # this the seed test fails and the node collects nothing.
+    seed: false
+    of: ENEMY
+    kind: PLAYER
+  nodes:
+  - type: DAMAGE
+    id: wrath_hit
+    amountPoly: 300+250*skill_level
+    damageType: MAGIC

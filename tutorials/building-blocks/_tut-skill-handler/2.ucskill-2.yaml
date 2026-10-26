@@ -1,0 +1,37 @@
+name: Vortice della spada
+type: CLASS
+maxLevel: 40
+cooldownPoly: '18'
+costType: SP
+costPoly: 50+130*skill_k
+range: 500
+useTimeout: 2500
+skillshot: true
+weaponLimitation:
+- SWORD
+- TWO_HANDED
+flags:
+- ENEMYONLY
+- ATTACK_SKILL
+- LEVEL_UP_BY_POINT
+- CAN_CHANGE_DIRECTION
+client:
+  job: WARRIOR
+  icon: skill/warrior/palbang
+  motionIndex: 2
+  gradeCount: 4
+desc:
+  vars:
+    val: { ref: node.dmg.amountPoly }
+resolve:
+  by: client
+  bound: { targets: '12', hitsPerTarget: '1' }
+per_compute:
+- type: DAMAGE
+  id: dmg
+  amountPoly: 1360*skill_k+(point_TOTAL_PHYS_ATT-point_AURA_PHYS_ATT_BONUS)*2.75
+  damageType: MELEE
+  ability_scaling: { adder: PALBANG_ADDER, resist: PALBANG_RESIST }
+  handler: palbang
+  accept:
+    of: ENEMY

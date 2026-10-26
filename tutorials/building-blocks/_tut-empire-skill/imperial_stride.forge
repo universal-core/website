@@ -1,0 +1,34 @@
+forge imperial_stride begin
+    environment game begin
+        local VNUM = 360
+        local INFO = forge.sys.game.CHAT_TYPE.INFO
+        local wanted = {}
+
+        local loadout = forge.sys.game.skill_loadout
+        loadout.register("imperial_stride",
+            function(ch) return wanted[ch:get_player_id()] == true end,
+            function(ch)
+                return {
+                    pages  = { { id = "SUPPORT", layout = "flat" } },
+                    skills = { { page = "SUPPORT", slot = 1, vnum = VNUM, level = 0 } },
+                }
+            end)
+
+        local R = forge.sys.game.cmd
+        R.register_router("istride", R.new_router(nil, {
+            on = R.new_low_wizard_route("/istride on", {}, function(ch)
+                wanted[ch:get_player_id()] = true
+                loadout.refresh(ch)
+                ch:chat_packet(INFO, "imperial stride on the support page")
+            end),
+            off = R.new_low_wizard_route("/istride off", {}, function(ch)
+                wanted[ch:get_player_id()] = nil
+                loadout.refresh(ch)
+                ch:chat_packet(INFO, "imperial stride off")
+            end),
+        }))
+
+        forge.sys.log(0, "loaded, skill " .. VNUM)
+        return {}
+    end
+end

@@ -1,0 +1,148 @@
+---
+title: A back hit that lands 30% harder
+description: Write a Lua damage handler for the warrior skill 2, bind it with one line in the skill file, and check on a test server that the damage before defence rises by 30% on exactly the hits it announces.
+slug: /skill-handler
+sidebar_position: 7
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import model31 from "!!raw-loader!./_tut-skill-handler/31.lua";
+import skill1 from "!!raw-loader!./_tut-skill-handler/2.ucskill-1.yaml";
+import skill2 from "!!raw-loader!./_tut-skill-handler/2.ucskill-2.yaml";
+import handler1 from "!!raw-loader!./_tut-skill-handler/2-1.lua";
+import handler2 from "!!raw-loader!./_tut-skill-handler/2-2.lua";
+
+export const start = { "Locale/conf/skill/31.lua": model31, "Locale/conf/skill/2.ucskill.yaml": skill1 };
+export const solution = { "Locale/conf/skill/31.lua": model31, "Locale/conf/skill/2.ucskill.yaml": skill2, "Locale/conf/skill/2.lua": handler2 };
+
+<Tutorial files={start} solution={solution} active="Locale/conf/skill/31.lua">
+
+You give the warrior skill 2, Vortice della spada, a Lua damage handler. When the victim faces the same way you do, the hit counts as a back hit and the attack before defence is multiplied by 1.3. You write one new file and add one line to the skill's own file. No forge, no quest compiler, no client file. On a test server you read the effect in the chat: the engine prints the breakdown of every skill hit, and `pure` jumps by 30% on exactly the hits your handler announces.
+
+## Before you start
+
+- The [skill extension reference](/docs/building-blocks/skill-extension) open beside you, and [Beyond the formula](/foundations/skills/beyond-the-formula) for why a skill's damage can be shaped from Lua. This page uses both without repeating them. The [skill file reference](/docs/building-blocks/skill-file) explains the keys of the YAML file.
+- A test server, where `server.type.test_server` is set in the core config. The breakdown line in step 2 exists only there. On a test server every character is a GM implementor, so `/setskill` works for anyone. Verification stays on a test server: the line sits in the live damage path behind that flag.
+- A warrior with skill 2 and a sword or a two-handed weapon, the weapons the skill allows. Set the level with `/setskill 2 <level>` if the character does not have it.
+- Two or more ordinary monsters of one kind standing near each other. Not bosses or metin stones.
+- Switch off other bonuses while you measure: a trait buff, a stealth effect or a potion moves the numbers between casts.
+- Access to the skill files of the server. You edit them in the repository folder `Locale/conf/skill/`.
+- The restart loop of [Your first Forge module](/tutorials/first-forge-module): `sh shutdown.sh`, then `sh run.sh`.
+- A text editor. The workbench on the right only shows the files.
+
+The client reads its own copy of the skill file from the pack, but it never reads the `handler:` key. Nothing in this tutorial needs a pack to be staged again or the client to restart.
+
+## Step 1: read the model and take a baseline
+
+A handler is a Lua file named after the skill vnum, `<vnum>.lua`, next to the skill's `<vnum>.ucskill.yaml`. The file returns a table. Each key of the table is the name of a handler, and a DAMAGE node of the skill picks one with `handler: <name>`. There is no registration call: the name in the YAML and the key in the Lua are the whole binding.
+
+Skill 31, Tranello, ships with one. Its file and the line that binds it:
+
+<ShowFile path="Locale/conf/skill/31.lua" lines="4-12" />
+
+`damage_intent` runs for each target of a cast, after the formula and the splash factor and before the target's defence is subtracted. It gets one `intent` and writes the result back into `intent.attack`. It does not return anything: the engine reads the fields, not the return value. `intent:is_back_hit(35)` is true when the caster's facing and the victim's facing differ by less than 35 degrees.
+
+Skill 2 has one DAMAGE node, `id: dmg`, and no handler.
+
+<ShowFile path="Locale/conf/skill/2.ucskill.yaml" lines="30-37" />
+
+Before you edit anything, cast skill 2 once at two monsters of the same kind.
+
+**Check.** The chat prints one breakdown line per monster, and both carry the same `pure` value, the attack before defence. Write it down as `P`.
+
+```text
+Skill damage: pure -> <n> | base (after def) -> <n> | % bonus <n> | 2nd type modifiers -> <n>
+```
+
+`pure` is the attack the handler hands back, before defence. `base (after def)` is `pure` minus the defence of the victim. The last two numbers add the percentage modifiers and the closing modifier.
+
+## Step 2: write the handler and bind it
+
+Create `Locale/conf/skill/2.lua`. The key is `palbang`, the name of the skill's icon, as in `31.lua` where it is `amseop`. The condition is the same `is_back_hit(35)`. The factor is 1.3 for the back hit and nothing for any other hit. This file has no dagger term because skill 2 is not a dagger skill, so the factor is exactly 1.3. Copy 31's dagger term onto a dagger skill and the terms add: 1.0 plus 0.3 plus 0.5 reads as 1.8 against 1.5 in front, a ratio of 1.2.
+
+<CreateFile path="Locale/conf/skill/2.lua" code={handler1} />
+
+Then bind it. Add `handler: palbang` to the DAMAGE node of `Locale/conf/skill/2.ucskill.yaml`, right after `ability_scaling`, indented as a key of the node, at the level of `damageType`.
+
+<UpdateFile path="Locale/conf/skill/2.ucskill.yaml" code={skill2} />
+
+Restart the game cores.
+
+**Check.** The file loaded if `logs/syserr` has no line that starts with `skill 2 `. `logs/syslog` has the table line:
+
+```text
+Skill Prototype loaded from YAML: <n> skills, <n> policy variants over <n> policies
+```
+
+Nothing else confirms the handler at boot. The proof comes in the next step.
+
+## Step 3: see the hook fire
+
+The log says the file loaded. It does not say the function runs. Make it talk: one chat line to the caster on every back hit, with the value before and after. `is_test_server()` keeps the line off a live server, where the handler still does its job. `forge` is read inside the function, at hit time, never at the top of the file.
+
+<UpdateFile path="Locale/conf/skill/2.lua" code={handler2} />
+
+Replace the file's content, restart the game cores and cast skill 2 at two monsters, one of them facing away from you. A monster that has just been hit usually turns to face you, so use one that is idle or walking away.
+
+**Check.** The monster that faces away gives a line before its breakdown, and the breakdown has the raised `pure`:
+
+```text
+back hit on <name>: <P> -> <floor(1.3 x P)>
+Skill damage: pure -> <floor(1.3 x P)> | base (after def) -> <n> | % bonus <n> | 2nd type modifiers -> <n>
+```
+
+The other monster has no back-hit line, and its breakdown still reads `pure -> <P>`.
+
+## Step 4: measure the bonus
+
+Cast several times and compare each `pure` with the `P` you wrote down. Every back-hit line pairs with a `pure` that is 1.3 times `P`, rounded down, and every hit without a back-hit line keeps `P`. `base (after def)` rises by the same absolute amount as `pure`: the defence is subtracted after the handler, so the bonus is not eaten by it.
+
+Now delete the `handler:` line from `2.ucskill.yaml` and restart. The back-hit lines are gone and `pure` is `P` on every target. You wrote nothing that takes the 30% away. The handler only changed one hit while it was worked out.
+
+**Check.** Three readings agree: the back-hit line appears only on a target that faces your way, `pure` is 1.3 times `P` on exactly those hits, and both disappear without the `handler:` line. To undo for good, also delete `2.lua`.
+
+## Run it
+
+The loop is the same after every change to the handler or the skill file:
+
+1. Edit `Locale/conf/skill/2.lua` or `2.ucskill.yaml`.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`.
+3. Read `logs/syserr` for lines that start with `skill 2 `, then cast the skill.
+
+No compile step exists. The restart is the loop: the skill table is read when the core starts, and a running core does not read an edited handler file again.
+
+The game core does not start if the YAML is broken, for example if the new line is indented wrong:
+
+```text
+Skill YAML: cannot parse file 2.ucskill.yaml: <yaml error>
+cannot initialize skill table from YAML
+```
+
+Every fault in the Lua side is gentler. The core boots, one line goes to `logs/syserr`, and the node runs without the handler:
+
+| Line in `logs/syserr` | Cause |
+| --- | --- |
+| `skill 2 handler 'palbang' not found in 2.lua` | the `handler:` value and the key of the returned table differ |
+| `skill 2 declares a handler but conf/skill/2.lua is missing` | the file is named or placed wrong |
+| `skill 2 2.lua must return a table of handlers` | the file has no `return M` |
+| `skill 2 extension load error: <message>` | a Lua syntax error in the file |
+| `skill 2 handler 'palbang' implements none of gate, damage_intent or applied` | the slot name is misspelled |
+| `skill 2 damage_intent error: <message>` | a runtime error inside the function; logged on every hit |
+
+## Pitfalls
+
+- A `2.lua` without the `handler:` line is never read. No error, no effect.
+- Write `intent.attack`. A handler that returns the new value instead changes nothing and logs nothing.
+- Call methods with a colon: `intent.caster:chat_packet(...)`. With a dot, the call raises and the hit goes on with whatever `intent.attack` held at that moment. Write it last.
+- `is_back_hit` compares facings, not positions. A monster that faces your way counts wherever it stands, and a monster that turns to face you never counts. The angles are folded to the range of -180 to 180 and subtracted, so facings of 170 and -170 degrees give a difference of 340 and do not count.
+- Edit a handler and the restart is the only loop. `/reload p` re-reads the skill table, so it picks up a new `handler:` line, but it keeps the functions already loaded from a `2.lua` and your edit does not run.
+- Without `collect.scalePoly` on the node, every victim of one cast gets the same attack before the handler, so two lines that differ differ only by the handler. A node with a scale poly breaks that comparison.
+
+## Where to go next
+
+- [Skill extension reference](/docs/building-blocks/skill-extension): the three slots, `gate`, `damage_intent` and `applied`, and every field of the intent.
+- [Beyond the formula](/foundations/skills/beyond-the-formula): why this hook sits before defence and where the old vnum branches went.
+- [A bonus that only counts when](/tutorials/first-trait): the same test-server readout habit, for a trait.
+
+</Tutorial>
