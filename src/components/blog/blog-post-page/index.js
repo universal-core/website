@@ -104,13 +104,15 @@ export const BlogPostPageView = ({ children }) => {
           </LinkedinShareButton>
         </div>
       </div>
-      <div className="not-prose">
-        <img
-          className="w-full rounded-xl blog-lg:rounded-[2.25rem] aspect-[894/504]"
-          src={frontMatter.image}
-          alt={title}
-        />
-      </div>
+      {frontMatter.image && (
+        <div className="not-prose">
+          <img
+            className="w-full rounded-xl blog-lg:rounded-[2.25rem] aspect-[894/504]"
+            src={frontMatter.image}
+            alt={title}
+          />
+        </div>
+      )}
       <div className="blog-sm:px-6">
         <div className="mt-6 blog-lg:mt-10 mb-6 text-sm">
           <div

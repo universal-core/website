@@ -22,30 +22,32 @@ export default function BlogPostItem({ className }) {
 
   return (
     <BlogPostItemContainer className={className}>
-      <div>
-        <Link
-          itemProp="url"
-          to={permalink}
-          className={clsx("block", "w-full h-auto", "aspect-[592/334]")}
-        >
-          <div
-            className={clsx(
-              "not-prose relative m-0 hover:brightness-90",
-              "h-full w-full",
-            )}
+      {frontMatter.image && (
+        <div>
+          <Link
+            itemProp="url"
+            to={permalink}
+            className={clsx("block", "w-full h-auto", "aspect-[592/334]")}
           >
-            <img
-              src={frontMatter.image}
-              alt={title}
+            <div
               className={clsx(
-                "absolute inset-0 mt-0 h-full w-full rounded-[4px] object-cover",
-                "border border-solid border-gray-700",
+                "not-prose relative m-0 hover:brightness-90",
+                "h-full w-full",
               )}
-              loading="lazy"
-            />
-          </div>
-        </Link>
-      </div>
+            >
+              <img
+                src={frontMatter.image}
+                alt={title}
+                className={clsx(
+                  "absolute inset-0 mt-0 h-full w-full rounded-[4px] object-cover",
+                  "border border-solid border-gray-700",
+                )}
+                loading="lazy"
+              />
+            </div>
+          </Link>
+        </div>
+      )}
       <div className="px-4 py-4 md:px-6  md:py-6">
         <div className={clsx("flex flex-wrap items-center", "mb-6", "gap-3")}>
           {tags.map((tag) => (
