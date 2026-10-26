@@ -56,8 +56,8 @@ function EditMetaRow({
         )}
       >
         <span>Last updated on </span>
-        <span>{formattedLastUpdatedAt} </span>
-        <span>by {lastUpdatedBy}</span>
+        <span>{formattedLastUpdatedAt}</span>
+        {lastUpdatedBy && <span> by {lastUpdatedBy}</span>}
       </div>
     </div>
   );
