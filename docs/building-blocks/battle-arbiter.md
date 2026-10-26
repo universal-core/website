@@ -56,7 +56,7 @@ The arbiters in the shipped content show each place:
 | Guild war referee, every war mode | when a war is created | when the war is destroyed |
 | Battle royale | in the forge environment body, at load | never; its guard limits it to its own matches |
 
-Three Lua arbiters ship: the EvE classic event, the guild war referee and battle royale. One more arbiter is registered by the engine itself: `land_deployment`. It is registered when the core boots and again, if the first attempt found no registry, at the next entry point of the land deployment system. In a normal boot it is first in the list. Its guard claims every pair in which either side is a guild presence, and its verdict never answers `Pass`. A Lua arbiter cannot outrank it for such a pair.
+Three Lua arbiters ship: the EvE classic event, the guild war referee and battle royale. One more arbiter is registered by the engine itself: `land_deployment`. It registers on first use: when the land deployment manager is created and, if the registry did not exist yet, again at the next entry point of the land deployment system. So it usually comes after the arbiters registered at forge load. Its guard claims every pair in which either side is a guild presence, and its verdict never answers `Pass`. A Lua arbiter earlier in the list whose guard also matches a guild presence answers first for that pair.
 
 ## API
 
@@ -79,6 +79,34 @@ Three Lua arbiters ship: the EvE classic event, the guild war referee and battle
 Handles start at 1 and grow by one per registration on that core. They are never reused, so a stale handle can never remove somebody else's arbiter. There is no priority parameter and no replace-by-name. A `guard` or `can_attack` that is not a function stops the call with `battle_arbiter_registry.register: guard is not callable` or `battle_arbiter_registry.register: can_attack is not callable`. Inside a forge environment body that error fails the forge load and the core does not start. `register` never returns 0.
 
 Both callables stay alive until `unregister`, so closures and upvalues work. All the shipped arbiters capture a map index or a war in locals.
+
+### The C++ registration
+
+Engine code registers on the same list through the registry singleton. The guard and the verdict are plain
+functions of the attacker and the victim, and the handle is kept for `Unregister` in the owner's teardown.
+
+| Call | Signature | Returns |
+| --- | --- | --- |
+| `Register` | `Register(std::string name, GuardFn guard, CanAttackFn can_attack)` | `handle_t` (`uint64_t`) |
+| `Unregister` | `Unregister(handle_t)` | `bool`, `false` for an unknown handle |
+
+`GuardFn` is `std::function<bool(LPCHARACTER att, LPCHARACTER vic)>` and `CanAttackFn` is
+`std::function<BattleVerdict(LPCHARACTER att, LPCHARACTER vic)>`. The one native arbiter that ships is the land
+deployment one:
+
+```cpp
+m_hArbiter = CBattleArbiterRegistry::instance().Register("land_deployment",
+    [](LPCHARACTER pkAtt, LPCHARACTER pkVic) -> bool {
+        return (pkAtt && pkAtt->IsGuildPresence()) ||
+            (pkVic && pkVic->IsGuildPresence());
+    },
+    [](LPCHARACTER pkAtt, LPCHARACTER pkVic) -> BattleVerdict {
+        return CDeploymentManager::instance().ResolveAttack(pkAtt, pkVic);
+    });
+```
+
+A C++ guard and verdict return their value directly. The rules in "The callbacks" for a wrong return type or
+a Lua error apply to Lua callbacks only.
 
 ### Verdicts
 
@@ -204,9 +232,10 @@ So an arbiter touches killer mode only for same-empire player pairs. `Allow` mar
 
 ### Order and lifetime
 
-- `land_deployment` is first, registered when the core boots.
-- Then the arbiters registered at forge load, in forge load order. That order is not guaranteed.
-- Then the runtime registrations, in the order they happen.
+- The arbiters registered at forge load, in forge load order. That order is not guaranteed.
+- Then every later registration, in the order it happens: runtime registrations from Lua, and `land_deployment`, which registers on first use and so usually lands here.
+
+There is no priority field. Engine code and Lua share one list, and the first arbiter whose guard matches answers.
 
 An arbiter lives until `unregister` or until the core process stops. A forge has no unload hook, so nothing unregisters for you. Tie `unregister` to the end of the thing the arbiter judges: an event teardown, a war end, a GM switch.
 
@@ -372,7 +401,7 @@ The referee stores the handle in `self.battle_handle` when the war is created. I
 
 **Flipping a verdict mid-fight cuts running poison, fire and bleeding.** They ask again on every tick and end when refused. A `Deny` turned on later ends them at the next tick.
 
-**A Lua arbiter cannot beat `land_deployment`.** For a pair with a guild presence, the engine arbiter has already answered.
+**Guard guild presences out unless you mean to judge them.** `land_deployment` usually registers after your arbiter, so a guard that matches a guild presence answers for it first. Keep guards scoped to your own map or match.
 
 **A rule registered on one core does not hold on another.** Registrations are per core process.
 

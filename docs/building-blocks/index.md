@@ -12,10 +12,9 @@ whatever registered for it answers.
 - Affects and broadcast affects
 - Traits
 - The skill framework
-- Policies: item use, potion use, skill use
-- The battle arbiter
-- The death manager
-- The PvP team manager
+- Policies: the [battle arbiter](./battle-arbiter.md), death, item use (potions included), spectator, party join,
+  skill use, skill loadout and skill policy
+- The PvP team manager, paired with the battle arbiter
 - Rankings, MMR and seasons
 - Drops and regens
 - The event manager and the EvE engine
