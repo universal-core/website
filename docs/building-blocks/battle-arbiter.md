@@ -6,7 +6,7 @@ displayed_sidebar: mainSidebar
 
 # Battle arbiter reference
 
-A battle arbiter is a rule you register from Lua that answers one question: may this attacker hit this victim? It is a guard that says which attacks the rule cares about, and a verdict that says `Allow`, `Deny` or `Pass`. You reach for it when a map, an event or a war needs its own PvP rules without touching the ordinary ones. To build one step by step, follow [Write a battle arbiter rule](/tutorials/battle-arbiter-rule). The forge file layout is in the [Forge API reference](/docs/core/luna-forge). How the server talks to the client around it is in [the bridge](/foundations/luna/bridge).
+A battle arbiter is a rule you register from Lua that answers one question: may this attacker hit this victim? It is a guard that says which attacks the rule cares about, and a verdict that says `Allow`, `Deny` or `Pass`. You reach for it when a map, an event or a war needs its own PvP rules without touching the ordinary ones. To build one step by step, follow [Write a battle arbiter rule](/tutorials/battle-arbiter-rule). The forge file layout is in the [Forge API reference](/docs/core/luna-forge). The arbiter decides the server's verdict only; what the client shows and when attacks are enabled is the [PvP team manager](/docs/building-blocks/team-manager), its pair. Why decisions like this one left the engine is in [Policies](/foundations/policies/). How the server talks to the client around it is in [the bridge](/foundations/luna/bridge).
 
 ## Quick start
 
@@ -56,7 +56,7 @@ The arbiters in the shipped content show each place:
 | Guild war referee, every war mode | when a war is created | when the war is destroyed |
 | Battle royale | in the forge environment body, at load | never; its guard limits it to its own matches |
 
-Three Lua arbiters ship: the EvE classic event, the guild war referee and battle royale. One more arbiter is registered by the engine itself: `land_deployment`. It registers on first use: when the land deployment manager is created and, if the registry did not exist yet, again at the next entry point of the land deployment system. So it usually comes after the arbiters registered at forge load. Its guard claims every pair in which either side is a guild presence, and its verdict never answers `Pass`. A Lua arbiter earlier in the list whose guard also matches a guild presence answers first for that pair.
+Three Lua arbiters ship: the EvE classic event, the guild war referee and battle royale. One more arbiter is registered by the engine itself: `land_deployment`. It registers in the land deployment manager's constructor, at boot, after the registry exists and before any forge loads, so in a normal boot it is first in the list. Every entry point of the land deployment system retries the registration in case the declaration order ever changes; once registered it is not registered again. Its guard claims every pair in which either side is a guild presence, and its verdict never answers `Pass`. A Lua arbiter cannot outrank it for such a pair.
 
 ## API
 
@@ -169,7 +169,7 @@ flowchart TD
 
 1. **Absolute refusals.** No arbiter can override them. The victim is dead or in observer mode. The victim is a mount (it has a rider) or a pet. The attacker or the victim stands in a no-PvP safe zone. The attacker is stunned, dead or in observer mode.
 2. **The arbiters, in registration order.** For each one: the guard, and if it returned `true`, the verdict. The first `Allow` allows, the first `Deny` refuses, `Pass` moves to the next arbiter. If every arbiter passes, or no guard returned `true`, or none is registered, the check goes to step 3. There is no default deny.
-3. **Team sessions.** Player pairs only. Non-player pairs, two players in no session, and a pair where either session member is off the session's map are passed on. A pair is refused when exactly one side is in a session, when they are in different sessions, when their teams are allied (a team is allied with itself), and while the session's attacks are disabled. Otherwise it is allowed.
+3. **Team sessions.** Player pairs only. Non-player pairs, two players in no session, and two members of the same session where either is off the session's map are passed on. A pair is refused when exactly one side is in a session, when they are in different sessions, when their teams are allied (a team is allied with itself), and while the session's attacks are disabled. Otherwise it is allowed.
 4. **Same party.** Refused.
 5. **The no-attack flag.** The victim's flag for the attacker's empire (empire ids are 1, 2 and 3). Refused.
 6. **NPC and mob rules.** Skill-flag requirements of NPCs, the mob-against-mob rule (at least one must be an attack mob), a summoned attack NPC that may hit only its summon target, NPCs of the same empire that do not fight each other, guard NPCs that may hit monsters and bosses.
@@ -208,7 +208,7 @@ The guard runs for every pair on the core, on every map, not only for pairs on y
 
 - a caster that is not a player can buff only a target that is not a player;
 - a target that is not a player cannot be buffed by a player;
-- two players whose teams are allied in a session can buff each other;
+- two players whose teams are allied in a session can buff each other, when both are on the session's map;
 - if either is in a session otherwise, they cannot;
 - an attackable pair cannot;
 - anyone else can only when they are of the same empire.
@@ -232,8 +232,9 @@ So an arbiter touches killer mode only for same-empire player pairs. `Allow` mar
 
 ### Order and lifetime
 
-- The arbiters registered at forge load, in forge load order. That order is not guaranteed.
-- Then every later registration, in the order it happens: runtime registrations from Lua, and `land_deployment`, which registers on first use and so usually lands here.
+- `land_deployment`, registered at boot before any forge loads.
+- Then the arbiters registered at forge load, in forge load order. That order is not guaranteed.
+- Then every runtime registration, in the order it happens.
 
 There is no priority field. Engine code and Lua share one list, and the first arbiter whose guard matches answers.
 
@@ -354,7 +355,7 @@ end
 
 ### One arbiter per war, built from closures
 
-The guild war referee builds a guard and a verdict per war, so each war carries its own map and its own teams. A pair is allowed only when both are players of two different teams of that war.
+The guild war referee builds a guard and a verdict per war, so each war carries its own map and its own teams. A pair is allowed only when both are players of two different teams of that war. Its `Allow` does not look at the war's pre-engage switch, so for a war pair it overrides a session whose attacks are still disabled.
 
 ```lua
 function base_war_referee:_battle_guard(war)
@@ -401,7 +402,7 @@ The referee stores the handle in `self.battle_handle` when the war is created. I
 
 **Flipping a verdict mid-fight cuts running poison, fire and bleeding.** They ask again on every tick and end when refused. A `Deny` turned on later ends them at the next tick.
 
-**Guard guild presences out unless you mean to judge them.** `land_deployment` usually registers after your arbiter, so a guard that matches a guild presence answers for it first. Keep guards scoped to your own map or match.
+**A Lua arbiter cannot beat `land_deployment`.** It is first in the list, and for any pair with a guild presence it has already answered before a Lua arbiter is asked.
 
 **A rule registered on one core does not hold on another.** Registrations are per core process.
 

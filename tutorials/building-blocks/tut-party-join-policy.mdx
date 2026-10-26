@@ -1,0 +1,171 @@
+---
+title: Lift the party rules on one map
+description: Register a party join policy from a Forge so players of different empires and any level gap can party on one map, check both rules in game, then break the policy twice on purpose.
+slug: /party-join-policy
+sidebar_position: 4
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import open1 from "!!raw-loader!./_tut-party-join-policy/open_party-1.forge";
+import open2 from "!!raw-loader!./_tut-party-join-policy/open_party-2.forge";
+import open3 from "!!raw-loader!./_tut-party-join-policy/open_party-3.forge";
+
+export const start = { "share/locale/italy/system/tutorial/open_party.forge": open1 };
+export const solution = { "share/locale/italy/system/tutorial/open_party.forge": open1 };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/tutorial/open_party.forge">
+
+You build a Forge module named `open_party`. On the map you choose, any two players can form a party, whatever their empires and whatever the gap between their levels. On every other map the stock rules hold.
+
+The rule is one party join policy: a guard that says which pairs it cares about, and a verdict that says which stock rules to drop. You check it in game with three characters, then break it twice on purpose, once with a missing `return` and once with a misspelled key, and read what the server does.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), and the loop you use there to compile, register and restart. This module uses the same loop.
+- The [party join policy reference](/docs/building-blocks/party-join-policy) open beside you, and [Policies](/foundations/policies/) for why the engine asks a policy instead of hard-coding the rule. This page uses both without repeating them.
+- Three test characters on a test server, where every character can use GM commands. Two are of the same empire, call them A and B, with A at least 31 levels above B. The third, C, is of another empire. `/level <n>` sets a level, and it also clears the character's skills, so use throwaway characters.
+- All three on one map, standing close together. Type `/state` and read the number after `MapIndex`. You need it in step 1.
+- A text editor. The workbench on the right only shows the files; you create the real one in `share/locale/italy/system/tutorial/`.
+
+Why three characters: the stock client hides "Invite to party" ("Invito Gruppo") on a player of another empire, and the server cannot change that. A direct invite therefore shows the level rule, and the empire rule needs the other route, a join request from C to a leader who already has a party. Do not test with the party finder: it applies only part of the verdict.
+
+## Step 1: register the policy
+
+A party join policy is a `(name, guard, policy)` triple. `forge.sys.game.party_join_policy.register` takes the three and returns a handle, a number greater than 0. Every time someone invites, asks to join or accepts, the engine walks the registered policies in order. The first one whose guard returns `true` gives the verdict, and the stock rules are applied with that verdict's values.
+
+This guard matches when the leader and the guest both stand on your map. The verdict is a table of only the fields you want to change: `same_empire = false` drops the empire rule, and `level_window = 0` drops the level window. Every field you leave out keeps its stock value.
+
+<ShowFile path="share/locale/italy/system/tutorial/open_party.forge" lines="8-16" />
+
+`MAP_INDEX` is a placeholder. Set it to the number `/state` printed. The module returns a table, because a forge that returns nothing fails to load, and then the game core does not start.
+
+Create `share/locale/italy/system/tutorial/open_party.forge` with exactly this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+```text
+../system/tutorial/open_party.forge
+```
+
+Compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/open_party.forge
+```
+
+**Check.** The compiler prints no error, and `share/locale/italy/quest/forge/open_party.game` exists. There is no `state` block, so nothing is created under `object/`. Restart the game cores and search the log:
+
+```bash
+grep open_party logs/syslog
+```
+
+You should see these two lines. The handle varies: another policy registered earlier takes a lower number.
+
+```text
+[OK] party_join_policy [open_party]: handle=<n>
+[Forge-open_party]: loaded, policy <n> on map <map_index>
+```
+
+`logs/syserr` says nothing about `open_party`.
+
+## Step 2: see the stock rules first
+
+Leave the map. Go to any other map with A and B, close together, and have A target B and press "Invito Gruppo".
+
+**Check.** A reads the level refusal in chat, `<Gruppo> Possono essere invitati solo giocatori il cui livello differisce al massimo di 30.`, and B sees nothing. Your guard did not match, so the stock rules held.
+
+## Step 3: the level rule is gone
+
+Go back to your map with A and B, stand close, and have A invite B again. Stay within a few steps: the client turns an accept into a refusal when the leader is more than 5000 units away.
+
+**Check.** B gets a dialog that asks whether to join A's group, and it stays for 10 seconds. B accepts. Both now have a party. The log shows one create line and two join lines:
+
+```text
+PARTY: Create <leader> pid <pid>
+PARTY: Join <name> pid <pid> leader <leader pid>
+PARTY: Join <name> pid <pid> leader <leader pid>
+```
+
+The level gap did not matter. The policy gave this pair `level_window = 0`.
+
+## Step 4: the empire rule is gone
+
+A is now the leader of a party. Bring C next to A and target A. "Invito Gruppo" is not there, because C is of another empire. "Entra nel gruppo" is, because A is in a party. Press it.
+
+The request goes through the same policy: the verdict is resolved for the leader of the party and the guest, and the empire rule is judged with it.
+
+**Check.** A gets a dialog, `<name> desidera entrare nel gruppo`, with Accept and Deny. A accepts. A reads `<Gruppo> <name> si è unito al tuo Gruppo.` and C reads `<Gruppo> <name> è entrato nel Gruppo.` Try the same on another map first if you want to see the refusal it replaces: `<Gruppo> Non puoi creare un gruppo con giocatori di altri regni.`
+
+## Step 5: break the policy with a missing return
+
+A policy must return a table. This version builds the table and forgets to return it. It compiles, it loads, and it does nothing.
+
+<UpdateFile path="share/locale/italy/system/tutorial/open_party.forge" code={open2} />
+
+Compile, restart, make sure no one is in a party, and repeat step 3 on your map.
+
+**Check.** The level refusal is back, as if the policy did not exist. A policy that fails does not block anyone: the engine logs the error and falls back to the stock rules. `logs/syserr` gets these two lines every time the policy is reached:
+
+```text
+Bridge::ValidateProcessorInvocation wrong return: expected [table], got nothing
+[party_join_policy open_party] lua callback error
+```
+
+A policy that returns a boolean gives `got [boolean]` in the first line. A Lua runtime error gives `Bridge::ValidateProcessorInvocation lua error: <message>`. A guard fails the other way: an error or a non-boolean return counts as `false`, so the policy never applies, and the log pair carries `open_party guard`.
+
+Put the `return` back with the next button.
+
+## Step 6: break the policy with a misspelled key
+
+This version spells the empire key `sameEmpire`. Nothing complains about it.
+
+<UpdateFile path="share/locale/italy/system/tutorial/open_party.forge" code={open3} />
+
+Compile, restart, make sure no one is in a party, and repeat steps 3 and 4.
+
+**Check.** Step 3 still works, because `level_window` is spelled right. In step 4, C gets the empire refusal. `logs/syserr` is empty and `logs/syslog` shows nothing out of the ordinary. The engine reads only the keys it knows, and an unknown key, or a known key of the wrong type such as `same_empire = "false"`, is ignored silently and the stock value stays. The only check is to play it.
+
+Restore the clean version with the last button: `open_party-1.forge` is also what the Solve view shows.
+
+<UpdateFile path="share/locale/italy/system/tutorial/open_party.forge" code={open1} />
+
+## Run it
+
+The loop is the same after every change:
+
+1. Compile: `./qc.sh --f ../system/tutorial/open_party.forge`.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`.
+3. Read `logs/syslog` for the `party_join_policy` and `[Forge-open_party]` lines, and `logs/syserr` for the errors above.
+
+If you pass something that is not a function to `register`, it throws `party_join_policy.register: guard is not callable` (or `policy is not callable`) into your forge.
+
+## What stays refused
+
+The policy lifts the two rules you named. It does not touch these, and the invite or request fails with the stock message:
+
+- the leader is in a dungeon, or the guest is in observer mode;
+- the guest is already in a party, or the party already has 8 members;
+- either character is in a team session, and the two are not in the same session as allies: `<Gruppo> Non puoi invitare un nemico.`;
+- the character who invites, or who asks to join, is in a PvP arena, which is refused before the policy is asked;
+- the guest blocked party invites, or the leader blocked requests;
+- the party switch of the server is off.
+
+## Pitfalls
+
+- The level refusal always says 30. Its text is fixed, so it stays 30 if you set a window of 10.
+- A misspelled key is ignored without a log line. Check the spelling against the reference.
+- A broken policy brings the stock rules back, and a broken guard skips your rule. Both fail safe, and both look like "my rule does nothing".
+- The first matching guard wins, in registration order. Two guards that match the same pair hide the later one.
+- The verdict is resolved again when an invite is accepted, so the guest must still be on your map at that moment.
+- The policy judges admission only. Nothing removes a member who later walks off the map.
+- The client decides what it shows. The server would admit C to a direct invite, but the stock client offers no button for it.
+- Keep the guard cheap. It runs on every invite, request and accept on the core.
+- A forge has no unload hook, so the policy lives until the core stops. To change `MAP_INDEX`, edit, compile and restart. `unregister` takes the handle you kept, as in [Write a battle arbiter rule](/tutorials/battle-arbiter-rule).
+- The policy is per core. Both characters must be on the core that hosts your map.
+
+## Where to go next
+
+- [Party join policy reference](/docs/building-blocks/party-join-policy): every verdict field, including the ones that cap the party size and refuse with your own message.
+- [Policies](/foundations/policies/): why these decisions are registered instead of written into the engine.
+- [Write a battle arbiter rule](/tutorials/battle-arbiter-rule): the same guard and verdict shape on the combat side.
+
+</Tutorial>

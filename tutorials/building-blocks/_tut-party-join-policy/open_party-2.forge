@@ -1,0 +1,20 @@
+forge open_party begin
+    environment game begin
+        -- the map index that /state prints where you stand
+        local MAP_INDEX = 64
+
+        local policy = forge.sys.game.party_join_policy
+
+        local handle = policy.register(
+            "open_party",
+            function(leader, guest)
+                return leader:get_map_index() == MAP_INDEX and guest:get_map_index() == MAP_INDEX
+            end,
+            function(leader, guest)
+                local verdict = { same_empire = false, level_window = 0 }
+            end)
+
+        forge.sys.log(0, "loaded, policy " .. handle .. " on map " .. MAP_INDEX)
+        return { handle = handle }
+    end
+end
