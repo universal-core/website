@@ -1,0 +1,28 @@
+forge visible_buff begin
+    environment game begin
+        local BUFF_ID = 3900
+        local SECONDS = 300
+        local INFO = forge.sys.game.CHAT_TYPE.INFO
+
+        affect.add_name_definition("TUTORIAL_VISIBLE_BUFF", BUFF_ID)
+        local BUFF = affect.name_map.TUTORIAL_VISIBLE_BUFF
+        affect.add_broadcastable(BUFF)
+        affect.add_no_save(BUFF)
+        affect.add_no_clear_on_death(BUFF)
+
+        local R = forge.sys.game.cmd
+        R.register_router("vbuff", R.new_router(nil, {
+            on = R.new_low_wizard_route("/vbuff on", {}, function(ch)
+                ch:remove_affect(BUFF)
+                ch:add_affect(BUFF, point.MOV_SPEED, 20, 0, SECONDS, 0, true)
+                ch:chat_packet(INFO, "visible buff on for " .. SECONDS .. " seconds")
+            end),
+            off = R.new_low_wizard_route("/vbuff off", {}, function(ch)
+                ch:remove_affect(BUFF)
+            end),
+        }))
+
+        forge.sys.log(0, "loaded, affect " .. BUFF)
+        return { affect = BUFF }
+    end
+end

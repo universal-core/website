@@ -1,0 +1,5 @@
+	## Broadcastable-affect particles (anchor + server affect dwType)
+	playerLoad.RegisterEffect(playerLoad.EFFECT_BROADCAST_AFFECT + 3057, "", "d:/ymir work/effect/etc/rarity/rarity_mid.mse")
+	playerLoad.RegisterEffect(playerLoad.EFFECT_BROADCAST_AFFECT + 3058, "", "d:/ymir work/effect/etc/rarity/rarity_legendary.mse")
+	playerLoad.RegisterEffect(playerLoad.EFFECT_BROADCAST_AFFECT + 3059, "Bip01", "d:/ymir work/effect/universal_elements/water_healing_spell.mse")
+	playerLoad.RegisterEffect(playerLoad.EFFECT_BROADCAST_AFFECT + 3900, "", "locale/universal/effect/visible_buff.mse")

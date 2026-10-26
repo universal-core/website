@@ -1,0 +1,186 @@
+---
+title: A buff other players can see
+description: Register an affect type that every nearby player sees, add it with a command, check that it survives death and not a warp, then give two clients the particle and the target board icon.
+slug: /visible-buff
+sidebar_position: 5
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import buff1 from "!!raw-loader!./_tut-visible-buff/visible_buff-1.forge";
+import buff2 from "!!raw-loader!./_tut-visible-buff/visible_buff-2.forge";
+import buffMse from "!!raw-loader!./_tut-visible-buff/visible_buff.mse";
+import intro from "!!raw-loader!./_tut-visible-buff/introloading.py";
+import shower from "!!raw-loader!./_tut-visible-buff/uiaffectshower.py";
+
+export const start = { "share/locale/italy/system/tutorial/visible_buff.forge": buff1 };
+export const solution = { "share/locale/italy/system/tutorial/visible_buff.forge": buff2, "locale/universal/effect/visible_buff.mse": buffMse, "root/introloading.py": intro, "root/uiaffectshower.py": shower };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/tutorial/visible_buff.forge">
+
+You build a Forge module named `visible_buff`. It defines one affect type, 3900, and a GM command `/vbuff on` adds it to you for 5 minutes. A second player standing nearby sees a green particle on you and, after targeting you, a target board icon with a countdown. The buff survives your death and "restart here", and it is gone after a warp.
+
+The server half is configuration: a name for the type and three flags. The engine does the rest. The client half is three edits in the client pack, because the server only ever sends the number 3900 and no client knows what to draw for it.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), and the loop you use there to compile, register and restart. This module uses the same loop.
+- The [affects reference](/docs/building-blocks/affects) open beside you, and [Affects](/foundations/affects/) for why the engine keeps a type's look, its save rule and its death rule as flags outside the code that adds it. This page uses both without repeating them.
+- Two clients on a test server, where every character can use GM commands. Call the characters A and B. B needs `/kill`. On a server that is not a test server, `/vbuff` needs the low wizard GM level and `/kill` the high wizard level. Put them on an ordinary map, close together.
+- A client whose pack you can edit and rebuild. Three files change in it, and the client reads the pack at startup, so you rebuild once and restart both clients.
+- A text editor. The workbench on the right only shows the files. It highlights `.lua`, `.forge`, `.quest`, `.py`, `.yml` and `.json`, so the `.mse` particle file shows as plain text there.
+
+## Step 1: register the type
+
+An affect type is a number. The server does not need a name for it, but `affect.add_name_definition` gives it one, so `affect.name_map.TUTORIAL_VISIBLE_BUFF` can stand in for 3900 in your Lua. Three more calls flag the type:
+
+- `affect.add_broadcastable` sends every add and remove of this type to everyone who can see the character, not only to its owner. Without it only the owner knows.
+- `affect.add_no_save` keeps the type out of the character's saved affects.
+- `affect.add_no_clear_on_death` keeps it when the character dies.
+
+The calls run once, when the core boots.
+
+<ShowFile path="share/locale/italy/system/tutorial/visible_buff.forge" lines="5-9" />
+
+3900 is clear of the types other modules use. Below 400 are skill affects and 1000 and up are quest affects. From 10000 up, the engine never clears a type on death and never saves it, so a test with such an id would prove nothing.
+
+The module returns a table, because a forge that returns nothing fails to load, and then the game core does not start.
+
+Create `share/locale/italy/system/tutorial/visible_buff.forge` with exactly this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+```text
+../system/tutorial/visible_buff.forge
+```
+
+Compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/visible_buff.forge
+```
+
+**Check.** The compiler prints no error, and `share/locale/italy/quest/forge/visible_buff.game` exists. There is no `state` block, so nothing is created under `object/`. Restart the game cores and search the log:
+
+```bash
+grep visible_buff logs/syslog
+```
+
+You should see this line:
+
+```text
+[Forge-visible_buff]: loaded, affect 3900
+```
+
+`logs/syserr` says nothing about `visible_buff`.
+
+## Step 2: add and remove the buff with a command
+
+Something has to add the affect. A command lets you do it at will, and keeps the buff out of login, where a re-add would hide the save test later.
+
+`ch:add_affect(type, point, value, flag, duration, sp_cost, override)` takes the type, the attribute point the affect changes, its value, a flag, a duration in seconds, an SP cost and whether to replace an existing one. This call adds 20 to the movement speed point for 300 seconds, so you feel the buff as well as see it. Keep `flag` at 0: a non-zero flag also sets a status bit, and a bit that has its own client particle would draw the character twice.
+
+Calling `ch:remove_affect` first, then `add_affect`, restarts the timer when you run the command twice and shows nearby players a remove followed by an add. (`override` set to true would also replace the affect in place.) `/vbuff` is a router, with `on` and `off` as its routes. `new_low_wizard_route` takes the usage text, the list of parameters (none here) and the callback.
+
+<UpdateFile path="share/locale/italy/system/tutorial/visible_buff.forge" code={buff2} />
+
+Replace the file's content with this version, compile again and restart the game cores.
+
+**Check.** The log has the router line next to the module line:
+
+```text
+[OK] cmd.register_router : [vbuff]
+[Forge-visible_buff]: loaded, affect 3900
+```
+
+On A, type `/vbuff on`. The chat says `visible buff on for 300 seconds`. Then list the affects of A:
+
+```text
+/affect_remove A
+```
+
+The list has a row that starts with `3900`, and its duration is close to 300. Nothing shows on screen yet, and that is expected: the server sent the element, and no client knows what to do with the number 3900.
+
+Run `/vbuff off` and list again: the row is gone.
+
+## Step 3: the particle
+
+A particle is a file the client draws on the character. Your effect is the first particle group of the GM mark, which sits in the client pack in `locale/universal/effect/gm.mse`, with the color changed to green so you can tell the two apart.
+
+<CreateFile path="locale/universal/effect/visible_buff.mse" code={buffMse} />
+
+Create `locale/universal/effect/visible_buff.mse` in the client pack, in the same folder as `gm.mse`, with exactly this content. It is a particle script: one emitter 124 units above the character, and the three lists `TimeEventColorRed`, `TimeEventColorGreen` and `TimeEventColorBlue` that set its color. The texture `universalled.dds` is the one `gm.mse` uses.
+
+Now tell the client which type owns it. The registration is one line in the `Broadcastable-affect particles` block of `__main__` in `root/introloading.py`. The key is `playerLoad.EFFECT_BROADCAST_AFFECT + 3900`. The bone is `""`, the character's origin, like the battle royale beacons. A bone name such as `"Bip01"` would hang the particle on the skeleton.
+
+<CreateFile path="root/introloading.py" code={intro} />
+
+The excerpt shows only a few of the block's lines. Add its last line to the block in the real file, after the entries that are already there. The number must be the same as the server's, and nothing checks it.
+
+Rebuild the client pack and restart both clients.
+
+**Check.** On A, type `/vbuff on`. A green particle appears above A on both screens. B sees it without targeting A. Now target A on B: the target board shows no icon for the buff. The particle and the icon are two separate registrations, and you have made the first one.
+
+If the particle is missing on both, read the client's error log. A wrong `.mse` path logs `RegisterEffect - LoadScript(<path>) Error` and the affect then shows with no particle.
+
+## Step 4: the icon
+
+The target board lists a type only if the type has an entry in `AFFECT_DATA_DICT` in `root/uiaffectshower.py`. An entry is a tuple: a title, an icon file, a resize flag, a description or `None`, and whether the player may cancel it by hand. This entry reuses the icon of the bleeding affect and has no description.
+
+<CreateFile path="root/uiaffectshower.py" code={shower} />
+
+The excerpt shows only a few of the dictionary's entries. Add the `3900` line to `AFFECT_DATA_DICT` in the real file. The same dictionary draws the affect bar of the owner, so A gets the icon too.
+
+Rebuild the client pack and restart both clients.
+
+**Check.** On A, type `/vbuff on`. A's own affect bar shows the icon with a countdown. On B, target A: the target board shows the same icon and nearly the same countdown. Walk B away until A is out of sight, walk back and target A again: the particle is on A and the icon is on the target board, because the server replays the broadcast affects to a character that comes into view.
+
+## Step 5: die with the buff
+
+Run `/vbuff on` on A if the 5 minutes have passed. On B, type `/kill A`. A dies. On A, press "Restart here".
+
+The death clear skips every type in the no-clear-on-death set, and "restart here" is not a warp. So the buff is still there.
+
+**Check.** On A, the icon is still in the affect bar. `/affect_remove A` still lists 3900. On B, the target board of A still shows the icon. The particle is back on A on both screens. On a server that is not a test server, "restart here" works ten seconds after the death on an ordinary map.
+
+## Step 6: lose the buff with a warp
+
+Run `/vbuff on` on A again, let B kill A with `/kill A`, and press "Restart in town". A warp is a reconnect, and the character loads again from its saved affects. The no-save flag keeps the type out of the saved set, so the buff does not come back.
+
+**Check.** After the town loads, `/affect_remove A` has no 3900 row and A's affect bar has no icon. Log out and in with the buff on as another check: the result is the same.
+
+## Run it
+
+The loop is the same after every server change:
+
+1. Compile: `./qc.sh --f ../system/tutorial/visible_buff.forge`.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`.
+3. Read `logs/syslog` for the `[Forge-visible_buff]` line and `logs/syserr` for errors.
+
+Every client change needs a pack rebuild and a client restart.
+
+If you misspell a name, for example `affect.name_map.TUTORIAL_VISIBLE_BUF`, `BUFF` is `nil` and each flag call logs one line, and none of the flags is set:
+
+```text
+affect_add_no_clear_on_death wrong argument: int type
+```
+
+The same line exists for `affect_add_no_save` and `affect_add_broadcastable`. In this module the next line, `"loaded, affect " .. BUFF`, then fails on the `nil`, the forge does not load and the game core does not start. A module that only passes the name on would load, and its buff would behave as if you had left the calls out.
+
+## Pitfalls
+
+- Leave `add_broadcastable` out and nothing complains. A still has the affect and sees the icon on its own bar, but there is no particle on anyone and B's target board is empty. No log says why.
+- The icon and the particle are separate. A particle needs a `RegisterEffect` line, an icon needs an `AFFECT_DATA_DICT` entry, and a missing one is silent.
+- The client does not know which types are broadcast. A client entry for a type the server does not flag shows nothing to anyone.
+- The number must match in the forge, `introloading.py` and `uiaffectshower.py`. The server never sends the name.
+- A `duration` of 0 becomes 1 second and writes a line to `logs/syserr`.
+- The three flags are also lists in `share/locale/italy/affect_config.yaml`: `NO_SAVE_AFFECTS`, `NO_CLEAR_ON_DEATH_AFFECTS` and `BROADCASTABLE_AFFECTS`. The two registrations merge. The doors fail in opposite directions: an unknown name in the YAML stops the core, and an unknown name in Lua is one log line.
+- A broadcast reaches the characters in view when the affect is added or removed, and a character that comes into view later gets a replay. There is no periodic resend.
+- The flags have no remove call, so taking a flag away needs a core restart.
+- A registration on the client is first-wins: a second line for the same type is ignored.
+
+## Where to go next
+
+- [Affects reference](/docs/building-blocks/affects): the registration calls, `add_affect` in full, and the flags.
+- [Affects](/foundations/affects/): how the engine keeps these rules outside the code that adds an affect.
+- [Send a message from the server to a client window](/tutorials/server-to-client-message): another client pack edit, a Python window that receives a server message.
+
+</Tutorial>

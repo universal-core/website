@@ -1,0 +1,14 @@
+forge visible_buff begin
+    environment game begin
+        local BUFF_ID = 3900
+
+        affect.add_name_definition("TUTORIAL_VISIBLE_BUFF", BUFF_ID)
+        local BUFF = affect.name_map.TUTORIAL_VISIBLE_BUFF
+        affect.add_broadcastable(BUFF)
+        affect.add_no_save(BUFF)
+        affect.add_no_clear_on_death(BUFF)
+
+        forge.sys.log(0, "loaded, affect " .. BUFF)
+        return { affect = BUFF }
+    end
+end
