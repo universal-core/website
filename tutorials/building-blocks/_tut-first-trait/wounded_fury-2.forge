@@ -1,0 +1,41 @@
+forge wounded_fury begin
+    environment game begin
+        local FURY_ID = 3910
+        local THRESHOLD = 80
+        local BONUS = 15
+        local INFO = forge.sys.game.CHAT_TYPE.INFO
+
+        affect.add_name_definition("TUTORIAL_WOUNDED_FURY", FURY_ID)
+        local FURY = affect.name_map.TUTORIAL_WOUNDED_FURY
+        affect.add_no_save(FURY)
+
+        local traits = forge.sys.game.traits
+        traits["define"]{
+            id   = "wounded_fury",
+            gate = { affect = FURY },
+            hooks = {
+                on_damage_dealt_pre = function(ch, victim, dam_type, ctx)
+                    if ch:get_hp_pct() < THRESHOLD then
+                        ctx.bump_point(point.ATTBONUS_MONSTER, BONUS)
+                        ch:chat_packet(INFO, "wounded fury +" .. BONUS .. " (hp " .. ch:get_hp_pct() .. "%)")
+                    end
+                end,
+            },
+        }
+
+        local R = forge.sys.game.cmd
+        R.register_router("wfury", R.new_router(nil, {
+            on = R.new_low_wizard_route("/wfury on", {}, function(ch)
+                ch:add_affect(FURY, point.NONE, 0, 0, affect.INFINITE_AFFECT_DURATION, 0, true)
+                ch:chat_packet(INFO, "wounded fury on")
+            end),
+            off = R.new_low_wizard_route("/wfury off", {}, function(ch)
+                ch:remove_affect(FURY)
+                ch:chat_packet(INFO, "wounded fury off")
+            end),
+        }))
+
+        forge.sys.log(0, "loaded, affect " .. FURY)
+        return { affect = FURY }
+    end
+end

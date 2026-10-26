@@ -1,0 +1,143 @@
+---
+title: A bonus that only counts when
+description: Write a trait that adds 15 to the monster attack bonus while the holder is under 80% HP, switch it on with a GM command, and check it in the log, the chat and the damage readout of a test server.
+slug: /first-trait
+sidebar_position: 6
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import fury1 from "!!raw-loader!./_tut-first-trait/wounded_fury-1.forge";
+import fury2 from "!!raw-loader!./_tut-first-trait/wounded_fury-2.forge";
+
+export const start = { "share/locale/italy/system/tutorial/wounded_fury.forge": fury1 };
+export const solution = { "share/locale/italy/system/tutorial/wounded_fury.forge": fury2 };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/tutorial/wounded_fury.forge">
+
+You build a Forge module named `wounded_fury`. A GM command `/wfury on` adds an affect, type 3910, to you. While you have it, every melee hit you land on an ordinary monster does 15 points of monster attack bonus more, but only when your HP is under 80%. Above 80% the trait does nothing. `/wfury off` takes it away.
+
+The trait is one hook and one `if`. It does not undo anything: the bonus exists only while one hit is being worked out, and the engine takes it back by itself.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), and the loop you use there to compile, register and restart.
+- The [visible buff](/tutorials/visible-buff) tutorial. This module registers an affect type and a `/cmd on|off` router the same way and does not explain them again.
+- The [traits reference](/docs/building-blocks/traits) open beside you, and [Traits](/foundations/traits/) for why the engine ties a trait's life to an affect. This page uses both without repeating them.
+- A test server, where every character can use GM commands, and one character. On a server that is not a test server, `/wfury` needs the low wizard GM level. The `battle_hit:` readout in step 3 exists only when the core config has `server.type.test_server` set.
+- An ordinary monster near you that hits back. Not a boss, a metin stone or a meteor: they take only 4/5 of the monster bonus, and a monster that is immune to bonuses takes none.
+- A text editor. The workbench on the right only shows the files.
+
+## Step 1: define the trait and gate it on an affect
+
+A trait is a set of hooks that the engine calls at fixed points of a character's life. It is attached to a character by an affect: its `gate`. While the character has the affect, the trait is attached. When the last affect of that type goes, the trait goes with it. There is no call to grant or revoke a trait.
+
+The affect here changes no stat. It is a switch, so the add uses `point.NONE` and a value of 0. The type is 3910, clear of the 3900 of the visible buff. `add_no_save` keeps it out of the saved affects, so a warp or a relog drops the trait too, and you type `/wfury on` again.
+
+The hook is `on_damage_dealt_pre`. The engine calls it on the attacker just before the damage formula reads the attack points, with the victim and the damage type. It has no damage argument, because the damage is not computed yet. `ctx.bump_point(point, delta)` adds `delta` to a point for the length of that one hit. Here the condition is the attacker's own HP: `ch:get_hp_pct()` is an integer percentage, so `< 80` is true at 79% and below.
+
+`ATTBONUS_MONSTER` counts against any ordinary monster, so one character fighting one monster is enough. The model for this trait, `cold_blood`, bumps `ATTBONUS_HUMAN`, which counts only against players. Swap the point to try it with two clients.
+
+<ShowFile path="share/locale/italy/system/tutorial/wounded_fury.forge" lines="12-23" />
+
+`define` is a reserved word in a `.forge` file, like `state`, `quest`, `with`, `when` and `begin`. The quest compiler adds those six to Lua, so `traits.define{...}` does not compile in a forge. The bracket form `traits["define"]{...}` is the same call, and the compiler never sees the word. In a plain `.lua` module the dot form is fine.
+
+The rest of the file is the router from the visible buff: `/wfury on` adds the affect with `override` true, so a second `on` replaces it instead of stacking a second copy, and `/wfury off` removes it.
+
+Create `share/locale/italy/system/tutorial/wounded_fury.forge` with exactly this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+```text
+../system/tutorial/wounded_fury.forge
+```
+
+Compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/wounded_fury.forge
+```
+
+Restart the game cores.
+
+**Check.** Search the log:
+
+```bash
+grep wounded_fury logs/syslog
+```
+
+You should see these lines. The numbers after `id=` and `binding=` depend on how many traits loaded before yours.
+
+```text
+[OK] [traits] define [wounded_fury] id=<n> affect_gate=3910 binding=<m> hook_mask=0x1
+[OK] cmd.register_router : [wfury]
+[Forge-wounded_fury]: loaded, affect 3910
+```
+
+`affect_gate=3910` is your gate. `hook_mask=0x1` says the trait subscribed to one trigger, `on_damage_dealt_pre`. `logs/syserr` says nothing about `wounded_fury`.
+
+In game, type `/wfury on`. The chat says `wounded fury on`, and `/affect_remove` followed by your character name lists a row that starts with `3910`. Open the character window: no stat changed. Nothing will, outside a hit.
+
+## Step 2: see the hook fire
+
+The log says the trait is attached. It does not say the hook runs. Make the hook talk: one chat line to the holder on every hit it bumps.
+
+<UpdateFile path="share/locale/italy/system/tutorial/wounded_fury.forge" code={fury2} />
+
+Replace the file's content with this version, compile again and restart the game cores. Type `/wfury on`.
+
+**Check.** Hit your monster while your HP is full. No fury line appears. Now let the monster hit you until your HP is under 80% and keep hitting back. Each of your hits now prints a line before anything else:
+
+```text
+wounded fury +15 (hp 71%)
+```
+
+Drink a potion until you are above 80% and hit again: the line stops. The condition is read again on every hit, and you undid nothing by hand.
+
+## Step 3: measure the bonus
+
+The chat line only proves that the hook ran. On a test server the engine also prints how each melee hit was worked out, and that shows the 15 itself. In the chat window, one hit prints the fury line, then a line like this:
+
+```text
+battle_hit: [You] attack to [Wild Dog]: pure -> 120 | base (after def) -> 100 | % bonus 135 | 2nd type modifiers -> 135
+```
+
+(The numbers here are an example, a hit at full HP with a 35 points total attack bonus. Yours depend on your character and the monster.) The same monster hit under 80% with the trait on would read `% bonus 150`: the same base 100, 15 points more. `base (after def)` is the damage after the monster's defense. `% bonus` is the damage after the attack bonuses: despite the name it is a damage number, not a percentage. So `% bonus` divided by `base` is the attack multiplier, 1.35 in the example. The last number, `2nd type modifiers`, also folds in the weapon resist and your attack multiplier, so it can differ from `% bonus`; read the ratio from `% bonus`.
+
+Write down that ratio from a hit at full HP and from a hit under 80%. The second is higher by 0.15: the 15 points of `ATTBONUS_MONSTER`, as a fraction of base. Rounding to whole damage moves it a little, so compare the ratios and not the raw numbers. A pierce roll or a fully absorbed hit also breaks the match, so look at several hits.
+
+Then type `/wfury off` and hit again under 80%. The fury line is gone and the ratio is back to what it was at full HP. You wrote nothing that takes the 15 away. The bonus was added to the point for this one hit, and the engine removed it when the hit was done. That is also why the character window never showed it.
+
+**Check.** Three readings agree: the fury line appears only under 80% with the trait on, the ratio rises by 0.15 on exactly those hits, and both disappear after `/wfury off`.
+
+## Run it
+
+The loop is the same after every server change:
+
+1. Compile: `./qc.sh --f ../system/tutorial/wounded_fury.forge`.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`.
+3. Read `logs/syslog` for the `[Forge-wounded_fury]` line and `logs/syserr` for errors.
+
+A forge that fails to load makes the quest manager initialisation fail, and the game core does not start. If you write `traits.define{` in the forge, the compiler stops with a `syntax error` and no `.game` file is written.
+
+## Pitfalls
+
+- Bump in the two pre hooks, `on_damage_dealt_pre` and `on_damage_taken_pre`: that is where a bump changes the hit. A hook that runs later in the same hit accepts the bump, but the formula has already read the points. A hook that runs with no hit in progress refuses it and logs one line per call:
+
+  ```text
+  [traits] bump_point outside a damage-pre guard (point=51, delta=15) ignored
+  ```
+
+- A misspelled hook name is ignored without a word. The `hook_mask=` in the `define` line is how you see it: `0x1` for `on_damage_dealt_pre`, `0x0` for a typo.
+- The pre hook takes `(ch, victim, dam_type, ctx)`. The post hooks take a `dam` before `dam_type`. Copy a post signature and `ctx` is `nil`, so the hook raises a Lua error. The error is logged as `[traits] on_damage_dealt_pre [wounded_fury]: ...` and the hit goes on without the bonus.
+- Trait ids are global. `cold_blood` is taken, and so are about a hundred others. A repeated id logs `[traits] define: duplicate id [cold_blood]` to `logs/syserr` and the trait is not registered. The forge still loads.
+- A `gate` whose affect name is misspelled gives `gate.affect` nil. The engine logs `[traits] define [wounded_fury]: gate is present but gate.affect is 0` and registers nothing.
+- The hook fires for the melee hit, for arrows and magic shots, and for every skill damage node. This trait reads only your own HP, so that is safe. If you change the condition to read `victim`, check `dam_type` first: a splash skill computes its amount once and reuses it for every victim, so a bonus that depends on the victim would leak to the others.
+- Do not read the bonus back. `ch:get_point(point.ATTBONUS_MONSTER)` from a command returns the stat without it.
+- Without `add_no_clear_on_death` the affect is cleared when you die, and the trait detaches with it. Run `/wfury on` again.
+
+## Where to go next
+
+- [Traits reference](/docs/building-blocks/traits): every hook, the context, counters and the gate in full.
+- [Traits](/foundations/traits/): why the engine keeps a trait's life in an affect and how a hit reaches the hooks.
+- [A buff other players can see](/tutorials/visible-buff): the affect half of this module, with the client side.
+
+</Tutorial>
