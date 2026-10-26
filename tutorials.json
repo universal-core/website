@@ -12,7 +12,12 @@
       "id": "building-blocks",
       "title": "Building blocks",
       "items": [
-        "building-blocks/tut-battle-arbiter-rule"
+        "building-blocks/tut-battle-arbiter-rule",
+        "building-blocks/tut-party-join-policy",
+        "building-blocks/tut-visible-buff",
+        "building-blocks/tut-first-trait",
+        "building-blocks/tut-skill-handler",
+        "building-blocks/tut-empire-skill"
       ]
     }
   ]
