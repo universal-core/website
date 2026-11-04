@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 
 import { MENU_ITEMS, type NavbarItemType } from "./constants";
-import { MenuItem } from "./menu-item";
+import { MegaMenu } from "./mega-menu";
 import { NavbarItem } from "./navbar-item";
 import { NavbarPopoverItem } from "./navbar-popover-item";
 
@@ -23,24 +23,7 @@ export const Menu: React.FC<Props> = ({ variant = "landing", align = "left" }) =
               variant={variant}
               align={align}
             >
-              <div
-                className={clsx(
-                  "grid grid-cols-2 gap-4",
-                  "p-4",
-                  "w-[672px]",
-                  "bg-white",
-                  variant === "landing" && " dark:bg-gray-900",
-                  variant === "blog" && "dark:bg-refine-react-dark-code",
-                )}
-              >
-                {item.items.map((subItem) => (
-                  <MenuItem
-                    key={subItem.label}
-                    item={subItem}
-                    variant={variant}
-                  />
-                ))}
-              </div>
+              <MegaMenu item={item} />
             </NavbarPopoverItem>
           );
         }

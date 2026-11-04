@@ -5,7 +5,7 @@ import React, { type FC, Fragment, type PropsWithChildren } from "react";
 import { CloseIcon } from "../icons/close";
 import { CoreSealLogo } from "../icons/core-seal";
 import { MENU_ITEMS, type NavbarItemType } from "./constants";
-import { MenuItem } from "./menu-item";
+import { MegaMenu } from "./mega-menu";
 import { MobileNavItem } from "./mobile-nav-item";
 import { useLocation } from "@docusaurus/router";
 
@@ -149,19 +149,7 @@ const Tablet = (props: { className?: string }) => {
                 {Icon && <Icon />}
               </div>
             </Link>
-            {"items" in item && (
-              <div
-                className={clsx(
-                  "mt-2",
-                  "grid grid-cols-2 min-[800px]:grid-cols-3",
-                  "gap-x-8 gap-y-4",
-                )}
-              >
-                {item.items.map((subItem) => (
-                  <MenuItem key={subItem.label} item={subItem} />
-                ))}
-              </div>
-            )}
+            {item.isPopover && <MegaMenu item={item} stacked />}
           </div>
         );
       })}
@@ -191,9 +179,7 @@ const Phone = (props: { className?: string }) => {
                         open && "border-b border-gray-200 dark:border-gray-700",
                       )}
                     >
-                      {item.items.map((subItem) => (
-                        <MenuItem key={subItem.label} item={subItem} />
-                      ))}
+                      <MegaMenu item={item} stacked />
                     </Disclosure.Panel>
                   </>
                 )}

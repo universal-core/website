@@ -205,6 +205,7 @@ const siteConfig = {
             "/foundations/skills/owners-and-cores": ["/foundations/skills/owners", "/foundations/skills/every-core"],
           };
           const from = [];
+          if (existingPath.replace(/\/$/, "") === "/manifesto") from.push("/manifesto/manifesto-gameplay-outside-engine");
           const key = existingPath.replace(/\/$/, "");
           if (moved[key]) from.push(...[].concat(moved[key]));
           if (existingPath.startsWith("/docs/core")) {

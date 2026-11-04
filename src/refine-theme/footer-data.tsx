@@ -9,6 +9,7 @@ export const menuItems = [
       { label: "Manifesto", href: "/manifesto/" },
       { label: "Foundations", href: "/foundations/" },
       { label: "Blog", href: "/blog" },
+      { label: "About", href: "/about" },
     ],
   },
   {

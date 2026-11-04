@@ -78,7 +78,7 @@ export const NavbarPopoverItem: React.FC<NavbarPopoverItemProps> = ({
               className={clsx(
                 "absolute",
                 "z-50",
-                align === "right" ? "right-0" : "left-0",
+                "left-1/2 -translate-x-1/2",
                 "top-full",
                 "pt-3",
               )}
