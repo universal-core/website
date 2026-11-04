@@ -1,5 +1,6 @@
 import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
+import { usePluginData } from "@docusaurus/useGlobalData";
 import React from "react";
 
 import { Chain } from "../components/home/Chain";
@@ -48,13 +49,6 @@ const TOOLS = [
   },
 ];
 
-const POSTS = [
-  ["A script that waits on the server", "script-waits-on-the-server"],
-  ["Hiding the transport layer", "hiding-the-transport-layer"],
-  ["Eleven branches, three functions, one list", "eleven-branches-one-list"],
-  ["A point used to be a branch in the damage code", "a-point-was-a-branch"],
-  ["Debugging Lua like a first-class language", "debugging-lua-first-class"],
-];
 
 const PATHS = [
   {
@@ -79,7 +73,13 @@ const PATHS = [
   },
 ];
 
+type BlogPostRef = { title: string; permalink: string; state: string };
+
 export default function Home() {
+  const { posts } = usePluginData("docusaurus-plugin-content-blog") as {
+    posts: BlogPostRef[];
+  };
+  const latest = posts.filter((p) => p.state === "live").slice(0, 5);
   return (
     <>
       <Head>
@@ -276,9 +276,9 @@ export default function Home() {
               <div>
                 <h2>Written while building it.</h2>
                 <ul className="a2-posts">
-                  {POSTS.map(([t, slug]) => (
-                    <li key={slug}>
-                      <Link to={`/blog/${slug}`}>{t}</Link>
+                  {latest.map((p) => (
+                    <li key={p.permalink}>
+                      <Link to={p.permalink}>{p.title}</Link>
                     </li>
                   ))}
                 </ul>

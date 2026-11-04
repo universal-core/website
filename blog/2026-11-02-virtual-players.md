@@ -1,4 +1,5 @@
 ---
+date: 2026-12-01
 title: 2,812 lines in one commit, then 36 more gates
 description: A character could only ever be itself, so every test build and every special mode rewrote a real row. How one commit made a throwaway copy of a player, the five months of leaks it took to close, and why the only road back is a prize commit.
 authors: luscha

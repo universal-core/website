@@ -478,3 +478,14 @@ html {
     height: auto;
   }
 }
+
+.uc-unreleased {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--uc-line);
+  border-left: 2px solid var(--uc-rose);
+  border-radius: var(--uc-radius);
+  background: var(--uc-bg2);
+  color: var(--uc-text);
+  font-size: 0.9375rem;
+}

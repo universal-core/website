@@ -1,6 +1,8 @@
 const blogPluginExports = require("@docusaurus/plugin-content-blog");
 const utils = require("@docusaurus/utils");
 const path = require("path");
+const blogUtils = require("@docusaurus/plugin-content-blog/lib/blogUtils");
+const { releaseState, previewUnreleased } = require("./blog-release");
 
 const defaultBlogPlugin = blogPluginExports.default;
 
@@ -53,6 +55,19 @@ function paginateBlogPosts({
   }
 
   return pages;
+}
+
+function linkNeighbours(blogPosts) {
+  blogPosts.forEach((post, i) => {
+    const prev = blogPosts[i - 1];
+    const next = blogPosts[i + 1];
+    post.metadata.prevItem = prev
+      ? { title: prev.metadata.title, permalink: prev.metadata.permalink }
+      : undefined;
+    post.metadata.nextItem = next
+      ? { title: next.metadata.title, permalink: next.metadata.permalink }
+      : undefined;
+  });
 }
 
 function getMultipleRandomElement(arr, num) {
@@ -118,17 +133,61 @@ async function blogPluginExtended(...pluginArgs) {
   return {
     // Add all properties of the default blog plugin so existing functionality is preserved
     ...blogPluginInstance,
+    loadContent: async function () {
+      const content = await blogPluginInstance.loadContent();
+      if (previewUnreleased()) return content;
+
+      const now = new Date();
+      const blogPosts = content.blogPosts.filter(
+        (post) =>
+          releaseState(
+            { draft: post.metadata.frontMatter.draft, date: post.metadata.date },
+            now,
+          ) === "live",
+      );
+      if (blogPosts.length === content.blogPosts.length) return content;
+
+      linkNeighbours(blogPosts);
+      const listParams = {
+        blogTitle,
+        blogDescription,
+        postsPerPageOption: postsPerPage,
+      };
+      return {
+        ...content,
+        blogPosts,
+        blogListPaginated: blogUtils.paginateBlogPosts({
+          ...listParams,
+          blogPosts,
+          basePageUrl: "/blog",
+        }),
+        blogTags: blogUtils.getBlogTags({ ...listParams, blogPosts }),
+      };
+    },
     /**
      * Override the default `contentLoaded` hook to access blog posts data
      */
     contentLoaded: async function (data) {
       const { content: blogContents, actions } = data;
-      const { addRoute, createData } = actions;
+      const { addRoute, createData, setGlobalData } = actions;
       const {
         blogPosts: allBlogPosts,
         blogTags,
         blogTagsListPath,
       } = blogContents;
+
+      const now = new Date();
+      setGlobalData({
+        posts: allBlogPosts.map(({ metadata }) => ({
+          title: metadata.title,
+          permalink: metadata.permalink,
+          date: metadata.date,
+          state: releaseState(
+            { draft: metadata.frontMatter.draft, date: metadata.date },
+            now,
+          ),
+        })),
+      });
 
       const blogItemsToMetadata = {};
 

@@ -14,7 +14,8 @@
     "docusaurus": "docusaurus",
     "serve": "docusaurus serve",
     "swizzle": "docusaurus swizzle",
-    "test": "jest --passWithNoTests --runInBand"
+    "test": "jest --passWithNoTests --runInBand",
+    "blog:status": "node scripts/blog-status.js"
   },
   "browserslist": {
     "production": [

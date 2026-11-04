@@ -1,4 +1,5 @@
 ---
+date: 2026-11-17
 title: A guild buff that could not leave its core
 description: Metin2 mainline guild skills ran in the caster's body over one war map, and the game had no empire skills at all. How they were removed in 2019, came back in 2026, and became casts that run on every core with nobody performing them.
 authors: luscha

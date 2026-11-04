@@ -1,4 +1,5 @@
 ---
+date: 2026-11-10
 title: 25 skills disagreed with themselves
 description: Every skill in the Metin2 mainline engine lives in three hand-kept copies, a server row and two client files, and they do not agree. How we found it by deleting copies, what the drift looked like, and what one file costs and buys.
 authors: luscha

@@ -1,4 +1,5 @@
 ---
+date: 2026-12-08
 title: A new achievement meant touching C++
 description: An achievement module present since the first commit in 2016 spread 42 call lines over 14 server files. How we replaced it with player metrics in one commit, what broke the next day, and what the substrate still does not own.
 authors: luscha
