@@ -1,0 +1,102 @@
+forge practice_room begin
+    environment game begin
+        local PV = forge.sys.game.player_virtual
+        local processor = require("tutorial.practice_processor")
+
+        local Room = {}
+        Room.__index = Room
+
+        function Room:new()
+            return setmetatable({}, Room)
+        end
+
+        ---@param ch LPCHARACTER
+        ---@return boolean
+        function Room:enter(ch)
+            local base = ch:get_map_index()
+            if base >= 10000 then return false end
+
+            local copy = forge.sys.game.dungeon_manager.create(base)
+            if not copy then
+                forge.sys.err("practice_room: no private copy of map " .. base .. ", is it in maps_allowed of this core?")
+                return false
+            end
+            copy:set_delete_when_empty(true)
+            copy:set_flag("practice_room", 1)
+            local map_index = copy:get_map_index()
+            if not PV.set_processor(map_index, processor) then
+                forge.sys.err("practice_room: processor refused on map " .. map_index)
+                return false
+            end
+            local x, y = ch:get_x(), ch:get_y()
+
+            forge.sys.game.char_manager.spawn_mob(101, map_index, x + 300, y, 0)
+
+            copy:set_last_jump_position(x, y)
+            ch:save_exit_location()
+            ch:warp_set(x, y, map_index)
+            return true
+        end
+
+        ---@param ch LPCHARACTER
+        function Room:leave(ch)
+            local copy = forge.sys.game.dungeon_manager.find_by_map_index(ch:get_map_index())
+            if copy ~= nil and copy:get_flag("practice_room") == 1 then
+                ch:exit_to_saved_location()
+            end
+        end
+
+        ---@param ch LPCHARACTER
+        function Room:on_dog_killed(ch)
+            if not ch:is_virtual() then return end
+
+            local prize = forge.sys.game.item_manager.create_item(27001, 20)
+            if not prize then return end
+            if PV.commit_stash_item(ch, prize, "practice_room") == 0 then
+                forge.sys.err("practice_room: prize refused for " .. ch:get_name())
+                return
+            end
+            ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "[Practice room] Prize committed. You are sent back in 5 seconds.")
+
+            local pid = ch:get_player_id()
+            forge.sys.game.event.create(function()
+                local back = forge.sys.game.char_manager.find_by_pid(pid)
+                if back ~= nil then
+                    forge.game.practice_room:leave(back)
+                end
+                return 0
+            end, {}, 5)
+        end
+
+        local room = Room:new()
+
+        forge.sys.game.cmd.register_router("practice", forge.sys.game.cmd.new_router(nil, {
+            leave = forge.sys.game.cmd.new_player_route("/practice leave", {}, function(ch)
+                room:leave(ch)
+            end),
+        }))
+
+        forge.sys.log(0, "loaded")
+        return room
+    end
+
+    state start begin
+        when "9006".chat."Practice room" begin
+            say_title("Practice room")
+            say("A private copy of this map, with a wild dog to hunt.")
+            if select("Enter", "Cancel") == 1 then
+                local ch = forge.sys.game.char_manager.find_by_pid(pc.get_player_id())
+                if ch ~= nil then
+                    forge.game.practice_room:enter(ch)
+                end
+            end
+        end
+
+        when "101".kill begin
+            local ch = forge.sys.game.char_manager.find_by_pid(pc.get_player_id())
+            if ch ~= nil then
+                forge.game.practice_room:on_dog_killed(ch)
+            end
+        end
+    end
+end

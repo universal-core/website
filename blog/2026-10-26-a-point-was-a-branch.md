@@ -1,19 +1,19 @@
 ---
 title: A point used to be a branch in the damage code
-description: In vanilla Metin2 a bonus point does nothing until some function reads it, and a conditional bonus is one more branch in the damage code. How a scoped point bump turned that into a hook, a skills-only detour that traits superseded, and what still lives in the damage code.
+description: In the Metin2 mainline engine a bonus point does nothing until some function reads it, and a conditional bonus is one more branch in the damage code. How a scoped point bump turned that into a hook, a skills-only detour that traits superseded, and what still lives in the damage code.
 authors: luscha
 image: /img/blog/a-point-was-a-branch.png
 tags: [engine, traits, damage, refactoring]
 slug: a-point-was-a-branch
 ---
 
-In vanilla Metin2 a bonus point is a number on a character, and it does nothing. The effect exists only because some function reads that number and does something with it. If the bonus has a condition, the condition is an `if` in that function, and the function is usually the damage code. When I started on this engine, every new conditional bonus meant another branch there.
+In the Metin2 mainline engine a bonus point is a number on a character, and it does nothing. The effect exists only because some function reads that number and does something with it. If the bonus has a condition, the condition is an `if` in that function, and the function is usually the damage code. When I started on this engine, every new conditional bonus meant another branch there.
 
-This post follows that limit through four stages: the vanilla branch, the redesign that kept it, the point bump that removed the need for it, and a skills-only detour that traits superseded.
+This post follows that limit through four stages: the Metin2 mainline branch, the redesign that kept it, the point bump that removed the need for it, and a skills-only detour that traits superseded.
 
 ## Two lines in the damage function
 
-This is stock code, from the vanilla damage function:
+This is stock code, from the Metin2 mainline damage function:
 
 ```cpp
 if (IsAffectFlag(AFF_TERROR))
@@ -25,7 +25,7 @@ if (IsAffectFlag(AFF_HOSIN))
 
 The point `POINT_RESIST_NORMAL_DAMAGE` is a stat. The buff `AFF_HOSIN` is a flag. The only thing that joins them is these two lines, and the join lives inside the function that resolves a hit. Block, dodge, reflect, HP steal and the mana shield are written the same way in the same file: a point, and a hand-written reader.
 
-Vanilla has fewer than 150 of these points. We started the code base in 2016 with 192 slots. Today there are 324. Each one that is more than a plain stat needs its own reader somewhere in the server, and in the client when the player has to see the number.
+The Metin2 mainline engine has fewer than 150 of these points. We started the code base in 2016 with 192 slots. Today there are 324. Each one that is more than a plain stat needs its own reader somewhere in the server, and in the client when the player has to see the number.
 
 ## What a new bonus touched
 
@@ -126,7 +126,7 @@ Once there was one resolver, the buff erosion could leave it. Resist against a b
 
 This is the point I would take to another engine. The bump needed one place where the formula reads a point. Until the four copies were one, the hook sites would have had to be added four times, and each copy would have grown its own idea of what the hook may do.
 
-The vanilla branch, today, is a trait. It is native C++, the smallest one there is: it multiplies basic-attack damage by the same resist point as the two stock lines, now attached to whatever affect binds it. Traits are registered from C++ and from Lua, hosin on one side and cold blood on the other.
+The Metin2 mainline branch, today, is a trait. It is native C++, the smallest one there is: it multiplies basic-attack damage by the same resist point as the two stock lines, now attached to whatever affect binds it. Traits are registered from C++ and from Lua, hosin on one side and cold blood on the other.
 
 ## What it did not change
 

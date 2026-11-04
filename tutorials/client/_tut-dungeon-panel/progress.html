@@ -1,0 +1,57 @@
+{% macro progress(text, count, max, tooltip="%d/%d") %}
+    <inline>
+        <bullet-list>
+            <c color="lightsalmon">{{text}}</c>
+        </bullet-list>
+        <progress margin-x="10" width="auto" max="{{max}}" count="{{count}}" tooltip-text="{{tooltip}}"/>
+    </inline>
+{% endmacro %}
+
+{#  Like progress(), but the bar sits on its own line UNDER the label instead of beside it.
+    Use this in narrow state windows where an inline bar would be squeezed to a few pixels. #}
+{% macro progress_block(text, count, max, tooltip="%d/%d") %}
+    <bullet-list>
+        <c color="lightsalmon">{{text}}</c>
+    </bullet-list>
+    <progress margin-x="10" width="auto" max="{{max}}" count="{{count}}" tooltip-text="{{tooltip}}"/>
+{% endmacro %}
+
+{% macro rprogress(done_var, need_var_or_val, done_default=0, need_default=0, zone_suffix="") %}
+{#
+    Reactive progress macro that wraps progress bars in reactive zones.
+
+    Args:
+        done_var: Variable name for current count (e.g., "mh_1_done")
+        need_var_or_val: Variable name for max count (e.g., "mh_1_need") OR a literal number (e.g., 10000)
+        done_default: Default value for done_var (default: 0)
+        need_default: Default value for need_var if it's a variable (default: 0)
+        zone_suffix: Optional suffix for zone ID to make it unique (default: "")
+
+    Usage:
+        {% call(done, need) p.rprogress("mh_1_done", "mh_1_need") %}
+            {{ p.progress("Draghi aiutati: " ~ done ~ "/" ~ need, done, need) }}
+        {% endcall %}
+
+        {% call(done, need) p.rprogress("mh_3_target_done", 10000) %}
+            {{ p.progress("Sabbia raccolta: " ~ done ~ "/10000 grammi", done, need) }}
+        {% endcall %}
+#}
+    {% if need_var_or_val is number %}
+        {% set zone_id = "progress-" ~ done_var ~ zone_suffix %}
+        {% set reactive_vars = done_var %}
+    {% else %}
+        {% set zone_id = "progress-" ~ done_var ~ "-" ~ need_var_or_val ~ zone_suffix %}
+        {% set reactive_vars = done_var ~ "," ~ need_var_or_val %}
+    {% endif %}
+
+    <div id="{{ zone_id }}" reactive="{{ reactive_vars }}">
+        {% set _done = fun.getv(done_var, done_default) %}
+        {% if need_var_or_val is number %}
+            {% set _need = need_var_or_val %}
+        {% else %}
+            {% set _need = fun.getv(need_var_or_val, need_default) %}
+        {% endif %}
+
+        {{ caller(_done, _need) }}
+    </div>
+{% endmacro %}

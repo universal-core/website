@@ -1,0 +1,92 @@
+---
+title: A live dungeon panel
+description: Open a client panel from a Forge, drive a progress bar with counters, and watch it update on the client without reopening the page.
+slug: /dungeon-panel
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import progress from "!!raw-loader!./_tut-dungeon-panel/progress.html";
+import page1 from "!!raw-loader!./_tut-dungeon-panel/panel_demo-1.html";
+import forge1 from "!!raw-loader!./_tut-dungeon-panel/panel_demo-1.forge";
+import forge2 from "!!raw-loader!./_tut-dungeon-panel/panel_demo-2.forge";
+
+export const start = { "pack/locale/universal/dungeon_states/templates/progress.html": progress };
+export const solution = {
+  "pack/locale/universal/dungeon_states/templates/progress.html": progress,
+  "pack/locale/universal/dungeon_states/panel_demo.html": page1,
+  "share/locale/italy/system/tutorial/panel_demo.forge": forge2,
+};
+
+<Tutorial files={start} solution={solution} active="pack/locale/universal/dungeon_states/templates/progress.html">
+
+You build a small panel that sits beside the game window while you are in a dungeon. It shows a line of text and a progress bar, "Defeated: 0/5". A chat command moves the bar one step, and the bar redraws on your client at once, with no reload of the page.
+
+Two files make it: an HTML template that lives in the client pack, and a Forge that opens the panel and sets the counters the template reads. The shipped `progress.html` on the right is the macro library the template uses; read it first.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), and its compile and restart loop.
+- The [UCHTML reference](/docs/wiki/jinja2) open beside you, and [UCHTML](/foundations/uchtml/) for why a page is a template and not a hand-built window.
+- A **debug client**. A release client renders compiled templates only and ignores the `.html` file, so your new page shows nothing there until you compile it with the Compiler tab of the [Wiki Manager](/docs/wiki/data-generation). In a debug client the `.html` is read as it is.
+- A test character that can use GM commands and can stand inside any dungeon. The panel is bound to a dungeon instance, so outside one the Forge refuses.
+
+## Read the shipped macros
+
+The panel does not draw the bar itself. `progress.html` defines three macros. `progress(text, count, max)` draws a label and a `<progress>` element beside it. `progress_block` puts the bar under the label. `rprogress(done_var, need_var, ...)` wraps whatever you hand it in a `<div>` with an `id` and a `reactive` attribute that names the variables it reads.
+
+<ShowFile path="pack/locale/universal/dungeon_states/templates/progress.html" lines="20-56" />
+
+The `reactive` attribute is the whole trick. When a counter named in it changes, the client re-renders only that zone and patches it into the window. The rest of the page stays as it is.
+
+**Check.** You can name the two counters the zone below will watch: `done` and `need`.
+
+## Step 1: write the template
+
+A page is a Jinja template. It imports the macros with `with context`, so the macros see the counters, and it calls `rprogress` with a `call` block. The block receives the current `done` and `need` as arguments, and everything inside it is the part that redraws.
+
+<CreateFile path="pack/locale/universal/dungeon_states/panel_demo.html" code={page1} />
+
+Put the file in the client pack under `locale/universal/dungeon_states/`, next to the folder `templates/`. The `import` path is relative to that folder.
+
+**Check.** Every tag you used is a tag of the template engine: `main`, `spacer`, `progress`, `div`. The page has one reactive zone, `progress-done-need`.
+
+## Step 2: open the panel from a Forge
+
+The shipped dungeon state module exposes `open(map_index, template, title)` and `set_counters(map_index, counters)`. `open` binds a state to the dungeon on that map and sends the template name to every player inside. `set_counters` stores each value as a string and sends only the keys you pass. A key set to `nil` is removed.
+
+Create the Forge and register a `/panel_demo open` command with it.
+
+<CreateFile path="share/locale/italy/system/tutorial/panel_demo.forge" code={forge1} />
+
+Add `../system/tutorial/panel_demo.forge` to `share/locale/italy/quest/qc/quest_list` and compile it:
+
+```bash
+./qc.sh --f ../system/tutorial/panel_demo.forge
+```
+
+**Check.** The compiler prints no error and `share/locale/italy/quest/forge/panel_demo.game` exists. Restart the game cores.
+
+## Step 3: move the bar
+
+A counter that changes is the only thing that has to cross the wire. Add `step` and `close` commands. `step` reads the stored `done` back as a string, adds one, caps it at `NEED`, and sends only `done`.
+
+<UpdateFile path="share/locale/italy/system/tutorial/panel_demo.forge" code={forge2} />
+
+Compile and restart again.
+
+**Check.** The file has three routes, `open`, `step` and `close`, and returns a table at the end of the environment, because a forge that returns nothing fails to load.
+
+## Run it
+
+Log in to a debug client, step into any dungeon and type `/panel_demo open`. A window titled "Yard drill" appears with the line "Defeat the dummies in the yard." and the bar "Defeated: 0/5". Type `/panel_demo step` five times: the label and the bar advance each time and stop at 5/5. `/panel_demo close` closes the window.
+
+If the window appears with nothing in it, the client could not render the template: you are on a release client without a compiled page, or the file is not under `locale/universal/dungeon_states/`. If the chat says "Stand inside a dungeon first.", the map you are on is not a dungeon instance.
+
+## Where to go next
+
+- [UCHTML](/foundations/uchtml/): the pipeline from template to native widgets, and the reactive zones.
+- [Wiki Manager and data generation](/docs/wiki/data-generation): the Compiler tab.
+- [Luna Forge](/docs/core/luna-forge): the Forge module format used here.
+
+</Tutorial>

@@ -438,14 +438,14 @@ The template uses conditionals to render different content blocks depending on t
 
 ## Reactive Zones for High-Performance Updates
 
-UCHTML supports **reactive zones** - self-contained sections of your template that can re-render independently when specific variables change. This provides **10-100x performance improvement** over full page reloads and **preserves scroll position**, resulting in a dramatically better user experience.
+UCHTML supports **reactive zones** - self-contained sections of your template that can re-render independently when specific variables change. Only the zone's content is rebuilt, the rest of the page stays as it is, and the **scroll position is preserved**.
 
 ### What are Reactive Zones?
 
 Reactive zones allow you to mark sections of your HTML template that should automatically update when certain Jinja2 variables change, without reloading the entire page. When you update a watched variable using `SetVar()` or `SetVars()`, only the affected zones re-render, leaving the rest of the page untouched.
 
 **Benefits:**
-- ⚡ **10-100x faster updates** - Only the zone re-renders, not the entire page
+- ⚡ **Smaller updates** - Only the zone re-renders, not the entire page
 - 📜 **Scroll position preserved** - Users don't lose their place
 - ✨ **No visual flicker** - Smooth, in-place updates
 - 🎯 **Automatic optimization** - System intelligently chooses between zone update and full reload

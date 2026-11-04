@@ -4,7 +4,7 @@ sidebar_label: One cast across a map or every core
 description: How a skill reaches past one sector tree, map-wide per node with collect.from map and server-wide per skill with intracore, with authorise once and execute everywhere, the level in the packet, the cooldown stamped once, the victim-half damage, the boot refusals and what the simulator cannot show.
 ---
 
-A skill cast used to happen in one body on one core. A guild or an empire does not live on one core: its members are spread over every core of the mesh, and a buff for "every member" could not be computed anywhere, because each core holds only its own players. Two keys close that limit, and they are independent.
+A guild or empire has members on multiple game cores. A skill can reach a whole map or execute on every core, so each core applies the cast to its local players. The Metin2 mainline engine limits guild skill execution to the caster's war map.
 
 | Reach | Key | Declared per | Runs |
 | --- | --- | --- | --- |
@@ -12,38 +12,6 @@ A skill cast used to happen in one body on one core. A guild or an empire does n
 | Every core | `intracore: true` | skill | on every core of the mesh, once each |
 
 Who counts as ally or enemy, and whose roster is asked, is the owner of the skill: see [Skill owners](/foundations/skills/owners). How a node chooses its targets before reach matters is in [Skill reach](/foundations/skills/reach). The two keys compose with the owner, not with each other: the map-wide skills 155 to 157 are empire skills, and an intracore skill must be guild-owned or empire-owned.
-
-## What vanilla did
-
-The inherited code had guild skills only, in a fixed range of vnums from 151 to 162, and no empire skills. Using one was refused outside a guild war:
-
-```cpp
-if (!UnderAnyWar() || !ch->GetWarMap())
-{
-    ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<길드> 길드 스킬은 길드전 중에만 사용할 수 있습니다."));
-    return;
-}
-```
-
-Inside a war it called the war map, which walked its own set of characters and ran the caster's `ComputeSkill` on each member of the guild. The loop is this:
-
-```cpp
-void CWarMap::ComputeSkill(LPCHARACTER pkCaster, uint32_t dwVnum, uint32_t dwLevel, uint32_t dwGuildID)
-{
-    FWarComputeSkill f(pkCaster, dwVnum, dwLevel, dwGuildID);
-    std::for_each(m_set_pkChr.begin(), m_set_pkChr.end(), f);
-}
-```
-
-That is the whole reach: one war map, hosted by one core, with the caster's body applying the skill to everyone on it. A guild member logged in on another core, or in another channel, was not part of it.
-
-## What happened to guild skills
-
-In April 2019 the guild skills were removed. They did not fit the skill system we had just written in February 2019, the first version of the composable skill nodes, and we decided to keep them out of the gameplay and plan them for a later update.
-
-They came back in 2026. In March the skill infrastructure was re-enabled with level, cooldown, load, broadcast and client registration, and a guild skill went through the ordinary character path. A code comment from that time says what was wrong with it: the caster owned the skill instance, but the cooldown and the costs belonged to the guild. It still ran in the caster's body on the caster's core.
-
-On 9 August 2026 a single large change added the `subject:` key, the `intracore:` key, the map-wide extent of `collect.from`, and a damage resolver that survives having no attacker. The same day brought place nodes, and 158 became the skill described below; 152 to 157 had been worked since late July and were moved onto the new keys. Those skills were the first clients of the change. The limit it removed was the one above: a cast that could not leave its core.
 
 ## Map-wide: one node sweeps the whole map
 
@@ -90,12 +58,12 @@ else if(pkFrom->GetSectree())
 
 In words: a map-wide node sweeps the map; otherwise a position seed sweeps around its place; otherwise a cast with no performer and no centre asks the subject for its roster; otherwise the performer's sector tree. After the source, every path runs the same collector. A map-wide sweep does not read a radius. A `search.radius` next to `from: map` is only logged and the load goes on, and an unknown `from:` value is only logged too, so check the log after editing.
 
-The position seed ranks above the roster for a reason. Before 9 August an anchored subtree with no performer fell through to the subject roster and delivered a bounded blast to the whole core.
+A position seed takes precedence over the roster so a bounded blast stays near its centre.
 
 The map-wide skills that ship are the three empire skills 155, 156 and 157, all `per_use`, none intracore. They show why map-wide is kept apart from server-wide:
 
 - **156** puts one `AFFECT` with `from: map` and `of: ENEMY` over every enemy on the map and hangs a `DAMAGE` child under it. It is not intracore because the performer is present, so the damage keeps the crit roll, the attacker's bonuses, the trait hooks and a real killer. A fight happens on one map, and nothing in it wants to cross a core.
-- **155** collects every ally on the map, then a child `DAMAGE` re-seeded on each ally collects enemies within 700. Its header states the trap: the child sweep is still the performer's sector tree, so an ally on the far side of the map finds nobody. It needs `max_per_victim: 0` on the child, because the default of 1 would cap the whole cast at one hit per enemy and turn the composition into an ordinary area attack.
+- **155** collects every ally on the map, then a child `DAMAGE` re-seeded on each ally collects enemies within 700. Its header states the trap: the child sweep is still the performer's sector tree, so an ally on the far side of the map finds nobody.
 - **157** plants an `AUTO_SHOOT` emitter on every enemy on the map, and each tick heals up to three allies within 900. It is not intracore because a timed run reads the performer on every tick, so it lives on the core where the fight is.
 
 "The map" is a map index on one core. A map-wide sweep never leaves the core that hosts the map, and a child sweep under a map-wide parent still starts from the performer's sector tree.
@@ -219,15 +187,15 @@ Nothing declares a skill replicable. A cast can be computed identically on a sib
 
 ## A hit with no performer applies only the victim half
 
-An intracore `DAMAGE` has no attacker. The damage resolver guards every read of the attacker, so what applies is the victim half: the victim's own defence stands, without penetration or pierce, and nothing is read off an attacker's sheet. The code comment in the loader puts it as "partial by construction". The resolver, the twelve stat sinks behind it and the mob-skill resist all had to survive a null attacker for this to work.
+An intracore `DAMAGE` has no attacker. The damage resolver guards every read of the attacker, so what applies is the victim half: the victim's own defence stands, without penetration or pierce, and nothing is read off an attacker's sheet. The code comment in the loader puts it as "partial by construction".
 
 The cost is attribution. The kill is credited to a killer id, and a cast with no performer has none, so the kill has no owner. The shipped intracore damage skills, 152 and 158, accept players only.
 
 ## One pair: 158 against 150
 
-158, the Judgement of the Empire, landed on 9 August 2026 as an empire skill with `intracore: true`. Its top node is a collector with `of: ENEMY` and `kind: PLAYER`, and no `from:`, because a top-level intracore node must not declare one. On each core that selects the empire's enemy players present on that core. Under it, each marked player gets a mark with a five-second timer, and a ticker with `anchor: position` waits five seconds, then collects enemies within 800 of the mark and deals 100000 true damage with `max_per_victim: 0`. The anchored ticker is the case the position-seed rule above exists for. The file header states the contract: dying, warping or logging out between the mark and the ray does not cancel it. Running away does.
+158, the Judgement of the Empire, is an empire skill with `intracore: true`. Its top node is a collector with `of: ENEMY` and `kind: PLAYER`, and no `from:`, because a top-level intracore node must not declare one. On each core that selects the empire's enemy players present on that core. Under it, each marked player gets a mark with a five-second timer, and a ticker with `anchor: position` waits five seconds, then collects enemies within 800 of the mark and deals 100000 true damage with `max_per_victim: 0`. The anchored ticker is the case the position-seed rule above exists for. The file header states the contract: dying, warping or logging out between the mark and the ray does not cancel it. Running away does.
 
-150, the Stellar Sanctuary (new on 21 October 2026), is its counterplay and deliberately not intracore. It is a ticker anchored on a position with a radius of 1200: 20 pulses at one second, a heal, two short resistance affects and a cleanse every third pulse. The second affect carries a trait that zeroes the hits of 158. Its header explains the choice: an intracore cast has no performer and so no centre, and this one is nothing but a centre, so it lives on the one core where it was planted. The caster can walk out or die and the pulses go on, but being destroyed by a logout or a warp off the core ends them, because the performer's destructor cancels his runs. The runs of 158 belong to a performer-less cast owned by the manager, so no logout can end them.
+150, the Stellar Sanctuary, is its counterplay and deliberately not intracore. It is a ticker anchored on a position with a radius of 1200: 20 pulses at one second, a heal, two short resistance affects and a cleanse every third pulse. The second affect carries a trait that zeroes the hits of 158. Its header explains the choice: an intracore cast has no performer and so no centre, and this one is nothing but a centre, so it lives on the one core where it was planted. The caster can walk out or die and the pulses go on, but being destroyed by a logout or a warp off the core ends them, because the performer's destructor cancels his runs. The runs of 158 belong to a performer-less cast owned by the manager, so no logout can end them.
 
 So 150 is "one place on one core" and 158 is "every core". Neither is a map-wide skill: the map-wide examples are 155 to 157.
 
@@ -280,7 +248,7 @@ One invalid intracore skill stops the game core from starting. A live reload ign
 
 Both keys are YAML on native machinery. There is no Lua door for them: `handler:` is refused under `intracore`, and nothing registers a map-wide or server-wide cast from a script. Guild and empire skill use is gated by a policy: see [Skill policies](/foundations/skills/policies).
 
-That policy is where one rule is surprising today. The use policy registered in the guild war forge, `guild_skills:war_only`, covers the skills 151 to 157 and refuses a cast when the caster has no war map. It still catches the empire skill 154 and the map-wide skills 155 to 157 on non-war maps, so today they can be cast only from a guild war map. 150 and 158 are not in the list.
+That policy is where one rule is surprising. The use policy registered in the guild war forge, `guild_skills:war_only`, covers the skills 151 to 157 and refuses a cast when the caster has no war map. It still catches the empire skill 154 and the map-wide skills 155 to 157 on non-war maps, so they can be cast only from a guild war map. 150 and 158 are not in the list.
 
 The simulator tests the intracore path with `sim.intracore_deliver`, the exact call the game-to-game input makes when the broadcast arrives. It covers the victim-half damage and the rule that the level travels in the packet: delivered at level 1 while the guild is researched to 7, the affect must carry the level 1 number. Its manifest also states what it cannot show:
 

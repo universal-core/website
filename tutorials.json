@@ -9,15 +9,50 @@
       ]
     },
     {
-      "id": "building-blocks",
-      "title": "Building blocks",
+      "id": "policies",
+      "title": "Policies",
       "items": [
-        "building-blocks/tut-battle-arbiter-rule",
-        "building-blocks/tut-party-join-policy",
-        "building-blocks/tut-visible-buff",
-        "building-blocks/tut-first-trait",
-        "building-blocks/tut-skill-handler",
-        "building-blocks/tut-empire-skill"
+        "policies/tut-battle-arbiter-rule",
+        "policies/tut-party-join-policy"
+      ]
+    },
+    {
+      "id": "affects-traits",
+      "title": "Affects and traits",
+      "items": [
+        "affects-traits/tut-visible-buff",
+        "affects-traits/tut-first-trait"
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Skills",
+      "items": [
+        "skills/tut-skill-handler",
+        "skills/tut-empire-skill"
+      ]
+    },
+    {
+      "id": "metrics",
+      "title": "Player metrics",
+      "items": [
+        "metrics/tut-metric-achievement"
+      ]
+    },
+    {
+      "id": "virtual-players",
+      "title": "Virtual players",
+      "items": [
+        "virtual-players/tut-practice-room"
+      ]
+    },
+    {
+      "id": "client",
+      "title": "Client windows",
+      "items": [
+        "client/tut-dungeon-panel",
+        "client/tut-shader-widget",
+        "client/tut-particle-gradient"
       ]
     }
   ]

@@ -1,0 +1,31 @@
+categories:
+  - id: combat
+    name: "achievement.categories.combat"
+    icon: "icon/achievement/category_combat.tga"
+
+achievements:
+
+  - id: dog_catcher
+    name: "achievement.names.dog_catcher"
+    description: "achievement.desc.dog_catcher"
+    icon: "icon/achievement/dog_catcher.tga"
+    category: combat
+    subtype: monsters
+    tasks: [{ metric: kill.dog, count: 1000, label: "achievement.tasks.kill_dog" }]
+
+  - id: stone_hunter
+    name: "achievement.names.stone_hunter"
+    description: "achievement.desc.stone_hunter"
+    icon: "icon/achievement/stone_hunter.tga"
+    category: combat
+    subtype: metin
+    tasks: [{ metric: kill.metin, count: 1000, label: "achievement.tasks.kill_metin" }]
+
+  - id: stone_breaker
+    name: "achievement.names.stone_breaker"
+    description: "achievement.desc.stone_breaker"
+    icon: "icon/achievement/stone_breaker.tga"
+    category: combat
+    subtype: metin
+    supersedes: stone_hunter
+    tasks: [{ metric: kill.metin, count: 5000, label: "achievement.tasks.kill_metin" }]

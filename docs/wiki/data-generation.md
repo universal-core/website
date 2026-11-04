@@ -5,21 +5,45 @@ displayed_sidebar: mainSidebar
 
 # Wiki Data
 
-This section explains the functionality of the Wiki Data pipeline, which loads game settings data from various sources (e.g., prototypes, quests, configurations) and generates static assets for the wiki. These assets are saved in the `locale/[localization]/wiki` directory and can be customized via `.devops/wiki_builder/config.py`.
+Wiki pages never carry game facts by hand. Item, mob, shop, refine, cube and quest facts are generated offline from the server's own files into static JSON that the client reads from its pack. A page asks for them through the `item`, `mob`, `quest` and `world` namespaces of the [template context](./jinja2-context.md).
 
----
+The tool that generates and edits all of this is the **Wiki Manager**, a desktop application (PyQt) with one tab per task.
 
-### Output Files
+## Where the facts come from
 
-The pipeline generates the following static files:
-- `items.json`
-- `mobs.json`
-- `refine_trees.json`
-- `refine_sets.json`
+The builder reads the server's side of the game:
 
-### File Formats
+| Source | Gives |
+| --- | --- |
+| `item_proto.txt`, `mob_proto.txt`, `mob_adaptive_proto.txt` in the prototypes folder | Items and mobs. |
+| `group.txt`, `group_group.txt`, `cube.txt` in the server locale folder | Mob groups and crafting recipes. |
+| The server locale's shop and refine data, its map folder and the regen folders for cron, domain, event and dungeon data | Shops, refines and spawns. |
+| The interpreted quests | Drops, spawns, rewards and quest records that only exist inside quest scripts. |
 
-#### `items.json`
+### Interpreted quests
+
+Quest scripts are Lua programs, so their rewards and spawns cannot be read like a table. The Wiki Manager's **Interpreter** tab reads each quest script, expands the reward tables, and asks a language model (an OpenAI-compatible chat API, configured with a provider, a model and a key in the tab) to return one JSON record for it: quest type, maps and spawns, drops, rewards, reward choices, involved mobs and items, primary NPC, minimum level, unlocked quests and questline. The prompt tells the model to leave a field out when the script does not state it and to ignore commented-out code.
+
+The records are saved as one JSON file per quest in the interpreted quest folder. The builder reads that folder; it never calls the model. You run the interpreter again only for quests that changed, and you review the resulting records like any other generated data.
+
+## Output Files
+
+A build writes six files into the wiki folder (`locale/[localization]/wiki`):
+
+| File | Holds |
+| --- | --- |
+| `items.json` | Items: refines, shops, drops, chests, quests, crafts. |
+| `mobs.json` | Mobs: drops, spawns, shops, crafts, kill rewards. |
+| `cube.json` | Crafting recipes. |
+| `refine_trees.json` | Upgrade chains. |
+| `refine_sets.json` | Refine material sets. |
+| `quests.json` | Quest records, read through the `quest` namespace. |
+
+and two reports into the builder's own `build` folder, `mobs_by_map.json` and `mobs_without_map.json`, which list the spawn data per map and the mobs that no map reaches.
+
+## File Formats
+
+### `items.json`
 ```json
 {
     "vnum": {
@@ -151,7 +175,7 @@ The pipeline generates the following static files:
 }
 ```
 
-#### `mobs.json`
+### `mobs.json`
 ```json
 {
     "vnum": {
@@ -201,78 +225,33 @@ The pipeline generates the following static files:
 }
 ```
 
-### Editable Files
+## Editable Files
 
-In the same folder, the pipeline also produces:
-- `items_ex.json`
-- `mobs_ex.json`
-
-These files are designed for manual edits. Developers can add data not captured by the pipeline. Direct edits to `items.json` or `mobs.json` will be overwritten during subsequent pipeline runs, so use the `_ex.json` files for modifications.
+`items_ex.json` and `mobs_ex.json` live next to the generated files and are written by hand, never by the builder. The client deep-merges them over `items.json` and `mobs.json` when it loads, so use them for data the pipeline does not capture. A rebuild overwrites `items.json` and `mobs.json`, and leaves the `_ex` files alone.
 
 ---
 
 ## Running the Pipeline
 
-### Setup Environment
+The paths of a build are the prototypes folder, the server locale folder, the interpreted quest folder and the output folder. The Wiki Manager's **Builder** tab shows the defaults and lets you override each one; the same four can be set through the environment variables `WIKI_BUILDER_PROTO_PATH`, `WIKI_BUILDER_LOCALE_PATH`, `WIKI_BUILDER_INTERPRETED_QUEST_PATH` and `WIKI_BUILDER_OUTPUT_PATH`.
 
-1. **Install a Virtual Environment**:
-   - Navigate to the root directory:
-     ```bash
-     cd ./
-     ```
-   - Create a virtual environment:
-     ```bash
-     python -m venv venv
-     ```
+1. Install the Wiki Manager requirements (PyQt, ruamel.yaml, PyYAML, lupa, and openai for the Interpreter tab) in a virtual environment.
+2. Start the Wiki Manager and open the **Builder** tab.
+3. Check the paths and run the builder. It runs eight numbered steps: quests, cubes, shops, refines, items, mobs, quest records, then merge and write.
+4. Pack the generated files with the other wiki files.
 
-2. **Activate the Virtual Environment**:
-   - On **Windows**:
-     ```bash
-     .\venv\Scripts\activate
-     ```
-   - On **macOS/Linux**:
-     ```bash
-     source venv/bin/activate
-     ```
+### Configuration tabs
 
-3. **Install Dependencies**:
-   - Navigate to `.devops/wiki_builder`:
-     ```bash
-     cd .devops/wiki_builder
-     ```
-   - Install requirements:
-     ```bash
-     pip install -r requirements.txt
-     ```
-   - Return to the root directory:
-     ```bash
-     cd ../../
-     ```
+The other tabs edit the files described in [configuration](./configuration.md) without touching their comments: map info, quest, raid and dungeon names, packed queries, locale strings, origin mappings, indexed pages, search result categories, wiki categories and whitelists.
 
-### Running the Script
+### Compiler tab
 
-1. Use the provided scripts to run the pipeline from the root directory (`./`):
-   - **Windows**: `run-wiki-builder.bat`
-   - **Linux/Mac**: `run-wiki-builder.sh`
+The **Compiler** tab compiles every `.html` and `.jinja` page under the wiki folder into a Python module named `tmpl_<hash of the page name>.py` in `wiki/tmpl`. A client that is not a debug client renders pages from these modules and never reads the `.html` source, so recompile after every page change that must reach players. **Clean + Compile** removes the existing compiled files first, which drops modules of pages you deleted.
 
-2. Make the bash script executable:
-   ```bash
-   chmod +x run-wiki-builder.sh
-   ```
+## C++ registration
 
-### Freeze Dependencies
+| Native registrant | What it registers |
+| --- | --- |
+|  |  |
 
-If you install or update dependencies, remember to update `requirements.txt`:
-1. Activate the virtual environment.
-2. Navigate to `.devops/wiki_builder`:
-   ```bash
-   cd .devops/wiki_builder
-   ```
-3. Freeze the dependencies:
-   ```bash
-   pip freeze > requirements.txt
-   ```
-4. Return to the root directory:
-   ```bash
-   cd ../../
-   ```
+The data pipeline is Python and JSON on both sides; nothing is registered in C++.

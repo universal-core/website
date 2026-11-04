@@ -1,0 +1,9 @@
+{% import "templates/progress.html" as p with context %}
+
+<main>
+    Defeat the dummies in the yard.
+    <spacer/>
+    {% call(done, need) p.rprogress("done", "need") %}
+        {{ p.progress("Defeated: " ~ done ~ "/" ~ need, done, need) }}
+    {% endcall %}
+</main>

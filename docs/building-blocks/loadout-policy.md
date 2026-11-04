@@ -8,7 +8,7 @@ displayed_sidebar: mainSidebar
 
 A skill loadout is a rule you register from Lua that decides which skills a character holds and in which cell of the skill window each one sits. It is a guard that says which characters the rule owns and a builder function that returns a plan: the pages it speaks for, and the skills on them with a position and a level. You reach for it when a mode needs a bar no ordinary character could have: an arena where everybody holds the same one skill at level 40, a test session with any skill on any page, a trial with a fixed kit.
 
-The loadout policy is the heir of the inherited engine's job and skill group table, the literal answer to "which skills does this character hold". That table is still the default; a loadout overrides it while it is in force. For why it is sampled at edges and not asked on every cast, and how it relates to the use policy and the skill policy, see [Loadout, use and skill policies](/foundations/skills/policies).
+The loadout policy replaces the Metin2 mainline engine's fixed job and skill group table, the literal answer to "which skills does this character hold". That table remains the default; a loadout overrides it while it is in force. For why it is sampled at edges and not asked on every cast, and how it relates to the use policy and the skill policy, see [Loadout, use and skill policies](/foundations/skills/policies).
 
 ## Quick start
 

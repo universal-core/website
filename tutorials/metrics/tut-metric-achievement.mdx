@@ -1,0 +1,187 @@
+---
+title: Count something, reward it
+description: Declare a metric that counts bear kills, add an achievement at 100 kills and a second one at 1000 that follows it, then check both with the /metric command and the achievement window.
+slug: /metric-achievement
+sidebar_position: 8
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import metrics1 from "!!raw-loader!./_tut-metric-achievement/metrics-1.yaml";
+import metrics2 from "!!raw-loader!./_tut-metric-achievement/metrics-2.yaml";
+import ach1 from "!!raw-loader!./_tut-metric-achievement/achievements-1.yaml";
+import ach2 from "!!raw-loader!./_tut-metric-achievement/achievements-2.yaml";
+import ach3 from "!!raw-loader!./_tut-metric-achievement/achievements-3.yaml";
+
+export const start = { "Locale/italy/metrics.yaml": metrics1, "Locale/italy/achievements.yaml": ach1 };
+export const solution = { "Locale/italy/metrics.yaml": metrics2, "Locale/italy/achievements.yaml": ach3 };
+
+<Tutorial files={start} solution={solution} active="Locale/italy/metrics.yaml">
+
+You add one line to `metrics.yaml` and two entries to `achievements.yaml`. The line counts every bear a character kills, for the whole life of the character. The first achievement is earned at 100 bears, the second at 1000 and follows the first in the achievement window. There is no C++ and no Lua to write.
+
+## Before you start
+
+- The [player metrics reference](/docs/core/player-metrics) open beside you. It has the full list of fields and operands; this page uses three of them.
+- A test server, a character you can give GM commands to, and a client. Both `/metric` and `/achievement` are implementor commands, and `<pg_name>` below is the name of your character.
+- A text editor. The workbench on the right only shows the files; you edit the real ones in the locale folder. They are shown here as short excerpts of the shipped files, and you can leave the rest of each file as it is.
+
+## Step 1: count the bears
+
+A metric is a named number the engine keeps per character and saves under its name. This one reads the kill signal, keeps the kills whose monster is one of four vnums, and counts one per kill. `kill.dog` above it in the file is the same shape.
+
+<ShowFile path="Locale/italy/metrics.yaml" lines="5" />
+
+Add the line below `kill.dog` in `Locale/italy/metrics.yaml`.
+
+<UpdateFile path="Locale/italy/metrics.yaml" code={metrics2} />
+
+`110` to `113` are the four bears in the mob list: Orso, Orso Grizzly, Orso Nero and Orso Bruno. `where` takes a list for each operand, and a kill matches when its vnum is any of them. `agg: count` adds 1 per matching kill.
+
+Two things are easy to get wrong in this file.
+
+**A typo stops the game core.** The engine reads `metrics.yaml` itself, once, at boot, and it refuses the whole boot if one line is bad. Write `form:` instead of `from:` and the log says:
+
+```text
+[metrics] declare [kill.bear]: no from:
+```
+
+A misspelled operand or a token the engine does not know is refused the same way, each with its own line that names the metric. The last line of the failure is `cannot initialize metrics from %s`, with a literal `%s` instead of the path: look at the line above it, which names the metric. The game core does not start until the line is fixed.
+
+**A metric added late starts at zero.** A character has a stored value only for the metrics it has moved. A metric that is new has no stored value for anybody, so every character that already exists begins at 0, whatever it killed before. Nothing backfills it. Bears killed before the restart in this step do not count.
+
+Restart the game core: the file is read at boot and there is no reload for it.
+
+**Check.** Search the log for the declaration pass:
+
+```bash
+grep "\[metrics\]" logs/syslog
+```
+
+You should see the declared count one higher than it was before your edit, and no refusal. The number is an example:
+
+```text
+[OK] [metrics] 53 declared from [Locale/italy/metrics.yaml], 0 refused
+```
+
+The path in brackets is the one your core read. Further down, the pass prints one line for each metric, and yours is among them:
+
+```text
+[metrics]  53 kill.bear from=kill agg=count operands=1 predicates=0 max_keys=0
+```
+
+The number on the left is the dense id of the metric, set by the order of the file. Any number is right.
+
+## Step 2: reward the first hundred
+
+An achievement is a row in `achievements.yaml` that names a metric and a threshold. It owns no counter: it reads the one you declared. The shipped `stone_hunter` is the model.
+
+<ShowFile path="Locale/italy/achievements.yaml" lines="16-22" />
+
+Add `bear_hunter` with the other combat entries, under `stone_breaker`. The order of the file does not matter; the `category` and `subtype` fields decide where it shows.
+
+<UpdateFile path="Locale/italy/achievements.yaml" code={ach2} />
+
+`category` and `subtype` place it in the window: `combat` and `monsters` already exist, so no new rail entry is needed. The task names the metric and the count. A threshold is a lifetime total, not an increment: 100 means a hundred bears in all.
+
+`name`, `description` and the task `label` are not text but keys. They resolve against the client locale file, `Client-Files/locale/locale/universal/locale_it.json`, under `achievement.names`, `achievement.desc` and `achievement.tasks`. Add the keys `bear_hunter` under `names` and `desc`, and `kill_bear` under `tasks`, with the text you want players to read. A key that does not resolve is drawn as the key itself, so nothing breaks if you skip it for now; the window shows `achievement.names.bear_hunter`. The icon is a client path and this one reuses an existing icon.
+
+A typo in an achievement is gentler than one in a metric. A task that names a metric nobody declared, say `kill.bare`, does not stop the boot. The entry is dropped, the other achievements load, and the log says:
+
+```text
+[achievement] bear_hunter: task names undeclared metric 'kill.bare' — ignored
+```
+
+The achievement is simply missing from the window. Search for `ignored` in the log after every edit.
+
+Restart the game core.
+
+**Check.** The achievement forge prints one line when it has read the file. The totals are those of your file, and the line must be there:
+
+```text
+[OK] [achievement] N achievements, M categories
+```
+
+## Step 3: add the one that follows it
+
+A step that deserves its own name, icon and description is its own achievement. `supersedes` names the one this follows. It is presentation: the window keeps a link out of sight until the one it follows is earned, and then lists both.
+
+Add `bear_slayer` after `bear_hunter`.
+
+<UpdateFile path="Locale/italy/achievements.yaml" code={ach3} />
+
+It reads the same metric with a higher threshold: 1000 bears in all, not 900 more. Add `bear_slayer` under `achievement.names` and `achievement.desc` in the locale file. The task `label` is the same key as the first one, because both bars count the same bears.
+
+`supersedes` never decides whether an achievement is earned. Each entry is evaluated against the metric by itself, so a character that is already above both thresholds earns both together. A `supersedes` that names an id that does not exist logs `[achievement] bear_slayer supersedes unknown '...'` followed by `link dropped`: the link goes and the entry stays.
+
+Restart the game core once more.
+
+## Run it
+
+Killing a thousand bears is slow. The `/metric` command moves the counter for you and shows what the engine holds. Log in with your GM character and type:
+
+```text
+/metric get <pg_name> kill.bear
+```
+
+The reply is the value and whether it was ever written:
+
+```text
+metric kill.bear = 0 (seeded: false)
+```
+
+Zero and not seeded: you have killed no bear since the restart. Kill one bear and ask again. The reply is `metric kill.bear = 1 (seeded: true)`.
+
+Now push the counter to 100:
+
+```text
+/metric add <pg_name> kill.bear 99
+```
+
+```text
+metric kill.bear += 99 -> 100
+```
+
+Within a few heartbeats the achievement forge hears the change and evaluates only the achievements that read this metric. The log says:
+
+```text
+[achievement] pid 1234 unlocked bear_hunter
+```
+
+(The number is the player id of your character.) In game, the plaque of the new achievement appears. Open the achievement window from the achievement button of the taskbar. Under Combat, in the Monsters list, `bear_hunter` is shown as earned, and `bear_slayer` has appeared below it with a bar at 100 out of 1000. Before `bear_hunter` was earned, the window showed only that one.
+
+Ask the server the same thing:
+
+```text
+/achievement inspect <pg_name> bear_slayer
+```
+
+```text
+bear_slayer [combat]
+ follows bear_hunter
+   kill.bear: 100/1000 (count)
+```
+
+`/achievement simulate <pg_name> bear_slayer` answers that the achievement is not yet earned and names `kill.bear` as the unmet task, and it grants nothing. Then push the rest:
+
+```text
+/metric add <pg_name> kill.bear 900
+```
+
+`bear_slayer` is earned, and both cards are shown as earned. The *Completati* filter of the window lists them.
+
+When it does not work, look first for the line you expect:
+
+- No `[OK] [metrics]` line, and the core is gone: a metric line was refused. Read the `[metrics] declare [...]` line above the failure.
+- `metric kill.bear = 0` right after a restart even though you killed bears: the metric is new, and the old kills were never counted (step 1).
+- `no metric named 'kill.bear'` from `/metric add`: the core runs a `metrics.yaml` without your line. You edited a file the core does not read, or you did not restart.
+- `/achievement inspect` answers `no achievement 'bear_slayer'`: the entry was dropped. Search the log for `ignored` and `link dropped`.
+- The window shows `achievement.names.bear_slayer` in place of a name: the locale key is missing or the client was not repacked.
+
+## Where to go next
+
+- [Player metrics reference](/docs/core/player-metrics): every aggregation, the filter operands, predicates and the full `/metric` list.
+- [Player metrics](/foundations/player-metrics/): why the engine keeps the numbers itself and lets achievements only read them.
+- [A skill damage handler in Lua](/tutorials/skill-handler): another reward path that needs no C++.
+
+</Tutorial>

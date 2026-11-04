@@ -1,0 +1,8 @@
+metrics:
+
+  kill.any:          { from: kill, agg: count }
+  kill.metin:        { from: kill, where: { type: [STONE] }, agg: count }
+  kill.dog:          { from: kill, where: { vnum: [101, 102, 103] }, agg: count }
+  kill.orc:          { from: kill, agg: count,
+                       where: { vnum: [631, 632, 633, 634, 635, 636, 637,
+                                       651, 652, 653, 654, 655, 656, 657] } }

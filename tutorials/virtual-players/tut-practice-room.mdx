@@ -1,0 +1,154 @@
+---
+title: A practice room that pays out
+description: Open a private copy of a map from a Forge, make every player in it a level 30 with an empty bag through a virtualization processor, commit one prize when they kill a dog, and check after a real re-login that the prize is the only thing that came back.
+slug: /practice-room
+sidebar_position: 1
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import virtualProcessor from "!!raw-loader!./_tut-practice-room/virtual_processor.lua";
+import practiceProcessor from "!!raw-loader!./_tut-practice-room/practice_processor.lua";
+import room1 from "!!raw-loader!./_tut-practice-room/practice_room-1.forge";
+import room2 from "!!raw-loader!./_tut-practice-room/practice_room-2.forge";
+import room3 from "!!raw-loader!./_tut-practice-room/practice_room-3.forge";
+
+export const start = { "share/locale/italy/system/arena/avatar/virtual_processor.lua": virtualProcessor };
+export const solution = { "share/locale/italy/system/arena/avatar/virtual_processor.lua": virtualProcessor, "share/locale/italy/system/tutorial/practice_processor.lua": practiceProcessor, "share/locale/italy/system/tutorial/practice_room.forge": room3 };
+
+<Tutorial files={start} solution={solution} active="share/locale/italy/system/arena/avatar/virtual_processor.lua">
+
+You build a Forge module named `practice_room`. A player talks to an NPC, and the server opens a private copy of the map and warps them into it. Inside, their character is a level 30 with no gold, no items, no quest flags and no affects, whatever the real one is. A wild dog stands three meters away. Killing it commits one prize to the real character, 20 red potions, and sends the player back.
+
+The point is the line between the two. Everything the player does in the room happens on a copy that is thrown away. The prize is the one thing you send back on purpose. You check that on the real character, after a real re-login.
+
+## Before you start
+
+- The finished module of [Your first Forge module](/tutorials/first-forge-module), and the loop you use there to compile, register and restart. This module uses the same loop.
+- The [player virtualization reference](/docs/core/player-virtualization) open beside you, and [Player virtualization](/foundations/player-virtualization/) for why the engine keeps a copy instead of the real rows. This page uses both without repeating them.
+- A test server and one character with GM rights, with a level above 30, some gold and something in the bag, so the reset is visible.
+- The NPC with vnum 9006 (Vecchietta) standing on a map your game core hosts. She stays on the real map. If you have none, add a line to that map's `npc.txt` (`m cx cy 0 0 0 0 1m 100 1 9006`, in map cells). The room is a copy of the map you talk to her on, and the dog is spawned inside the copy by the module, so nothing is placed by hand in the room.
+- A text editor. The workbench on the right only shows the files; you create the real ones in `share/locale/italy/system/tutorial/`.
+
+The workbench opens on the avatar arena processor, a processor that ships with the server. You model yours on it in step 2.
+
+## Step 1: a private map and the way in
+
+A player cannot be virtual on a map that does not exist yet, so build the room first. `forge.sys.game.dungeon_manager.create` takes a base map index and returns a dungeon: a private copy of that map, addressed by its own index, 10000 or more. The engine frees it when it empties, once you call `set_delete_when_empty(true)`. The copy keeps the base map's world coordinates, so warping to the player's own `x` and `y` with the new index lands them on the same spot in the copy.
+
+`warp_set` is a reconnect, not a move inside the process: the client drops, and comes back on the new map. Save the exit location first, so there is a place to return to. Do not close anything from a `logout` handler for this reason, because logout fires on the way in as well.
+
+The module has two parts. The `environment game` block holds the class and runs once at boot. The `state start` block holds the NPC talk, which calls into it. The class tags the dungeon with a flag so `leave` only sends people out of a room it made. The `/practice leave` command is the way out until the prize does it for you.
+
+Create `share/locale/italy/system/tutorial/practice_room.forge` with exactly this content, then register it. Add one line to `share/locale/italy/quest/qc/quest_list`:
+
+<CreateFile path="share/locale/italy/system/tutorial/practice_room.forge" code={room1} lines="12-40" />
+
+```text
+../system/tutorial/practice_room.forge
+```
+
+Do not add the quest to `questcategory.txt`. A quest listed there with `0` is dormant in a virtual session, and the kill handler of step 3 has to run inside the room. A quest that is not listed is allowed.
+
+Compile it alone, from the runtime root:
+
+```bash
+./qc.sh --f ../system/tutorial/practice_room.forge
+```
+
+**Check.** The compiler prints no error and `share/locale/italy/quest/forge/practice_room.game` exists. Restart the game cores and search the log:
+
+```bash
+grep practice_room logs/syslog
+```
+
+You should see:
+
+```text
+[Forge-practice_room]: loaded
+```
+
+Talk to the NPC and choose "Enter". The client reloads and you stand where you were, on a copy of the map. Other players on the base map are gone. A wild dog waits three meters to your right. You are still yourself: your level, your gold, your bag. There is no processor yet.
+
+Type `/practice leave` to go back to where you stood.
+
+## Step 2: a processor on the shape of the shipped one
+
+A map is virtual when a processor is registered for its exact index. The shipped avatar processor is a plain table of hooks: `transform_*` functions that change the character as it loads, and `on_player_enter`. A hook you leave out is a passthrough. Yours needs four transforms and one greeting.
+
+<ShowFile path="share/locale/italy/system/arena/avatar/virtual_processor.lua" lines="8-33" />
+
+`transform_player_load` runs once, when the character first loads onto the room. `{}` from the item hook empties the bag and the equipped items, since both are in the list. `{}` from the quest hook drops every quest flag, the character's and the account's. `on_player_enter` runs at every entry, so keep the greeting behind `fresh`.
+
+<CreateFile path="share/locale/italy/system/tutorial/practice_processor.lua" code={practiceProcessor} />
+
+Then register it on the room. The processor has to be set before the player warps in, because the player is decided at load. It goes between creating the dungeon and the warp.
+
+<UpdateFile path="share/locale/italy/system/tutorial/practice_room.forge" code={room2} />
+
+Compile, restart and talk to the NPC again.
+
+**Check.** The greeting `[Practice room] Level 30, no gold, no items. Hunt the dog.` arrives in the chat. Your level is 30, your gold is 0, the bag is empty and no buff is on you. Your position is the same: the engine keeps the position, the exit location, the play time and the UI settings real. Walk around and kill the dog if you like; nothing it gives you is saved. In step 3 the kill handler does not exist yet, so nothing happens on the kill. Type `/practice leave`.
+
+On the way out, look at your real character: level, gold and bag are back as they were. The room never touched them.
+
+## Step 3: one prize at the kill
+
+A virtual session cannot write to the real rows, so a result that has to outlive it goes through the prize commit. `commit_stash_item` hands an item to the real character. Create the item with `item_manager.create_item`, commit it, and do not touch it again: the engine consumes it. The call returns the item id, or `0` when it refuses.
+
+Commit at an event the player triggers. A kill is one. `on_player_exit` runs at every disconnect before the saves, and a commit made there can be lost when the link to the database core is gone, so no shipped mode commits from it.
+
+The quest `kill` event runs for the player who made the kill. Guard it with `is_virtual()`, so a real player who kills a dog elsewhere gets nothing. After the commit, wait a few seconds so the player sees the message, then send them back with the same `leave` as the command.
+
+<UpdateFile path="share/locale/italy/system/tutorial/practice_room.forge" code={room3} />
+
+Compile, restart and talk to the NPC.
+
+**Check.** Kill the dog. The chat says `[Practice room] Prize committed. You are sent back in 5 seconds.` Five seconds later you are back on the base map. The game core log has the commit line, with the vnum 27001 and the reason you gave:
+
+```bash
+grep STASH_COMMIT logs/syslog
+```
+
+```text
+PlayerVirtualRewards: STASH_COMMIT pid <pid> id <item id> vnum 27001 count 20 flags <n> why='practice_room'
+```
+
+`logs/syserr` says nothing about `practice_room`.
+
+## Step 4: check it after a real re-login
+
+A commit is fire and forget. The write goes to the database core as one packet, and the running session is not updated. The only proof is the real character, loaded fresh.
+
+Log out of the game, close the client, log in again. Open the bag.
+
+**Check.** Your level, your gold and your own items are what they were before you started, and 20 red potions (Pozione Rossa) are in the bag. The potions are the only thing from the room that reached the real character. The level 30, the zero gold and the dog's drops stayed in the copy, which was freed when you left.
+
+If the potions are missing, the commit did not reach the database. Look in `logs/syserr` for `practice_room: prize refused` and for the engine's lines about an item bound to an owner.
+
+## Run it
+
+The loop is the same after every change:
+
+1. Compile: `./qc.sh --f ../system/tutorial/practice_room.forge`. The processor is a plain Lua file the forge requires, so it needs no compile.
+2. Restart the game cores: `sh shutdown.sh`, then `sh run.sh`. A forge is not reloaded while the core runs.
+3. Read `logs/syslog` for `[Forge-practice_room]: loaded`, and `logs/syserr` for the errors below.
+
+If the NPC does nothing and `logs/syserr` has `practice_room: no private copy of map`, the base map is not loaded by this core. A core loads only the maps in its own `maps_allowed`, so the base map has to be on the same core as the NPC.
+
+## Pitfalls
+
+- The player is decided at load. Register the processor before the warp, never after.
+- Logging out inside the room ends it. The dungeon deletes itself when empty, and the copy goes with it. The committed prize does not.
+- The flag a commit writes is not visible in the running session. `get_quest_flag` right after `commit_quest_flag` returns the old value; the real character sees it on the next load onto a real map.
+- The stash is delivered by the next real load. A player who warps out of the room gets it as the real character loads, and a player who logs out inside gets it at the next login.
+- Keep the quest out of `questcategory.txt`. Listed with `0`, its kill handler does not run in the room.
+- A processor error does not stop the load. The engine falls back to the real data and logs `PlayerVirtualLuaProcessor::TransformPlayerLoad Lua error:` in `logs/syserr`; that is how a typo shows a level 30 that is not.
+
+## Where to go next
+
+- [Player virtualization reference](/docs/core/player-virtualization): the 15 functions, the 9 hooks and what the boundary keeps real.
+- [Player virtualization](/foundations/player-virtualization/): why the only road back is a commit.
+- [Write a battle arbiter rule](/tutorials/battle-arbiter-rule): another Forge registered rule, on the combat side.
+
+</Tutorial>

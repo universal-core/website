@@ -9,9 +9,7 @@ Subsystems that gameplay is assembled from. Most of them are a registry in the
 engine with a Lua face: the engine asks a question at a fixed point, and
 whatever registered for it answers.
 
-- Affects and broadcast affects
-- Traits
-- The skill framework
+- Affects and broadcast affects (the state that [traits](../core/traits.md) and [skills](../core/skill-file.md) build on)
 - Policies: the [battle arbiter](./battle-arbiter.md), death, item use (potions included), spectator, party join,
   skill use, skill loadout and skill policy
 - The PvP team manager, paired with the battle arbiter

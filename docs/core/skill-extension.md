@@ -8,7 +8,7 @@ displayed_sidebar: mainSidebar
 
 A skill is data: a YAML file with nodes that say who is hit, for how much, and which affect is raised. A skill extension is the part that data cannot say. A node names a **handler**, a table of Lua functions that runs for one node, one target, one cast. It can skip the node for a target, reshape the hit before defence is subtracted, or act after an affect has landed.
 
-You reach for a handler when the rule needs to look at something the config cannot name: whether the caster stands behind the victim, which weapon is in hand, a combo frame. Uniform arithmetic stays in the YAML, and `ability_scaling` covers the adder and resist case. Anything that has to outlive the cast belongs to a [trait](/docs/building-blocks/traits), gated by the affect the skill raises. The reasoning behind the split is in [Beyond the formula](/foundations/skills/beyond-the-formula).
+You reach for a handler when the rule needs to look at something the config cannot name: whether the caster stands behind the victim, which weapon is in hand, a combo frame. Uniform arithmetic stays in the YAML, and `ability_scaling` covers the adder and resist case. Anything that has to outlive the cast belongs to a [trait](/docs/core/traits), gated by the affect the skill raises. The reasoning behind the split is in [Beyond the formula](/foundations/skills/beyond-the-formula).
 
 ## Quick start
 
@@ -192,7 +192,7 @@ traits:
     reduction_pct: 5+power/40
 ```
 
-`traits:` is always a list of entries with an `id`, and optionally `constants`, `formulas` and `params`. `counters:` on a node binds the native `skill_ledger` trait with the counter list. The loader binds the id when the trait framework already knows it, native or defined in Lua, and otherwise loads the colocated `traits/<id>.lua`, which is expected to call `forge.sys.game.traits.define`. If nothing resolves the id, the load logs `skill {} declares trait [{}] on affect {}, which resolves to no native, Lua or colocated trait` and the node gates nothing. The hooks, the ctx and the binding API are in the [traits reference](/docs/building-blocks/traits).
+`traits:` is always a list of entries with an `id`, and optionally `constants`, `formulas` and `params`. `counters:` on a node binds the native `skill_ledger` trait with the counter list. The loader binds the id when the trait framework already knows it, native or defined in Lua, and otherwise loads the colocated `traits/<id>.lua`, which is expected to call `forge.sys.game.traits.define`. If nothing resolves the id, the load logs `skill {} declares trait [{}] on affect {}, which resolves to no native, Lua or colocated trait` and the node gates nothing. The hooks, the ctx and the binding API are in the [traits reference](/docs/core/traits).
 
 ## C++ registration
 
@@ -205,7 +205,7 @@ The handler slots are Lua only. C++ calls into `SKILL_EXTENSIONS` and nothing el
 | Skill-bound trait | `REGISTER_NATIVE_TRAIT` at static initialisation, bound by the skill loader | `forge.sys.game.traits.define`, from a forge or a colocated `traits/<id>.lua`, bound by the skill loader | Native: `attack_buff_erosion`, `buff_def_erosion`, `dash`, `hosin_ward`, `mana_shield`, `stealth`, `terror`, `weapon_bound`, and `skill_ledger` through `counters:`. Lua: `guild_bulwark` and `stellar_ward`. |
 | Node type | The node enum, the name table, a parse case and an execute case, compiled in | None | 23 types. |
 
-The C++ door of the handler is empty: a native trait covers the stateful case, and a node type covers a new kind of action. A Lua handler cannot add a node type, spawn a projectile or drive a multi-stage skill. Those are node data. The native trait API is in the [C++ registration](/docs/building-blocks/traits#c-registration) section of the traits reference.
+The C++ door of the handler is empty: a native trait covers the stateful case, and a node type covers a new kind of action. A Lua handler cannot add a node type, spawn a projectile or drive a multi-stage skill. Those are node data. The native trait API is in the [C++ registration](/docs/core/traits#c-registration) section of the traits reference.
 
 ## Behavior
 
@@ -252,4 +252,4 @@ A handler fault at load never stops the game core. The node stays inert and the 
 ## See also
 
 - [Beyond the formula](/foundations/skills/beyond-the-formula): why skills split into data, handlers and traits.
-- [Traits reference](/docs/building-blocks/traits): the framework a skill-bound trait runs in.
+- [Traits reference](/docs/core/traits): the framework a skill-bound trait runs in.

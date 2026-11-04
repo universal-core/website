@@ -13,7 +13,7 @@ Arena and lobby were the most used legacy subsystem and the one giving the most 
 
 ## One rule, two files, four years of drift
 
-Vanilla Metin2 has no lobby and no matchmaking queue: its arena is a GM-started 1v1 duel. The lobby, the queue and the ranked arena were our own C++ additions, started in November 2017. By the day before the migration they were 12 files and 5,021 lines, plus about 270 lines of lobby handlers in the input code and the MMR manager beside them. The lobby types were a closed C++ enum, the team sizes were picked by a switch, the matchmaking level brackets were `if` chains, and one arena class served every mode by testing `IsRandom()` and `IsRanked()` flags. Lobby type and subtype went over the wire as single bytes, so a new type meant a new enum value on server and client.
+The Metin2 mainline engine has no lobby and no matchmaking queue: its arena is a GM-started 1v1 duel. The lobby, the queue and the ranked arena were our own C++ additions, started in November 2017. By the day before the migration they were 12 files and 5,021 lines, plus about 270 lines of lobby handlers in the input code and the MMR manager beside them. The lobby types were a closed C++ enum, the team sizes were picked by a switch, the matchmaking level brackets were `if` chains, and one arena class served every mode by testing `IsRandom()` and `IsRanked()` flags. Lobby type and subtype went over the wire as single bytes, so a new type meant a new enum value on server and client.
 
 I once got a request to make the join hour-based. The change took little time. What cost me was finding that somewhere in the input handling code there was already a hardcoded rule and a hardcoded error message deciding when the whole arena lobby was open or closed.
 

@@ -1,12 +1,12 @@
 ---
 title: "Skills: loadout, use and skill policies"
 sidebar_label: Loadout, use and skill policies
-description: Three registries decide which skills a character holds, whether a cast may happen, and which variant of a skill applies. What the inherited engine hardcoded, how C++ and Lua register, why only the use policy is asked and the other two are sampled, and what is still native.
+description: Three registries decide which skills a character holds, whether a cast may happen, and which variant of a skill applies. How C++ and Lua register them and why use is asked while the others are sampled.
 ---
 
-The inherited engine answered three questions about a skill with literals. Which skills does this character hold: a table indexed by job and skill group, six vnums per row. May this cast happen: one function that checked the mount whitelist, the weapon, the dead and stunned states, and a list of 18 vnums that always returned true. What does the skill do for this character: whatever the skill table said, the same for everyone. A new mode that wanted to change one of these edited that function.
+Three registries decide which skills a character holds, whether a cast may happen, and which variant applies. The Metin2 mainline engine expresses loadouts and cast checks in fixed tables and native code.
 
-Three registries now answer them: the skill loadout, the skill use policy and the skill policy. All three are the shape described on the [Policies page](/foundations/policies/): `(name, guard, payload)`, a handle that starts at 1 with 0 meaning refusal, registration order as resolution order, scope in the guard. This page covers what is specific to skills. A fourth question, who owns the skill, is not a registry; it is answered by the subject and told on [the owners page](/foundations/skills/owners).
+The skill loadout, skill use policy, and skill policy follow the [policies model](/foundations/policies/): `(name, guard, payload)`, a handle starting at 1 with 0 meaning refusal, and registration order as resolution order. The guard supplies scope. [Skill owners](/foundations/skills/owners) explains who owns a cast.
 
 ## Asked at the cast, sampled at the edges
 
@@ -30,7 +30,7 @@ flowchart TD
 
 ## The use policy: it can forbid, never permit
 
-The use policy is consulted only after every native check in the cast predicate has passed, so it is additive and deny-only. A verdict with `allowed = true` cannot override a native refusal, because the registry is never reached when a native check fails. The native checks wrap in one function so the policy also runs on the paths that used to shortcut to true: sub skills, horse summons, guild skills.
+The use policy is consulted only after every native check in the cast predicate has passed, so it is additive and deny-only. A verdict with `allowed = true` cannot override a native refusal, because the registry is never reached when a native check fails. The policy also runs on sub skills, horse summons, and guild skills after their native checks.
 
 ```cpp
 if (!nativeCheck()) {
@@ -114,9 +114,9 @@ forge.sys.game.skill_use_policy.register("rage:charge",
     { SKILL_SUB_RAGE })
 ```
 
-### What the war-only rule catches today
+### The war-only rule
 
-The rule names 151 to 157. When it was written in March 2026, all seven were guild skills. In August 2026 skills 154 to 157 became empire skills, and the rule still names them. Today an empire skill from 154 to 157 is refused with `CANNOT_SKILL_ONLY_IN_WAR` whenever the caster is not on a guild war map. Skills 150 and 158, also empire skills, are not in the list and are unaffected. The comment above the rule still describes the earlier list, a guild skill held by every guild member.
+The rule names skills 151 to 157, including empire skills 154 to 157. It refuses them outside a guild war map with `CANNOT_SKILL_ONLY_IN_WAR`. Empire skills 150 and 158 are not in the list.
 
 ## The skill policy: a named variant of a skill
 
@@ -131,8 +131,6 @@ policies:
   arena:
     node.hide.durationPoly: max(5,15+8*skill_k-10)
 ```
-
-This is the one of the three with no hardcoded predecessor as a system. Its nearest before was a formula variable: the duration formula contained `max(5,15+8*skill_k-(10*is_in_arena))`, one expression that said two things, so the tooltip had to carry both numbers and a duelist read the one that did not apply. The variable was removed when the policy arrived in August 2026.
 
 Variants are built when the skill table loads, not merged when a cast looks one up. Each entry is a path-to-value patch applied to a clone of the skill and parsed as a whole skill. A policy that cannot be built is a boot error rather than a fight that goes wrong, and so is a skill that names an id the policy declaration file does not declare. At cast time a character with no active policy gets the base skill, and one with active policies gets a walk over a short list.
 
@@ -183,32 +181,22 @@ The failure direction is closed on both counts. A broken guard means the rule do
 
 The client keeps its static table. It is laid down first, whole, and the plan then replaces the pages it names.
 
-## The C++ door: open, and nothing ships through it
+## Registration from C++ and Lua
 
 All three registries are singletons, constructed once at startup, and none of them includes the Lua binding. A C++ system can call `Register` on the registry directly and pays nothing for the Lua path. Two details differ from Lua. A null guard in C++ means every character, where Lua always requires a callable guard. A null policy is refused with a log line.
 
 Nothing native registers. Every registrant in shipped content is Lua, from forge files. In C++ the only caller outside the registries themselves is the simulator, which registers a skill policy through a test hook to probe it. The doors are symmetric, but only one of them is used.
 
-| Registry | Lua registrants today |
+| Registry | Lua registrants |
 | --- | --- |
 | Skill use | the guild war rule on 151 to 157, the rage charge rule |
 | Skill policy | the arena duel rule, one rule per range step in the ball game arena |
 | Loadout | the ball game arena, and a test forge |
 
-## How it got here
-
-Before the skill files, skill data lived in a database table edited by hand, without versioning. In February 2019 the first version of the composable skill system arrived. In April 2019 the guild skill handling was removed. Guild skills did not fit the skill system, and we decided to keep them out of gameplay; they were planned for a later update. With them went the war-only check that the inherited engine kept inside the guild skill handler: it refused the cast unless the guild was in a war and the caster stood on a war map.
-
-Nothing enforced that rule from April 2019 until March 2026, which is consistent with guild skills being out of gameplay. When we brought skills back in March 2026, the war-only rule came back as the first client of what became the use policy, and its first form was a Lua registry of about 210 lines behind a hook. It iterated its entries with `pairs()`, which has no defined order, and it sent the deny message from inside the predicate. Both are the defects the [Policies page](/foundations/policies/) tells.
-
-In August 2026 the three registries took their present form. The use policy replaced that hook and the Lua registry on 6 August: the same triple as the other axes, plus the vnum filter because this one runs on every cast. The skill policy and the loadout appeared the day before. Shared binding code came a week later, and with it two fixes: a non-callable guard or policy used to be accepted at register time, and the simulator's cast helper skipped the cast predicate, so no use policy could be observed.
-
-What was layered and what was replaced differs by registry. The use policy is layered on top of native checks that remain. The skill policy is new, and replaced one formula variable. The loadout overrides the inherited tables and does not delete them.
-
-## What is still in the engine
+## What stays in the engine
 
 - The native cast checks: dead and stunned, owner authority, the skill group membership table, riding and the mount whitelist, rod and pick, the weapon limitation, the player kill ban on attack skills.
-- The skill group membership table itself. It is the same literal table as before, moved into its own function, and it is the default whenever no loadout is in force.
+- The skill group membership table itself. It is the default whenever no loadout is in force.
 - The sub skill and horse vnums that always pass. These are hardcoded in the cast predicate.
 - The client static bar.
 - Owner authority. It is a switch on the subject kind inside the native checks: a guild member with the skill authority and a guild level above zero, an empire with a level above zero, otherwise the character's own level. See [owners](/foundations/skills/owners), and [every core](/foundations/skills/every-core) for how the three kinds of owner cast across cores.

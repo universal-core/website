@@ -1,0 +1,136 @@
+---
+title: A colour gradient on a particle
+description: Give a particle gold tones from a gradient ramp while keeping its soft shape.
+slug: /particle-gradient
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, UpdateFile, ShowFile } from "@site/src/components/tutorial";
+import mse1 from "!!raw-loader!./_tut-particle-gradient/visible_buff-1.mse";
+import mse2 from "!!raw-loader!./_tut-particle-gradient/visible_buff-2.mse";
+import material from "!!raw-loader!./_tut-particle-gradient/visible_buff.msfvx";
+import attach from "!!raw-loader!./_tut-particle-gradient/visible_buff.msattach";
+import items1 from "!!raw-loader!./_tut-particle-gradient/item_effect-1.txt";
+import items2 from "!!raw-loader!./_tut-particle-gradient/item_effect-2.txt";
+
+export const start = { "locale/universal/effect/visible_buff.mse": mse1, "locale/universal/item_effect.txt": items1 };
+export const solution = { "locale/universal/effect/visible_buff.mse": mse2, "locale/universal/effect/visible_buff.msfvx": material, "locale/universal/effect/visible_buff.msattach": attach, "locale/universal/item_effect.txt": items2 };
+
+<Tutorial files={start} solution={solution} active="locale/universal/effect/visible_buff.mse">
+
+You give the green visible buff particle gold tones from a gradient ramp. The material reads the brightness of the existing texture, so the particle keeps its soft shape.
+
+## Before you start
+
+- Finish [A buff other players can see](/tutorials/visible-buff), or have another `.mse` effect that you can make appear in game.
+- Open the [effects and materials reference](/docs/core/effects-and-materials) beside you.
+- Have a client pack you can edit and rebuild.
+- Use a text editor. The workbench shows both `.mse` and `.msfvx` files as plain text.
+
+## Read the model
+
+Open the particle's `ParticleProperty` group. Its red, green, and blue curves give it one color: 0.2 red, 1.0 green, and 0.4 blue. `SrcBlendType 5` and `DestBlendType 6` make it alpha blended. `TextureFiles` names `universalled.dds`, beside the effect in the locale pack.
+
+<ShowFile path="locale/universal/effect/visible_buff.mse" lines="69-70,105-116,129-132" />
+
+**Check.** Find the three color curves, the blend values, and the texture name.
+
+## Step 1: create the material
+
+Create the material beside the effect. It selects a shared ramp and tells the particle how to sample it.
+
+<CreateFile path="locale/universal/effect/visible_buff.msfvx" code={material} />
+
+- `Family emissive_particle` selects the particle material family. `Family` is required.
+- `Emission 1.0` leaves the sampled color at its original intensity. Keep it at 1.0 for this alpha blended particle: a higher value can turn it into an opaque glowing sheet.
+- `Gradient` names the shared `gilded.dds` ramp.
+- `GradientMode replace` uses the ramp color in place of the `.mse` color curves.
+- `GradientInput brightness` samples the ramp using the texture's brightness. A pure white texture would give one flat color.
+- `GradientGain 1.2` scales the brightness used to choose a point on the ramp.
+- `GradientLifeShift 0.2` shifts that point as the particle ages.
+
+The ramp position is `GradientGain` times texel brightness, minus `GradientLifeShift` times particle life, clamped from 0 to 1. The sampled color is multiplied by texel brightness and `Emission`; black texels stay black. Alpha still comes from the texture and the particle's alpha curve.
+
+**Check.** The material has all seven keys inside `Group Effect`, and `Gradient` points to `gilded.dds`.
+
+## Step 2: name the material from the effect
+
+Add `MaterialFile` immediately after `StartTime` in the root of `Group Particle`. The relative path resolves beside the `.mse`. The affect still names the same effect; the effect now names the material.
+
+<UpdateFile path="locale/universal/effect/visible_buff.mse" code={mse2} />
+
+**Check.** The marked line reads `MaterialFile "visible_buff.msfvx"`, and both files are in `locale/universal/effect/`.
+
+## Step 3: put the effect on a weapon
+
+The affect is not the only place that plays an effect. Each row of `locale/universal/item_effect.txt` gives an item an effect, and a row that names an `.msattach` bundle attaches everything the bundle lists. The bundle below plays `visible_buff.mse`, and with it the material you just added.
+
+<CreateFile path="locale/universal/effect/visible_buff.msattach" code={attach} />
+
+`File` is resolved beside the bundle, like `MaterialFile`. `Bone` is optional and left out here.
+
+Now open `locale/universal/item_effect.txt`. Each row has three columns separated by tabs: the item vnum, a bone, and the effect path. A bundle row must leave the bone as `-` (or empty); any other bone is refused with `bundle bone must be '-' or empty`. Add one row at the end of the file, using real tab characters between the columns:
+
+<UpdateFile path="locale/universal/item_effect.txt" code={items2} />
+
+```text
+447<TAB>-<TAB>locale/universal/effect/visible_buff.msattach
+```
+
+Vnum 447 is a weapon that already has rows in the file. Bundle rows attach only for weapon, rage weapon and armour items, and the vnum must exist in the item prototype table. A row with fewer or more than three columns is skipped without a message, so a row typed with spaces does nothing.
+
+**Check.** The new row has exactly two tab characters, the middle column is `-`, and the last column ends in `.msattach`.
+
+## Check your work
+
+If you have an engine repository checkout, run its MSE validator on the three effect files. It is agent tooling in that repository and is not shipped with a client. It runs without a client and returns a nonzero exit code on an error:
+
+```bash
+python validate_mse.py locale/universal/effect/visible_buff.mse locale/universal/effect/visible_buff.msfvx locale/universal/effect/visible_buff.msattach
+```
+
+A debug client build can also have an F11 Cosmetics panel for playing effects and comparing materials. The panel exists only in builds configured for it.
+
+A normal client has neither the validator nor the F11 panel. Pack the `locale` folder with your client pack step, restart the client, look at the effect in game, and read the client log.
+
+## Run it
+
+Pack the `locale` folder and restart both clients. On the character with the visible buff, type `/vbuff on`. You should see gold tones from the ramp instead of the flat green, with the same soft shape.
+
+Equip a character with a vnum 447 weapon and look at it. The same effect now plays from the weapon as well as from the affect.
+
+For an A/B comparison, delete the `MaterialFile` line, repack, and restart both clients. The plain green effect returns, on the affect and on the weapon. Add the line back, repack, and restart to restore the material. Materials are read when the effect loads, so restart after each change.
+
+If the result is still plain, read the client log. A misspelled material key produces a line like this:
+
+```text
+Cosmetic material: locale/universal/effect/visible_buff.msfvx: key 'emision': unknown key
+```
+
+A material missing from the pack produces:
+
+```text
+Cosmetic material: locale/universal/effect/visible_buff.msfvx: key 'file': resource not found or malformed
+```
+
+A missing ramp produces:
+
+```text
+Cosmetic textures: ramp 'd:/ymir work/special/cosmetics/ramps/gilded.dds': missing file; neutral index 0 is used
+```
+
+Conflicting material references produce:
+
+```text
+Effect '<mse path>' has conflicting material references
+```
+
+Fix the named file or reference, repack, and restart both clients. A bad or missing material leaves the plain effect; a missing ramp uses the neutral ramp.
+
+## Where to go next
+
+- [Effects and materials reference](/docs/core/effects-and-materials): material keys, paths, and gradient behavior.
+- [A buff other players can see](/tutorials/visible-buff): build the effect used here and make it visible to nearby players.
+- [Extended, never wrapped](/blog/mse-extended): the story behind extended effect materials.
+
+</Tutorial>

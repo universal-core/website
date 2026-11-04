@@ -13,7 +13,7 @@ The reason was a bitfield. This post is about the limits around it, and about ra
 
 ## Four bits left, and a field I had already enlarged
 
-In the inherited code, the only thing a viewer learns about another character's affects is a set of bits. The full affect element goes to its owner. Everyone else gets the `AFF_` flags in the character update packet: a bitfield of two 32-bit words. The count of `AFF_` values was the first limit, so I enlarged the field from 2 dwords to 3.
+In the Metin2 mainline engine, the only thing a viewer learns about another character's affects is a set of bits. The full affect element goes to its owner. Everyone else gets the `AFF_` flags in the character update packet: a bitfield of two 32-bit words. The count of `AFF_` values was the first limit, so I enlarged the field from 2 dwords to 3.
 
 That bought room, and the room ran out anyway. At the head of the current tree the highest `AFF_` value in use is 91, the field holds 96, and the guard in the flag test rejects everything outside 1 to 95. Four bits remain.
 

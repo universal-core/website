@@ -309,7 +309,7 @@ counters:
 | `affectVnum` | The identity of the affect. Default is the skill vnum. A trait binding is keyed by trait and affect type for the whole process, so two variants of one skill that want different trait numbers must give their nodes different `affectVnum` values. |
 | `upkeep` | What the affect drains per tick while it holds. `point` is `SP` or `HP` (`HP` also marks the affect as costing health), `amountPoly` is required. An unknown point or a missing amount fails the file. |
 | `attach` | `TICKER` and `AUTO_SHOOT`: `affect` gives the run and the affect one lifetime. It takes only the word `affect`. |
-| `traits` | A list of `{ id:, constants:, formulas:, params: }`. The behavior this affect gates. See [Traits reference](/docs/building-blocks/traits). |
+| `traits` | A list of `{ id:, constants:, formulas:, params: }`. The behavior this affect gates. See [Traits reference](/docs/core/traits). |
 | `counters` | A map of name to `{ event:, from: }`: running totals the affect keeps. `event` is one of `DAMAGE_TAKEN`, `DAMAGE_DEALT`, `HEAL_TAKEN`, `HEAL_DONE`, `DEBUFF_TAKEN`, `DEBUFF_GIVEN`, `KILL`, `DIED`. `from` is `ANY` (default), `CASTER`, `PC` or `NON_PC`. At most 8 counters per node. Read a total as `node.<id>.<name>`. |
 
 Inside a `traits:` entry, `constants` are polys in the node's own names, evaluated per holder. `formulas` are polys in the trait's names, stored on the binding. `params` map a name to an enum value, and the name must end in `_point` (a point), `_column` (a mob resist column) or `_affect` (an affect flag) to say which enum it reads. `trait:` in the singular, and `constants`, `formulas` or `params` outside a `traits:` entry, are errors. More on affects is in [Affects reference](/docs/building-blocks/affects).
@@ -860,4 +860,4 @@ per_compute:
 - [Skill descriptions that cannot drift](/foundations/skills/descriptions): `desc.vars`.
 - [Skills: owned by a character, a guild or an empire](/foundations/skills/owners) and [one cast across a map or every core](/foundations/skills/every-core): `subject` and `intracore`.
 - [Loadout, use and skill policies](/foundations/skills/policies): the three registries around a skill.
-- [Traits reference](/docs/building-blocks/traits) and [Affects reference](/docs/building-blocks/affects): what `traits:` and `counters:` bind to.
+- [Traits reference](/docs/core/traits) and [Affects reference](/docs/building-blocks/affects): what `traits:` and `counters:` bind to.

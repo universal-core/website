@@ -1,0 +1,28 @@
+forge panel_demo begin
+    environment game begin
+        local TEMPLATE = "panel_demo.html"
+        local NEED = 5
+
+        local function in_dungeon(ch)
+            return forge.sys.game.dungeon_manager.find_by_map_index(ch:get_map_index()) ~= nil
+        end
+
+        local function panel_open(ch)
+            if not in_dungeon(ch) then
+                ch:chat_packet(forge.sys.game.CHAT_TYPE.INFO, "Stand inside a dungeon first.")
+                return
+            end
+            local map_index = ch:get_map_index()
+            forge.game.ue_dungeon_state:open(map_index, TEMPLATE, "Yard drill")
+            forge.game.ue_dungeon_state:set_counters(map_index, { need = NEED, done = 0 })
+        end
+
+        forge.sys.game.cmd.register_router("panel_demo",
+            forge.sys.game.cmd.new_router(nil, {
+                open = forge.sys.game.cmd.new_low_wizard_route("/panel_demo open", {}, panel_open),
+            })
+        )
+
+        return { template = TEMPLATE }
+    end
+end

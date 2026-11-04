@@ -1,12 +1,12 @@
 ---
-title: "Skills: beyond the formula"
-sidebar_label: Beyond the formula
-description: "Where a skill stops being data: Lua node handlers, ability_scaling, traits bound to affects, and the node types that stay C++. How seven and a half years of vnum branches in the damage path became eight Lua files, two dead ends on the way, and what is still in the engine."
+title: "Skills: extending a skill past its YAML"
+sidebar_label: Extending past the YAML
+description: Lua handlers, ability scaling, traits, and native behavior extend a skill beyond its YAML definition.
 ---
 
-A skill file describes a skill with formulas: an amount, a duration, a cost, a range. Some skills need a fact the formulas cannot name: the victim is poisoned, the caster is in stealth, the blow lands from behind, this is the last frame of a combo. Until July 2026 each of those lived as an `if (unVnum == SKILL_X)` branch inside the damage path, and every new interaction meant editing the combat hot path and recompiling the server.
+Skills can respond to combat state, shape damage, and attach behavior that lasts beyond a cast. Lua handlers, ability scaling, traits, and native C++ behavior make this one of the most powerful features of the skill system. The Metin2 mainline engine expresses skill-specific interactions as C++ branches keyed by skill.
 
-Now a skill reaches past its YAML in four ways, and there is one wall. How formulas are evaluated is in [Skill formulas](/foundations/skills/formulas); what a node is and when it runs is in [Nodes and phases](/foundations/skills/nodes-and-phases).
+[Skill formulas](/foundations/skills/formulas) explains evaluation; [nodes and phases](/foundations/skills/nodes-and-phases) explains when a node runs.
 
 | Way | Written in | Who decides | Lifetime |
 | --- | --- | --- | --- |
@@ -45,7 +45,7 @@ At boot, after the YAML loaded without a fault, the skill loader walks every ski
 
 A policy variant of a skill, a per-mode copy, is a skill in its own right. The same `<vnum>.lua` answers for it, and a node it inherited unchanged still learns whether its handler has a gate. The Ball-Em-Up arena handlers in `78.lua` are used only inside the `ballemup` variants of skill 78.
 
-C++ holds no reference to the Lua functions. Every call looks up `SKILL_EXTENSIONS[vnum][handler][hook]` again. An earlier cut stored the protected function on the node, and references freed after the Lua state died crashed the server at shutdown.
+C++ holds no reference to the Lua functions. Every call looks up `SKILL_EXTENSIONS[vnum][handler][hook]` again. This avoids retaining references beyond the lifetime of the Lua state.
 
 ```mermaid
 flowchart TD
@@ -101,9 +101,7 @@ int32_t ApplyAbilityScaling(const TDamage* dmg, int32_t dam, LPCHARACTER caster,
 }
 ```
 
-The result is `max(0, dam * (100 + caster adder - victim resist) / 100)` in integers, applied for every DAMAGE node so the clamp runs as the old unconditional call did. It sits right after the splash factor and before `damage_intent`. 31 skill files carry it, for example `ability_scaling: { adder: SAMYEON_ADDER, resist: SAMYEON_RESIST }` on skill 1.
-
-It replaced a C++ map keyed by skill vnum, with the resist found by enum offset from the adder. One row of that map was keyed wrong. The Noejeon row used a point id where it needed a skill id, and the point id is 266, while Noejeon is skill 106. From October 2021 the Noejeon adder and resist applied to skill 266, a mob skill, and never to Noejeon. The July 2026 migration kept it byte for byte: skill 266 carries `NOEJEON_ADDER` and skill 106 has no `ability_scaling`. Now it is visible in a file rather than hidden in a map.
+The result is `max(0, dam * (100 + caster adder - victim resist) / 100)` in integers, applied for every DAMAGE node. It sits right after the splash factor and before `damage_intent`. 31 skill files carry it, for example `ability_scaling: { adder: SAMYEON_ADDER, resist: SAMYEON_RESIST }` on skill 1.
 
 ## Traits from a skill node
 
@@ -122,7 +120,7 @@ traits:
 
 Both kinds ship. Eight native C++ trait ids are bound by skill nodes (`attack_buff_erosion`, `buff_def_erosion`, `dash`, `hosin_ward`, `mana_shield`, `stealth`, `terror`, `weapon_bound`), plus `skill_ledger` through `counters:`. Two Lua traits sit in the skill configuration folder, `guild_bulwark` on skill 153 and `stellar_ward` on skill 150; `thorns` sits beside them, bound by no skill file. That is 17 content skills. When no native or Lua trait of the given id is defined, the loader looks for `traits/<id>.lua` there.
 
-This is also the answer to "is there a native handler". There is no native C++ handler slot: the invokers only look up Lua. A skill that needs C++ behaviour gets it from a native trait bound to its affect, from `ability_scaling`, or from a node type. Traits are not a skill feature that happens to exist. They serve every affect in the engine, and how they hook, bump points and the native and Lua pair are on [Traits](/foundations/traits/).
+There is no native C++ handler slot: the invokers only look up Lua. A skill that needs C++ behaviour gets it from a native trait bound to its affect, from `ability_scaling`, or from a node type. Traits are not a skill feature that happens to exist. They serve every affect in the engine, and how they hook, bump points and the native and Lua pair are on [Traits](/foundations/traits/).
 
 ## Node types are C++ only
 
@@ -138,118 +136,6 @@ That wall is deliberate. A handler shapes a node's damage or gates its execution
 | `ability_scaling` | applied by C++ | none, a YAML field | 31 skills |
 | skill-bound trait | native registration | Lua definition | 8 native ids plus `skill_ledger`, 2 Lua |
 | node type | enum, parser, executor | none | 24 types |
-
-## Backstory: seven and a half years of vnum branches
-
-Vanilla Metin2 kept per-skill rules as vnum branches. Its splash damage functor has an `if` on `SKILL_AMSEOP` for the back-hit bonus and one on `SKILL_GUNGSIN` for the dagger. The comment above the first one is a Korean question that translates to "why is this done here??", about a stealth latch stored on the character. Beyond the functor, the vanilla server names skill constants more than 200 times across 11 files, about 70 of them as `case` labels.
-
-In February 2019 the first version of the composable skill system began, and on 19 February the AMSEOP and GUNGSIN branches were carried into the new damage function as they were, under a comment that stayed until July 2026:
-
-```cpp
-//Some shit hardcoded for camuflage
-bool bUnderEunhyung = m_pkCaster->GetAffectedEunhyung() > 0;
-if(m_pkProto->unVnum == SKILL_AMSEOP)
-{
-    float fDelta = GetDegreeDelta(m_pkCaster->GetRotation(), pkVictim->GetRotation());
-    float adjust = 1.0f;
-    if(fDelta < 35.0f)
-    {
-        adjust += 0.3f;
-    }
-    if(bUnderEunhyung == true)
-    {
-        adjust += 0.25f;
-    }
-
-    if(m_pkCaster->GetWear(WEAR_WEAPON) && m_pkCaster->GetWear(WEAR_WEAPON)->GetSubType() == WEAPON_DAGGER)
-        adjust += 0.5f;
-
-    nAmount = (int32_t) (nAmount * adjust);
-}
-```
-
-This is the AMSEOP block as it stood on the last day. The system around it was data; the exceptions were not. The chain then grew by one branch at a time:
-
-| Date | Added to the damage path |
-| --- | --- |
-| February 2019 | AMSEOP and GUNGSIN, from vanilla |
-| May 2021 | MARYUNG bonus against slowed targets, BIPABU +25% against burning ones |
-| October 2021 | a map of adder and resist points per skill |
-| August 2022 | a step table for the MARYUNG slow bonus |
-| April 2026 | a second GUNGSIN block: knockback on the last frame of a ninja dagger combo |
-| April 2026 | SWAERYUNG and YONGKWON +10% against PABEOP |
-
-Per-skill state lived on the character too: a latch and a level for the stealth bonus, set and cleared in other files.
-
-## Backstory: the modifier DSL, a first attempt that was never committed
-
-The first answer we tried was a modifier language in the skill file: `modifiers:` with `mult`, `add`, `curve` and `when:` conditions. It looked tidy. It was a trap. Every skill we migrated needed a new grammar primitive: MARYUNG needed a `curve`, the value model needed a value-source type, adder and resist needed a percent operation and a new pipeline stage, AMSEOP needed `weapon`, `back_hit` and `stealth_cast` condition types. Not one skill fit the vocabulary that existed before it. That was the tell. We had not decoupled the content author from the engine engineer. We had relocated the hardcoding from a C++ `if` chain into a parser and an evaluator, and added a grammar that had to be maintained too.
-
-It never reached git. Only the two documents that describe it did, which is why it is told here and not shown.
-
-## Backstory: the handler platform, and 18 days after defence
-
-On 20 July 2026 the handlers landed in one commit: per-node Lua handlers and `ability_scaling` together, retiring the DSL. It touched 59 files and, ignoring whitespace, added 787 lines and removed 257. The vnum branches left the damage path, along with the stealth latch on the character.
-
-The first version had the wrong slot. It was called `on_hit`, took the hit context and returned the final damage, and it ran after defence:
-
-```lua
--- AMSEOP (Tranello) — post-defense damage bonus.
--- Was the hardcoded pre-defense if-chain in CSkill::ProcessDamage.
-local M = {}
-
----@type DamageNodeHandler
-M.amseop = {
-    on_hit = function(ctx)
-        local adjust = 1.0
-        if ctx:is_back_hit(35) then adjust = adjust + 0.3 end
-        if ctx.caster:has_affect_flag("EUNHYUNG") then adjust = adjust + 0.25 end   -- cast from stealth
-        if ctx.caster:weapon_is("DAGGER") then adjust = adjust + 0.5 end
-        return math.floor(ctx.damage * adjust)
-    end,
-}
-
-return M
-```
-
-For 18 days, until 7 August, the six ported bonuses applied after defence, where the old chain had applied them before. A multiplier on the surviving damage gave `(attack - def) x m` instead of `(attack x m) - def`, so each bonus was quietly smaller against armour. On 7 August the slot became `damage_intent`, carrying `attack`, `type`, `ignore_defense` and `damage_attribute`, and the bonuses moved back before defence.
-
-A day earlier a second bug had surfaced: `has_affect` was taking an affect name and was changed to take a number, with two handler files updated to pass `affect.name_map` values.
-
-## Backstory: a skills-only interface, then traits
-
-Between 20 and 24 July I also explored a second route, a C++ interface for per-character skill mechanics, `ISkillMechanic`. The idea was a stateful behaviour attached to a character that intercepts engine flows at a small set of touch points, with the skill config naming the mechanic and feeding it values. It was built on 20 July and grew for two days. On 22 July the affect-driven half was removed with four of its mechanics, and the note on that commit calls what was left a skill windup, not a platform.
-
-That day the trait system gained a native C++ backend next to the Lua one, and I steered the work to traits once I realized they superseded the interface. On 24 July the last implementer, Charge, went, and the interface, the per-character host and the affect spine went with it. The four behaviours it carried became a trait, a member of the skill class and two predicates. The work on traits is on the traits page; the lesson for this page is the boundary it settled: a skill-only hook was too narrow a place for state that outlives a cast.
-
-## After: eight files
-
-The six skills of the chain became six handler files, all born on 20 July and reworked on 7 August. Two more arrived as new content: the Ball-Em-Up arena handlers on skill 78 in October, and rage on skill 250, the first `applied` handler, a few days later. The slot was added the same day because an affect node needed side effects that must happen only when the affect lands. Together the eight files are 212 lines.
-
-The Gungsin knockback, a second vnum block in the old chain, became data plus a gate: a CRUSH node with `handler: gungsin_push`, whose gate lets the push fire only on the finishing frame of the combo, inside the combo window, and never against doors, stones or meteors.
-
-```lua
--- CRUSH gate: the knockback only fires on the combo-finisher frame (per combo
--- index) within the combo window, and never against un-pushable entities beyond
--- what ProcessCrush already skips (nomove / immune-fall / cheongeun).
-local PUSH_SEQUENCE = { [0] = 3, [1] = 4, [2] = 5, [3] = 5 }
-
----@type DamageNodeHandler
-M.gungsin_push = {
-    gate = function(ctx)
-        local c = ctx.caster
-        local idx = math.min(3, c:get_combo_index())
-        if c:get_combo_sequence() ~= PUSH_SEQUENCE[idx] then return false end
-        if c:combo_interval() >= 1100 then return false end
-
-        local v = ctx.victim
-        if v:is_stone() or v:is_door() or v:is_meteor() or v:is_ai_teleport() then return false end
-        return true
-    end,
-}
-```
-
-The damage path now holds no vnum test. Named skill constants in the game server went from 261 references in 19 files before the handlers to 85 in 15 files today. That drop spans many later changes, rage, traits and the simulator among them, and is not the handlers alone. The skill engine as a whole got larger, not smaller.
 
 ## Traps, by cause
 
@@ -290,10 +176,6 @@ bool SkillExt_InvokeGate(uint32_t skillVnum, const char* handler, const SDamageI
 
 **Handlers are stateless on purpose, and they run per target.** A gate on a COLLECTOR runs for every collected target, so a counter kept in a gate advances per target, not per cast. Content that needs memory across hits keeps it in a Lua global, as the arena handlers do and reset from the referee. Anything that must outlive the cast is a trait.
 
-## What is still in the engine
+## Native behavior
 
-- Node types: 24, compiled, with no registry and no Lua door.
-- Native per-skill behaviour behind traits: eight native trait ids plus `skill_ledger`. They are bound from YAML, but their code is C++.
-- Vnum references: 85 named constants in 15 files, led by the skill use checks, item code and auto hunt. It undercounts literal numbers: the use check still lists sub skills 121, 122, 124 and 126 to 130 as always usable by number.
-- Two skill-specific spots in the damage path that are not vnum tests: the refusal of a horse skill against a player, and the damage shield read from a point.
-- The mount and horse rules in the use check, covered by [Skill policies](/foundations/skills/policies).
+Node types and native traits are implemented in C++. Two skill-specific checks in the damage path refuse a horse skill against a player and read the damage shield from a point. Mount and horse use rules are covered by [skill policies](/foundations/skills/policies).

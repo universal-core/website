@@ -8,7 +8,7 @@ displayed_sidebar: mainSidebar
 
 A skill tooltip shows numbers that the server computes. A description keeps the words and the numbers apart: the words are a locale file, the numbers are named references into the skill's own config. You reach for this page when you add a skill, change a formula a tooltip quotes, or translate a sentence.
 
-Why it is split this way, and what it replaced, is in [Skill descriptions that cannot drift](/foundations/skills/descriptions). The skill file itself is in [Skill file reference](/docs/building-blocks/skill-file); the formulas inside every `...Poly` key are in [One formula, two evaluators](/foundations/skills/formulas).
+Why it is split this way, and what it replaced, is in [Skill descriptions that cannot drift](/foundations/skills/descriptions). The skill file itself is in [Skill file reference](/docs/core/skill-file); the formulas inside every `...Poly` key are in [One formula, two evaluators](/foundations/skills/formulas).
 
 ## Quick start
 
@@ -159,7 +159,7 @@ desc:
     dmgreduction: { ref: node.buff_reduction.traits.terror.formulas.reduction_pct }
 ```
 
-The trait says `power` is the skill's `skill_power` and `reduction_pct: 5+power/40`, so the var holds `5+(skill_power)/40`. A trait formula that reads a per-hit name such as `dam` or `hp_pct` needs a `with:` pin for it. The trait side is in the [traits reference](/docs/building-blocks/traits).
+The trait says `power` is the skill's `skill_power` and `reduction_pct: 5+power/40`, so the var holds `5+(skill_power)/40`. A trait formula that reads a per-hit name such as `dam` or `hp_pct` needs a `with:` pin for it. The trait side is in the [traits reference](/docs/core/traits).
 
 ## How the client receives a description
 
@@ -410,7 +410,7 @@ desc:
 ## See also
 
 - [Skill descriptions that cannot drift](/foundations/skills/descriptions): the limit this closed and its history.
-- [Skill file reference](/docs/building-blocks/skill-file): the `desc:` block among the config's keys.
+- [Skill file reference](/docs/core/skill-file): the `desc:` block among the config's keys.
 - [One formula, two evaluators](/foundations/skills/formulas): polys and the name vocabulary.
 - [Skill policies](/foundations/skills/policies): how a variant is merged into a config.
-- [Traits reference](/docs/building-blocks/traits): `formulas:` and `constants:` that a description can read.
+- [Traits reference](/docs/core/traits): `formulas:` and `constants:` that a description can read.

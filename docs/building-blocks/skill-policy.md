@@ -8,7 +8,7 @@ displayed_sidebar: mainSidebar
 
 A skill policy is a rule you register from Lua that puts a named variant of a skill in force on every character a guard accepts. The variant is written in the skill's own config file, under `policies:`: a handful of overrides for damage, cost, cooldown, range, flags, animation or the tooltip. You reach for it when a map, an arena or an event needs the same skill to behave differently, and you want the numbers to live beside the skill instead of as a condition inside its formula: ten seconds less of a disguise in a duel, a longer reach for one player of a match.
 
-Nothing here replaces vanilla code. It is a new capability: the skill table was the same for everyone, and now it can differ per character, per map or per mode. It is also not the [skill use policy](/docs/building-blocks/skill-use-policy). They share the guard and the handle, and they answer different questions:
+Nothing here replaces Metin2 mainline engine code. It is a new capability: the skill table was the same for everyone, and now it can differ per character, per map or per mode. It is also not the [skill use policy](/docs/building-blocks/skill-use-policy). They share the guard and the handle, and they answer different questions:
 
 | | Skill policy | Skill use policy |
 | --- | --- | --- |
@@ -82,7 +82,7 @@ The shipped ids:
 | `arena` | The arena duel rule, registered by the base arena referee for every duelist. |
 | `ballemup`, `ballemup_r1` to `ballemup_r5` | The ball game arena: one id for the base variant and one per Launch Range step. The referee registers one rule per step and puts exactly one in force per player. |
 
-For the syntax of the `policies:` block itself (the path grammar, deleting a key with `~`, adding a node, the check that refuses a policy restating a node's traits without its own `affectVnum`) see [Skill file reference](/docs/building-blocks/skill-file).
+For the syntax of the `policies:` block itself (the path grammar, deleting a key with `~`, adding a node, the check that refuses a policy restating a node's traits without its own `affectVnum`) see [Skill file reference](/docs/core/skill-file).
 
 ## API
 
@@ -356,13 +356,13 @@ Exactly one guard answers `true` for a player, so exactly one id is in force. If
 
 **A rule registered on one core does not hold on another.** Registrations are per core process. A map hosted on another core is judged by the rules of that core.
 
-**A policy that restates traits needs its own affect.** A variant that restates a node's traits or counters without giving the node its own `affectVnum` fails the skill load, because every binding on an affect type activates together. This is a skill file rule, see [Skill file reference](/docs/building-blocks/skill-file).
+**A policy that restates traits needs its own affect.** A variant that restates a node's traits or counters without giving the node its own `affectVnum` fails the skill load, because every binding on an affect type activates together. This is a skill file rule, see [Skill file reference](/docs/core/skill-file).
 
 ## See also
 
 - [Loadout, use and skill policies](/foundations/skills/policies): why the skill policy is sampled while the use policy is asked per cast, and how the three registries relate.
 - [Policies](/foundations/policies/): the shared shape of every guard and handle registry.
 - [Skill use policy reference](/docs/building-blocks/skill-use-policy): the deny-only gate on casts.
-- [Skill file reference](/docs/building-blocks/skill-file): the `policies:` block and its path grammar.
+- [Skill file reference](/docs/core/skill-file): the `policies:` block and its path grammar.
 - [Item use policy reference](/docs/building-blocks/item-use-policy): the same pattern for items.
 - [Forge API reference](/docs/core/luna-forge): file layout, environments and load order.

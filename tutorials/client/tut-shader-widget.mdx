@@ -1,0 +1,82 @@
+---
+title: A shader in a window
+description: Draw a pulsing ring in a client window with one pixel shader and one Python class, and drive it from the clock.
+slug: /shader-widget
+hide_table_of_contents: True
+---
+
+import { Tutorial, CreateFile, ShowFile } from "@site/src/components/tutorial";
+import aura from "!!raw-loader!./_tut-shader-widget/aura_ps.hlsl";
+import pulse from "!!raw-loader!./_tut-shader-widget/pulse_ps.hlsl";
+import test from "!!raw-loader!./_tut-shader-widget/uiTest.py";
+
+export const start = { "pack/root/shaders/ui/aura_ps.hlsl": aura };
+export const solution = {
+  "pack/root/shaders/ui/aura_ps.hlsl": aura,
+  "pack/root/shaders/ui/pulse_ps.hlsl": pulse,
+  "game/uiTest.py": test,
+};
+
+<Tutorial files={start} solution={solution} active="pack/root/shaders/ui/aura_ps.hlsl">
+
+You draw a filled disc with a bright rim whose width pulses, inside a plain client window. The picture comes from one pixel shader. A Python class places the window and sends the shader a clock, so the rim breathes once a second or so.
+
+Two files make it: a shader in the client pack and a test window that you keep loose beside the client. The shipped aura shader on the right is the model; read it first.
+
+## Before you start
+
+- A **debug client** built with the remote debugger flag. Its test board loads a loose Python file by name and shows it, which is how you iterate on a window without repacking Python.
+- Your client's pack step for the `root` folder (`pack-client-files`). Shaders are read from the pack, so a new shader needs a repack and a client restart.
+- The [`ui.ShaderQuad` reference](/docs/core/ui-shader-quad) open beside you.
+
+## Read the shipped shader
+
+A shader quad is an ordinary window whose rectangle a pixel shader paints. The shader gets 16 floats from Python in a constant buffer at `b13`. The aura shader names the first six: red, green, blue, fill alpha, rim alpha and rim width in screen pixels.
+
+<ShowFile path="pack/root/shaders/ui/aura_ps.hlsl" />
+
+The window is told to span texture coordinates (-1, -1) to (1, 1), so `length(input.TexCoord)` is exactly 1 on the edge of the disc whatever the window size. The rim is measured in screen pixels through `fwidth`, so it stays one readable line at every size.
+
+**Check.** You can name the six floats and which of them is a width in pixels.
+
+## Step 1: a rim that moves
+
+The aura has no clock, and a shader has no time input: the only way a value reaches it is the 16 floats. You add a seventh one, `g_Time`, and let it widen and narrow the rim. The file lives next to the model, under `shaders/ui/` in the client files `root` folder.
+
+<CreateFile path="pack/root/shaders/ui/pulse_ps.hlsl" code={pulse} />
+
+The cbuffer keeps its 16-float shape: the new float takes the place of the first padding float.
+
+**Check.** `g_Time` sits seventh in the cbuffer, so Python must send it as the seventh value.
+
+## Step 2: a window that sends the clock
+
+The test board loads a module named `uiTest` and builds its `TestWindow` class. The class makes a `ui.ShaderQuad`, parents it to itself, sets the shader and the disc-space UV, and in `OnUpdate` sends all 16 floats, with the time since the window opened in the seventh. `SetParams` fills what you leave out with zeros, so always send the whole tuple. The picking flag keeps the decorative quad from swallowing clicks.
+
+<CreateFile path="game/uiTest.py" code={test} />
+
+The board calls `Destroy` before it replaces a test window, so the class releases its quad there.
+
+**Check.** The shader path is `shaders/ui/pulse_ps.hlsl`, exactly the file you created, and the UV is `-1, -1, 1, 1`.
+
+## Run it
+
+Repack the `root` folder and start the debug client. Log in, open the test board (the window with the "uiTest" line), and press F10 or click Load. A window appears at 300, 200: a blue disc, faint inside, with a bright rim that grows and shrinks.
+
+If nothing appears, the shader failed and the quad draws nothing; Python raises no error. Look in the client log:
+
+```text
+PrimitiveRenderer2D: Failed to load shaders/ui/pulse_ps.hlsl
+DX11 shader compilation failed for 'shaders/ui/pulse_ps.hlsl': <compiler diagnostic>
+```
+
+The first line with no compiler line means the file is not in the pack under that path. A compiler line carries the HLSL error. Fix the file, repack and **restart the client**: a failed pipeline stays cached under its path for the whole session, so Load alone never retries it.
+
+If the disc is a thin line or a square, the UV is still the default (0, 0, 1, 1). If the rim does not move, the seventh float is not the clock.
+
+## Where to go next
+
+- [`ui.ShaderQuad`](/docs/core/ui-shader-quad): textures, the shader contract and every trap.
+- [The render pipeline](/foundations/rhi/): how the quad's draw reaches the device.
+
+</Tutorial>

@@ -7,11 +7,11 @@ slug: debugging-lua-first-class
 image: /img/blog/debugging-lua-first-class.png
 ---
 
-I debugged quests by commenting out one line at a time until the problem went away. The logging that vanilla Metin2 gives a quest script could not print a player or a mob, so there was nothing else to try.
+I debugged quests by commenting out one line at a time until the problem went away. The logging that the Metin2 mainline engine gives a quest script could not print a player or a mob, so there was nothing else to try.
 
 ## Logs that could not print the thing I needed
 
-The quest log functions were there, but not reachable everywhere and unable to print complex structures like a `pc` or a mob. This is the vanilla error function, which is also what my tree had until September 2024:
+The quest log functions were there, but not reachable everywhere and unable to print complex structures like a `pc` or a mob. This is the Metin2 mainline error function, which is also what my tree had until September 2024:
 
 ```cpp
 int32_t _syserr(lua_State* L)
@@ -74,7 +74,7 @@ That entry is the cheap part. Making the debugger understand the engine behind i
 
 Of the three, the compiler hurt the most. It was the hardest for two reasons: edge cases that came out later, and source mapping.
 
-The vanilla compiler does not translate quests, it re-prints them. It walks the token stream and writes every token back out separated by a space, so comments and blank lines vanish and the layout is gone. A line in the output has no arithmetic relation to a line in the source. On top of that my tree ran a Python front end in front of the compiler, which copied each quest into a working folder with the `define` constants substituted. Errors then named the copy, one more step away from the file I edited.
+The Metin2 mainline compiler does not translate quests, it re-prints them. It walks the token stream and writes every token back out separated by a space, so comments and blank lines vanish and the layout is gone. A line in the output has no arithmetic relation to a line in the source. On top of that my tree ran a Python front end in front of the compiler, which copied each quest into a working folder with the `define` constants substituted. Errors then named the copy, one more step away from the file I edited.
 
 On 20 September 2024 I split the one big compiler file into a compiler, a quest model, a forge part and helpers. Five days later the source-map version landed, in one commit that touched 65 files. It did four things:
 
@@ -104,7 +104,7 @@ The edge cases were the long tail, and they kept coming for sixteen months.
 
 On 23 September 2024 I fixed `or`-chained `when` triggers: the argument was registered before the compiler checked for the `or`, so the wrong objects came out. That commit also added the first test file for the compiler, 78 lines. Two days later the same test was rewritten so that the triggers and the `with` condition were split across lines, because a compiler that slices source text, unlike one that re-prints tokens, cares where a condition ends and a body starts. The test file now holds 16 `when` shapes.
 
-On 22 October 2024 state names stopped being converted from a variable to a string, so `set_state(__COMPLETE__)` had to become `set_state("__COMPLETE__")` through a regex pass. The old compiler did this on the token; mine no longer re-prints tokens. On 8 November 2024 a quest with two blocks for the same event and no argument kept only the last one. The real case was two `take` blocks in the Devil Tower quest. The fix merged the blocks into one script, and the source map then needed an offset for where each block starts inside the merged file. On 30 January 2025 a conditioned block lost the `return` that vanilla closed it with.
+On 22 October 2024 state names stopped being converted from a variable to a string, so `set_state(__COMPLETE__)` had to become `set_state("__COMPLETE__")` through a regex pass. The old compiler did this on the token; mine no longer re-prints tokens. On 8 November 2024 a quest with two blocks for the same event and no argument kept only the last one. The real case was two `take` blocks in the Devil Tower quest. The fix merged the blocks into one script, and the source map then needed an offset for where each block starts inside the merged file. On 30 January 2025 a conditioned block lost the `return` that the Metin2 mainline engine closed it with.
 
 Preprocessor substitution was the slowest to show. Defines can use other defines, as in the Wonsui Temple dungeon:
 
@@ -135,7 +135,7 @@ A second pair of path mappings, for the `conf/` and `locale/` folders, lives in 
 
 ## The client had no file to open
 
-The client was worse to see. Its Python never runs from files on disk: `sys.path` is empty and every import is answered by a custom importer that reads the module out of EterPack, the client's packed virtual file system. A debugger maps a frame to a file through `__file__`, and a module compiled out of a pack has no file a debugger can open. Vanilla Metin2 pasted the main script into a string and executed it, and its importer handled flat names only.
+The client was worse to see. Its Python never runs from files on disk: `sys.path` is empty and every import is answered by a custom importer that reads the module out of EterPack, the client's packed virtual file system. A debugger maps a frame to a file through `__file__`, and a module compiled out of a pack has no file a debugger can open. The Metin2 mainline engine pasted the main script into a string and executed it, and its importer handled flat names only.
 
 I rewrote how the client manages module loading in May 2024, four months before the Lua half. The launcher runs the main script as a real module, with `__file__` set. The importer maps dotted names to paths, supports packages, and compiles each pack module with its absolute path as the filename. The socket and ctypes libraries the debugger needs are linked statically. A build with the debugger compiled in attaches ptvsd on the first free local port from 3000 to 3049.
 

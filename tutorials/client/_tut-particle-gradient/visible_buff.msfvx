@@ -1,0 +1,11 @@
+// locale/universal/effect/visible_buff.msfvx
+Group Effect
+{
+    Family               emissive_particle
+    Emission             1.0
+    Gradient             "d:/ymir work/special/cosmetics/ramps/gilded.dds"
+    GradientMode         replace
+    GradientInput        brightness
+    GradientGain         1.2
+    GradientLifeShift    0.2
+}

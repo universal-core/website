@@ -13,7 +13,7 @@ I started Forge because of two things the quest manager would not let me do. The
 
 ## What the quest manager does well
 
-The manager is a Lua and C++ integration from the early 2000s, and vanilla Metin2 has run its scripting on it for two decades. I do not say that to be polite. It is a good design for what it was built for.
+The manager is a Lua and C++ integration from the early 2000s, and the Metin2 mainline engine has run its scripting on it for two decades. I do not say that to be polite. It is a good design for what it was built for.
 
 The quest compiler turns each `when` block into one file named after the event it answers. A script for the use of item 71055 lands in `object/71055/use/change_name.start`, a kill of mob 691 in `object/691/kill/...`, and an event with no target in `object/notarget/<event>/`. At boot the game core walks those folders and indexes the chunks by vnum and event. Finding the code for an event is a directory lookup.
 
@@ -59,7 +59,7 @@ That binding has a name in the engine's own debug dump, "Quest Manager State", a
 
 Every exposed function reads these slots instead of taking an argument. This is the greatest limitation of the quest manager, and one of the reasons Luna was born. The state is built for one PC, and anything that needs a second one has to break it.
 
-The binding has a second cost, in writing the API. Every function of every namespace is a C function written by hand, mapped argument by argument, which is slow and easy to get wrong. The engine has 826 such table rows (796 distinct functions) in 32 namespaces plus the globals, 211 of them under `pc` alone. Vanilla Metin2 has 649 in 35 namespaces. And since every `pc.*` function acts on the player the state was set up for, a script cannot work on several players, or several items, as equals.
+The binding has a second cost, in writing the API. Every function of every namespace is a C function written by hand, mapped argument by argument, which is slow and easy to get wrong. The engine has 826 such table rows (796 distinct functions) in 32 namespaces plus the globals, 211 of them under `pc` alone. The Metin2 mainline engine has 649 in 35 namespaces. And since every `pc.*` function acts on the player the state was set up for, a script cannot work on several players, or several items, as equals.
 
 ## Two players in one state
 
@@ -75,7 +75,7 @@ Here is what that does:
 - Dialogue written before the switch and flushed after it goes to B.
 - Any nested event, a level up from a script or a unique mob killed by `d.kill_all`, sets its own PC current and leaves it there. The script resumes with someone else selected, and `pc.select` cannot notice.
 
-Vanilla Metin2 ships the pattern that never restores. In the Spider Dungeon 3 quest, the kill of the Spider King selects the leader to read the name for the notice, and the script ends there:
+The Metin2 mainline engine ships the pattern that never restores. In the Spider Dungeon 3 quest, the kill of the Spider King selects the leader to read the name for the notice, and the script ends there:
 
 ```lua
 when "2092".kill begin
@@ -99,7 +99,7 @@ I remember this one from the 2014 version. For a long time players there "exchan
 
 Ymir's answer is `q.begin_other_pc_block(pid)` and `q.end_other_pc_block()`. I think of it as a stack of quest manager states, and it is the start of one. What the code stacks is only the player id. The begin remembers the first PC as the root, pushes the current PC's id on a vector of ids, and selects `pid`. The end pops the id and selects it again. So the PC and the character come back, after any depth of nesting, and nothing else is stacked: the running state, the dialog buffer and the timers were never touched, and inside the block the item, the NPC and the quest name are still B's leftovers. My engine's own comment next to the nested-event bug says it plainly: "The correct way to fix this should be to stack questmanager states."
 
-The block adds one more rule. A yield inside it would show a dialogue to B while the coroutine belongs to A, so the manager forbids it. In vanilla the `select`, `wait`, `input` or `confirm` logs "FATAL ERROR! Yield occur in other_pc_block." and returns without yielding, and the script runs on as if the answer had been nothing.
+The block adds one more rule. A yield inside it would show a dialogue to B while the coroutine belongs to A, so the manager forbids it. In the Metin2 mainline engine the `select`, `wait`, `input` or `confirm` logs "FATAL ERROR! Yield occur in other_pc_block." and returns without yielding, and the script runs on as if the answer had been nothing.
 
 The diagram shows the state as one set of slots. Look at the slot `pc.select` swaps, at what follows it to player B, at what stays on player A, then at the id stack the block adds beside it.
 
@@ -125,7 +125,7 @@ flowchart LR
     ST -. "end pops A back" .-> CP
 ```
 
-Vanilla Metin2 uses the block in 38 places, always as a party loop: one `for` over the member ids with a begin and an end around the body. Read one whole function. It resets a flag on every member of the party:
+The Metin2 mainline engine uses the block in 38 places, always as a party loop: one `for` over the member ids with a begin and an end around the body. Read one whole function. It resets a flag on every member of the party:
 
 ```lua
 CryptOfCrownless.ResetPartyTimers = function()
@@ -147,7 +147,7 @@ The flag's quest is named in the call, with `pc.setf` and not `pc.setqf`, so the
 
 The block was still fragile, and the fragility sat in what the manager did not check:
 
-- If `pid` has no character on this core, the switch does nothing and the body runs against the previous player. The vanilla begin returns nothing, so the script cannot tell.
+- If `pid` has no character on this core, the switch does nothing and the body runs against the previous player. The Metin2 mainline begin returns nothing, so the script cannot tell.
 - A Lua error inside the block skips the `end`, and the stack stays pushed until the process dies.
 
 I fixed these in the engine on 2026-08-10, in one commit with six entries: the depth is restored on every exit from a resume, the begin reports a failed switch so the caller can skip the body, a yield inside a block raises, and `d.foreach_participant_safe` wraps its body in `pcall`. All of it is bookkeeping to make a stack of ids behave like a scope. The model is still one state set up for one player, and the script has to remember whose it is.

@@ -162,7 +162,7 @@ A `div` can be marked as a **reactive zone** by adding the `reactive` attribute 
 - List the variable names (comma-separated) that this zone depends on in the `reactive` attribute
 - When any of those variables change via `SetVar()` or `SetVars()`, only this zone re-renders
 - Scroll position is preserved automatically
-- 10-100x faster than full page reload for small updates
+- Only the zone's children are rebuilt, so the rest of the page is untouched
 
 **Example:**
 ```html
@@ -957,7 +957,7 @@ Text not enclosed in any tag counts as text.
 
 :::caution
 
-**Allowed Children:** Only the inline tags: `c`, `hitem`, `hmob`, `hraid`, `hdungeon`, `hquest`, `hmap`, `hyperlink`, and `br`.
+**Allowed Children:** Only the inline tags: `c`, `hitem`, `hmob`, `hraid`, `hdungeon`, `hquest`, `hmap`, `hhmap`, `hyperlink`, and `br`.
 
 :::
 
@@ -1115,6 +1115,20 @@ Should not contain any child elements.
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
 | id                    | Required     | —             | Must provide a map identifier. |
+
+
+:::caution
+
+Should not contain any child elements.
+
+:::
+
+---
+
+## **`hhmap`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| id                    | Required     | —             | Must provide a hunt map identifier. The link opens the hunt map page. |
 
 
 :::caution
@@ -1540,6 +1554,34 @@ And each of the images need to exist in order to render the button.
 
 ---
 
+## **`conflict-bar`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| left                  | Optional     | `0`           | Integer value of the left side. |
+| right                 | Optional     | `0`           | Integer value of the right side. |
+| left-color            | Optional     | `gauge_bpass` | Gauge texture of the left side. |
+| right-color           | Optional     | `gauge_yellow`| Gauge texture of the right side. |
+| tooltip-text          | Optional     | —             | Tooltip text. Up to two `%d` tokens are filled, in order, with the left share and the right share in percent. |
+| [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
+
+A tug-of-war bar between two values. The slider sits in the middle when both are equal and the left side fills `left / (left + right)` of the bar; with both at zero it sits at 50%. It is not tied to a feature: any two numbers work. Inside a [reactive zone](#reactive-zones) it follows the values when they change.
+
+:::caution
+
+Should not contain any child elements.
+
+:::
+
+<details><summary>Code Example</summary>
+
+```html
+<conflict-bar width="auto" left="{{ past_score }}" right="{{ future_score }}" left-color="gauge_yellow" right-color="gauge_blue" tooltip-text="Past {{ past_score }} (%d%%) vs Future {{ future_score }} (%d%%)"/>
+```
+
+</details>
+
+---
+
 ## **`multi-equip-window`**
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
@@ -1819,6 +1861,35 @@ ItemsGrid accepts only the following formats for the `vnums` attribute:
 
 ---
 
+## **`shop-grid`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| shop                  | Required     | —             | Shop vnum, as keyed in the shop configuration. |
+| category              | Required     | —             | Zero-based index of one category of that shop. An index out of range renders an empty grid. |
+| width                 | Required     | `auto`        | Grid width. |
+| height                | Required     | —             | Grid height. |
+| [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
+
+Renders the items of one shop category in a grid, priced like the in-game shop.
+
+:::caution
+
+Should not contain any child elements.
+
+:::
+
+<details><summary>Code Example</summary>
+
+```html
+{% for category in s.categories %}
+    <shop-grid shop="{{ s.vnum }}" category="{{ loop.index0 }}" height="100" width="auto"/>
+{% endfor %}
+```
+
+</details>
+
+---
+
 ## **`item-stats`**
 | Attribute             | Requirement  | Default       | Constraints/Notes |
 |-----------------------|--------------|---------------|-------------------|
@@ -2030,6 +2101,36 @@ Should not contain any child elements. The item shop must be loaded (store popul
 
 ```html
 <item-shop-card id="7" />
+```
+
+</details>
+
+---
+
+## **`ranking-window`**
+| Attribute             | Requirement  | Default       | Constraints/Notes |
+|-----------------------|--------------|---------------|-------------------|
+| ranking-type          | Required     | —             | The ranking to subscribe to. |
+| width                 | Required     | —             | Window width, or `auto`. |
+| height                | Required     | —             | Window height. |
+| rows                  | Optional     | `10`          | Number of rows shown. |
+| show-pagination       | Optional     | `true`        | `false` hides the pagination controls. |
+| more-info             | Optional     | `false`       | `true` adds a "more info" button at the bottom. |
+| more-info-text        | Optional     | `More Info`   | Text of that button. |
+| [*Base Attributes*](#common-base-attributes)     | Optional     | —             | Inherits all common base attributes. |
+
+A self-contained ranking ladder: it subscribes to the ranking data when it is created and unsubscribes when the element is destroyed or rebuilt.
+
+:::caution
+
+Should not contain any child elements.
+
+:::
+
+<details><summary>Code Example</summary>
+
+```html
+<ranking-window align="center" ranking-type="eve_classic" rows="2" width="auto" height="200" show-pagination="false" more-info="true"/>
 ```
 
 </details>

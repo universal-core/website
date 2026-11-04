@@ -139,7 +139,10 @@ const DISCLOSURE = [
     name: "repository path",
     pattern: /\b(Server|Client|Launcher|Doc|Tools|Prototypes|Sql-script)\/[\w./-]+/,
   },
-  { name: "engine source file", pattern: /\b[\w-]+\.(cpp|cc|cxx|h|hpp|hlsl)\b/ },
+  {
+    name: "engine source file",
+    pattern: /\b[\w-]+\.(cpp|cc|cxx|h|hpp)\b|(?<!shaders\/[\w/-]*)(?<!_tut-[\w-]+\/)\b[\w-]+\.hlsl\b/,
+  },
 ];
 
 describe("content disclosure", () => {

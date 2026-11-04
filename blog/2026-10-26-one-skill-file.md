@@ -1,19 +1,19 @@
 ---
 title: 25 skills disagreed with themselves
-description: Every skill in vanilla Metin2 lives in three hand-kept copies, a server row and two client files, and they do not agree. How we found it by deleting copies, what the drift looked like, and what one file costs and buys.
+description: Every skill in the Metin2 mainline engine lives in three hand-kept copies, a server row and two client files, and they do not agree. How we found it by deleting copies, what the drift looked like, and what one file costs and buys.
 authors: luscha
 image: /img/blog/one-skill-file.png
 tags: [engine, skills, configuration, refactoring]
 slug: one-skill-file
 ---
 
-In vanilla Metin2 a skill is written down three times: a row in the server database, a line in a client table, and a line in the client tooltip file. Nobody checks that the three say the same thing. When we finally deleted two of the copies in July 2026, we found 25 skills that told the client they could target a buffable NPC and told the server nothing, and 281 tooltip formulas copied from the skill configs, 17 of which had drifted from the engine's.
+In the Metin2 mainline engine a skill is written down three times: a row in the server database, a line in a client table, and a line in the client tooltip file. Nobody checks that the three say the same thing. When we finally deleted two of the copies in July 2026, we found 25 skills that told the client they could target a buffable NPC and told the server nothing, and 281 tooltip formulas copied from the skill configs, 17 of which had drifted from the engine's.
 
 This post is about those three copies, how long we kept them by hand, and what it took to get down to one.
 
 ## Three copies, already disagreeing
 
-The server side is the table `skill_proto`, read by the database core at boot. The client side is two text files: a skill table with the formulas, and a tooltip file that carries its own copy of the tooltip formula. The inherited data is the only evidence I can show for vanilla, and only between the two client files, because the server rows are not in the tree.
+The server side is the table `skill_proto`, read by the database core at boot. The client side is two text files: a skill table with the formulas, and a tooltip file that carries its own copy of the tooltip formula. The inherited data is the only evidence I can show for the Metin2 mainline engine, and only between the two client files, because the server rows are not in the tree.
 
 Take the first four warrior skills. Skill 3 agrees with its tooltip. The other three do not:
 

@@ -1,0 +1,8 @@
+// locale/universal/effect/visible_buff.msattach
+Group Effects
+{
+    Group Effect00
+    {
+        File "visible_buff.mse"
+    }
+}

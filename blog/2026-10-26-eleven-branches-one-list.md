@@ -1,6 +1,6 @@
 ---
 title: Eleven branches, three functions, one list
-description: Who may hit whom lived in eleven branches over three functions, each dropped in wherever it fit. How the attack rules went from the inherited code to one ordered list that events join and leave.
+description: Who may hit whom lived in eleven branches over three functions, each dropped in wherever it fit. How the attack rules went from the Metin2 mainline engine to one ordered list that events join and leave.
 authors: luscha
 image: /img/blog/eleven-branches-one-list.png
 tags: [engine, combat, events, refactoring]
@@ -11,13 +11,13 @@ On the day before we cut it, the question "may this player hit that one?" was an
 
 That is a tolerable mess until an event has to live in it. The risk I saw was this: any event, Christmas for example, could break normal gameplay, because the attack code path was free for all. There was one shared predicate, every hit in the game ran through it on every map all year, and an event's rule had to be written into it.
 
-## What the inherited code did with an event
+## What the Metin2 mainline engine did with an event
 
 The attack predicate we inherited already showed the habit. It asks what the attacker is riding, and the answer is a switch over mount ids: thirty-eight of them, three of which are event mounts for Ramadan, Halloween and Christmas. Every event that shipped a mount had to put its id into the player-versus-player rule. Whichever way the unlisted mounts fall, an event's attack behaviour hung on a hard-coded list inside a rule that has nothing to do with events.
 
 Killer mode, the flag that marks a player as a murderer, was set from inside the same predicate, in six places. Asking "can A attack B" could flag A as a killer as a side effect.
 
-Christmas reached further than the mount. The monster state machine has a branch for the Christmas tree: on one regular hunting map, if the `xmas_tree` event flag is set, aggressive monsters do not attack first. An event flag changed the behaviour of every aggressive monster on a map people play on all year, from inside the mob AI. That branch is unchanged from the inherited code and is still there today.
+Christmas reached further than the mount. The monster state machine has a branch for the Christmas tree: on one regular hunting map, if the `xmas_tree` event flag is set, aggressive monsters do not attack first. An event flag changed the behaviour of every aggressive monster on a map people play on all year, from inside the mob AI. That branch is unchanged from the Metin2 mainline engine and is still there today.
 
 ## 2016: nine branches, and a Christmas rule that never fires
 

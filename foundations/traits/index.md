@@ -1,77 +1,45 @@
 ---
 title: "Traits: mechanics instead of hardcoded bonuses"
 sidebar_label: Traits
-description: How traits grew out of point-driven hardcoded bonuses into a general mechanics layer gated by affects, with the bump point, the hooks, stage ordering, registration from C++ and Lua, and what still stays in the engine.
+description: A general mechanics layer gated by affects, with hooks, transient point bumps, stage ordering, and registration from C++ and Lua.
 ---
 
-## The limit: a point does nothing on its own
+## Mechanics beyond points
 
-In the inherited engine a bonus was a point. An item applied `POINT_*` deltas, the damage formula read the points, and that was the whole contract. It covers static stat tweaks cleanly. It cannot say "+15 damage against players while my HP is under 80%", "this hit is reduced because a buff is up", or "count the damage and pay it back". A point holds a number. It has no condition, no state and no moment at which it applies.
+A point holds a number. It has no condition, state, or moment at which it applies. In the Metin2 mainline engine, conditional bonuses require branches in the damage path or additional points. Traits add a gate that says when a rule is active, hooks that say where it runs, and state for values that change over its lifetime.
 
-So every conditional bonus became a branch somewhere in the damage path, written where the developer happened to be. This is the inherited code, two affect-gated rules inside the damage function:
-
-```cpp
-if (IsAffectFlag(AFF_TERROR))
-    dam = (int32_t) (dam * (95 - GetSkillPower(SKILL_TERROR) / 5) / 100);
-
-if (IsAffectFlag(AFF_HOSIN))
-    dam = dam * (100 - GetPoint(POINT_RESIST_NORMAL_DAMAGE)) / 100;
-```
-
-The mana shield had its own `IsAffectFlag(AFF_MANASHIELD)` block further down. Item bonuses such as steal HP or kill recovery were read by hand in the same function. When a rule applied to the melee hit, the shot and the skill hit, it was copied into each of them, and the copies drifted. Until July 2026 the damage defence pipeline existed in four copies.
-
-The other answer was a new point. Vanilla Metin2 has about 145 of them. The engine had 191 by 2016 and has 324 today. Among them are 34 `ADDER` points and 33 `RESIST` points, one pair per skill, so that a skill's damage could be tuned on its own. Each new bonus was a pass through the whole engine: the commits that added lifesteal percent, defence penetration, skill damage against monsters and PvP penetration touched 9, 15, 16 and 23 files, mixed with other work, so those counts are upper bounds. The per-skill map that joined an adder to its skill held a key bug for years: the Noejeon entry was keyed by a point where a skill vnum belonged, so it could never match.
-
-Traits are the evolution of that arrangement. They keep the point as the unit of stat and add what a point lacks: a gate that says when, a hook that says where, and state that says how much so far. They are a general layer for mechanics that give bonuses or behave conditionally. Skills use them, but a skill is one gate among many, and the code says so. The native terror trait is skill-scaled, and its header states that nothing in it says "skill":
-
-```cpp
-// Its reduction is skill-scaled, but nothing here says "skill": it declares that
-// it needs `power`, and whoever gated it resolved that in its own vocabulary
-// before the affect landed. On skill 64 the AFFECT node supplies
-//   constants: { power: skill_power }
-//   formulas:  { reduction_pct: 5+power/40 }
-// A quest or an item could gate the same trait and compute `power` its own way.
-```
-
-The mayhem arena augments in June 2026 were the first client. The limit they met was the one above, and it was already there.
+A trait can reduce damage while an affect is active, count damage for a later action, or add a conditional bonus to a point for one calculation. [Skills](/foundations/skills/one-file), modes, and items can bind traits through affects.
 
 ## The gate is the affect
 
-Every conditional rule in the old code had the same shape: it applied while some affect was on. Mana shield while `MANASHIELD` is up, stealth while `EUNHYUNG` is up, an erosion while the buff is on the victim. So the trait does not check the affect as a condition. The affect is the attachment. When it is gained, the trait attaches to the holder. When the last affect of that type ends, the trait detaches.
-
-That gives cleanup, persistence, dispel interaction and stacking for free, because the affect system already handles them. A trait never removes its own affect by hand; `end_self` removes the gating affect and the gate closes as a consequence. For the lifecycle of the affect itself, see [Affects](/foundations/affects/).
-
-The mechanism is small:
+The affect is the attachment. When it is gained, the trait attaches to the holder. When the last affect of that type ends, the trait detaches. The affect system supplies cleanup, persistence, dispel interaction, and stacking. A trait does not remove its own affect by hand: `end_self` removes the gating affect and the gate closes as a consequence. See [Affects](/foundations/affects/) for the affect lifecycle.
 
 - A trait definition (`TraitDef`) is the behaviour. It carries no gate and no numbers.
-- A binding (`TraitBinding`) is a definition, an affect type and the formulas with their numbers. One definition can be gated by several affects, each with its own values. The hosin ward is one definition with two bindings, because two different skills raise the same affect.
-- When `AddAffect` runs, the engine asks a reverse index (affect type to bindings). If nothing is gated on that type, that is one hash miss and nothing else happens.
-- A holder gets its trait state only when a binding first opens, and the state lives on the character. Nodes keep constants, counters, cooldowns, schedules and a Lua table.
-- The gate closes on `RemoveAffect`, on expiry and on the bulk clear at death, all through one path. Since July 2026 it also closes when an affect is unlinked directly, which it did not before: a trait gated on a timed affect never deactivated when the affect simply ran out.
-- Activation zeroes the counters. They do not survive from one activation to the next.
+- A binding (`TraitBinding`) combines a definition, an affect type, and formulas with their numbers. One definition can be gated by several affects, each with its own values.
+- When `AddAffect` runs, the engine asks a reverse index from affect type to bindings. If nothing is gated on that type, it makes one hash miss and does nothing else.
+- A holder gets trait state when a binding first opens. The state lives on the character; nodes keep constants, counters, cooldowns, schedules, and a Lua table. Activation zeroes the counters.
+- The gate closes through one path on `RemoveAffect`, expiry, bulk clear at death, and direct unlinking.
 
 ```mermaid
 flowchart TD
-    SRC["affect source: skill, augment, mode, quest"] --> ADD["AddAffect"]
+    SRC["affect source"] --> ADD["AddAffect"]
     ADD --> IDX["reverse index: affect type to bindings"]
     IDX --> BIND["binding: definition plus formulas"]
     BIND --> NODE["trait node on the holder"]
     NODE --> HOOK["hooks fire at engine call sites"]
-    RM["RemoveAffect, expiry, death clear"] --> CLOSE["gate closes"]
+    RM["RemoveAffect, expiry, death clear, unlink"] --> CLOSE["gate closes"]
     CLOSE --> NODE
 ```
 
-Dispatch is gated twice before a script is touched. Each holder keeps a trigger mask, the OR of the hooks of its active traits, and each call site does one bitwise AND against it. Only when the mask and the node's active flag agree does the engine cross into Lua. A trait nobody subscribed to costs nothing. Every Lua call goes through the single dispatch choke point, and an error is logged as `[traits] <hook> [<id>]: <what>` while the other traits still fire.
+Each holder keeps a trigger mask, the OR of the hooks of its active traits. A call site performs a bitwise AND against it, and the engine crosses into Lua only when the mask and the node's active flag agree. Every Lua call goes through one dispatch point. An error is logged as `[traits] <hook> [<id>]: <what>`, and the other traits still fire.
 
 ## The bump point
 
-The old way to make a static bonus conditional was a second point, or a branch. The bump point is a third way: for the length of one damage calculation, a trait adds a delta to a point, and the framework takes it back.
+A trait can add a delta to a point for one damage calculation. `ApplyPointBump` accumulates a transient overlay, and `GetPoint` folds it in without changing the stored points. A nestable guard unwinds the overlay; bumps on the same point compose additively, so +40 and -20 both apply and both unwind. The overlay also keeps a recompute from writing a temporary bonus into stored points.
 
-The bump is an overlay, not a write. `ApplyPointBump` accumulates a transient delta, `GetPoint` folds it in, and nothing touches the stored points. The first version wrote into the stored points, and in June 2026 bumps leaked and desynced when a recompute ran in the middle of one. The overlay with a nestable guard replaced it, and bumps on the same point compose additively: +40 from one trait and -20 from another both land and both unwind.
+A bump is legal only inside a guard. The melee hit, the shot, and each skill damage node open one. Each fires the attacker's `on_damage_dealt_pre` and the victim's `on_damage_taken_pre` with the settled damage type. Outside a guard the call is refused and logged as `[traits] bump_point outside a damage-pre guard (point=..., delta=...) ignored`.
 
-A bump is legal only inside a guard. Three sites open one: the melee hit, the shot, and each skill damage node. Each fires the attacker's `on_damage_dealt_pre` and the victim's `on_damage_taken_pre` with the settled damage type. Outside a guard the call is refused and logged as `[traits] bump_point outside a damage-pre guard (point=..., delta=...) ignored`.
-
-This is a whole trait from the arena augments. `ATTBONUS_HUMAN` is a point vanilla can only grant statically. Here it becomes conditional, with no new point and no new branch:
+This trait adds a player damage bonus while the holder's HP is below 80%.
 
 ```lua
 -- ============================================================================
@@ -95,13 +63,11 @@ traits.define{
 }
 ```
 
-HP is read at hit time. There is deliberately no "HP changed" trigger, because the HP point changes noisily: gear swaps, buff churn and recomputes all move it. A bonus "while below X% HP" reads the HP in the pre hook and has no toggle to get out of sync.
-
-Two traps come from the same design. The pre hooks fire for the melee auto, the shot and every skill damage node, and the physical ones all read the same attack point, so a bump that does not look at `dam_type` erodes all three. And a bump is not a toggled affect: an affect still wins when the bonus needs an icon, a visible flag or a life between attacks.
+HP is read at hit time. There is no HP-change trigger: gear swaps, buff churn, and recomputes all move the HP point. Reading it in the pre hook avoids a separate toggle that could get out of sync.
 
 ## The hooks
 
-A definition subscribes by naming hooks, and each one is a trigger bit in the mask. There are 24. Grouped by what they see:
+A definition subscribes by naming hooks; each is a trigger bit in the mask. There are 24 hooks:
 
 | Group | Hooks |
 | --- | --- |
@@ -114,9 +80,9 @@ A definition subscribes by naming hooks, and each one is a trigger bit in the ma
 | Events | `on_skill_cast`, `on_debuff_given`, `on_debuff_taken`, `on_buff_given`, `on_buff_taken`, `on_heal_done`, `on_heal_taken` |
 | Caps | the point limit, native only |
 
-The transform hooks are the ones that replaced the branches. They receive the number in `ctx.damage` (or `ctx.amount` for a heal), write it back, and what they write continues down the formula. A hook that errors or leaves a non-number keeps the damage unchanged. A negative result is clamped to 0, because nothing downstream re-checks and a negative damage would heal. The full signatures are in the [Traits reference](/docs/building-blocks/traits).
+The transform hooks receive the number in `ctx.damage`, or `ctx.amount` for a heal, and write back the value that continues down the formula. An error or a non-number leaves damage unchanged. A negative result is clamped to 0 so it cannot heal. The full signatures are in the [Traits reference](/docs/core/traits).
 
-The positions inside the damage function, in the order a hit meets them:
+A hit meets the damage hooks in this order:
 
 ```mermaid
 flowchart TD
@@ -128,11 +94,11 @@ flowchart TD
     F --> G["on_hit_resolved: crit and pierce flags"]
 ```
 
-`on_target_scan` sits outside this chain, in target acquisition: it returns true to hide the holder from a finder, which is how stealth works.
+`on_target_scan` sits outside this chain in target acquisition. It returns true to hide the holder from a finder.
 
 ## Stage ordering
 
-Several traits can sit on one position. `stage` orders them, ascending, with 0 as the default. The chain at `on_damage_taken_final` today is:
+Several traits can occupy one position. `stage` orders them ascending, with 0 as the default. At `on_damage_taken_final`, the chain includes:
 
 | Stage | Trait | Backend |
 | --- | --- | --- |
@@ -142,11 +108,11 @@ Several traits can sit on one position. `stage` orders them, ascending, with 0 a
 | 30 | `thorns` | Lua |
 | 40 | `guild_bulwark`, `stellar_ward` | Lua |
 
-Native and Lua traits share one list. Since July 2026 each call site makes one walk that visits both in stage order. In the first backend there were two passes, so a Lua trait could not sit between two native ones. Now `thorns` at 30 runs after the mana shield and before `stellar_ward`, whoever wrote them. Order matters because each transform sees the number the previous one left: a ward that cuts damage before the mana shield soaks changes what the shield soaks.
+Native and Lua traits share one list and one walk in stage order. Each transform sees the number the previous one left: a ward that cuts damage before the mana shield changes what the shield soaks.
 
-## Both doors
+## C++ and Lua registration
 
-A trait is defined in C++ or in Lua, and bound to an affect from either. The vocabulary is the same.
+A trait is defined in C++ or Lua and can be bound to an affect from either.
 
 | | C++ | Lua |
 | --- | --- | --- |
@@ -157,69 +123,35 @@ A trait is defined in C++ or in Lua, and bound to an affect from either. The voc
 
 Adding a native trait never edits a central switch: the hook macro defines the override and its trigger bit together, because a hook declared without its bit would silently never be dispatched. A native id wins. A Lua `define` with an id a native already owns is refused with `[traits] define [<id>]: a native trait already owns this id`, and a second Lua definition of the same id is refused as a duplicate.
 
-Who registers natively today:
+## Native registrations
 
-| What | Registered natively from C++ today | Registered from Lua today |
-| --- | --- | --- |
-| Trait definitions | 10 native traits at start-up: `attack_buff_erosion`, `buff_def_erosion`, `dash`, `guard_ward`, `hosin_ward`, `mana_shield`, `skill_ledger`, `stealth`, `terror`, `weapon_bound` | arena augments, battle royale, battle tower, rage, and 3 skill traits |
-| Bindings | the skill loader, from the `traits:` and `counters:` keys of skill files | `gate =` in `define` |
+The engine registers these native trait definitions at start-up: `attack_buff_erosion`, `buff_def_erosion`, `dash`, `guard_ward`, `hosin_ward`, `mana_shield`, `skill_ledger`, `stealth`, `terror`, and `weapon_bound`.
 
-The C++ door is open, but only the skill loader walks through it. No other C++ code binds a trait. A mode or an arena that wants a trait writes it in Lua.
+## Constants and formulas
 
-The constants and formulas are the other half of a binding. A constant is a number the gate resolved in its own vocabulary and froze when the affect landed: a caster's skill power, say. A formula is evaluated per call with the constants, the gate's `amount`, the damage and whatever the call site passes. A formula that names something nobody supplies is logged once per binding and returns its fallback.
+A constant is a number the gate resolves and freezes when the affect lands. A formula is evaluated per call with the constants, the gate's `amount`, the damage, and whatever the call site passes. A formula that names something nobody supplies is logged once per binding and returns its fallback.
+
+This call supplies a default and a live damage value:
 
 ```lua
 local reduction = ctx.formula("reduction_pct", 0, { dam = dam })
 ```
 
-This is an example written for the page, a formula call with a working default. Pass live values as variables: smuggle one in as a constant and it keeps the value it had when the buff landed.
+Pass live values as variables. A constant retains the value it had when the affect landed.
 
-## What Lua reaches
+## Lua and the point limit
 
-Lua can reach every position except one. A Lua trait can subscribe to `on_damage_taken_raw`, `on_damage_taken_final`, `on_damage_dealt_final`, `on_hit_resolved`, `on_attack`, `on_target_scan` and the heal transform `on_heal_taken_pre`. A native trait can subscribe to the same, and the two interleave by stage. The only native-only position is the point limit, the cap query that `GetLimitPoint` asks on every capped point read. That runs too often for a script call, so it is answered natively without crossing into Lua.
+Lua and native traits can subscribe to the same formula positions and interleave by stage. The point limit is native only: `GetLimitPoint` asks for the cap on every capped point read, too often for a script call. Lua hooks at formula positions cross the boundary per hit; the trigger mask avoids that crossing when nothing subscribes.
 
-The real cost for Lua at the formula positions is a state crossing per hit. That is why the trigger mask matters most there: it costs nothing until something subscribes.
+## Traps
 
-Shipping content uses most of these positions. `on_damage_taken_final` is the busiest, in the skill traits, the battle royale and the battle tower boons. `on_damage_dealt_final` and `on_hit_resolved` are used by the boons, `on_attack` by the battle royale, and `on_heal_taken_pre` by the battle royale only. `on_damage_taken_raw` has only a test trait on a mannequin, and nothing in Lua uses `on_target_scan` yet. Only the native stealth-style trait does.
+- A constant is frozen at the gate. A value that changes after the affect lands must be passed to the formula as a variable.
+- A persistent gate loses its constants on reload. Constants live on the in-memory node, and an affect restored from the database has no applier to prime them, so the fallback answers. Gate such a trait on a no-save affect, or take one scaled number from `gate_value()`, which persists with the affect.
+- A binding is keyed by trait and affect type for the whole process. Sources that raise the same affect cannot carry different traits or formulas.
+- Only a bump from a pre hook changes the hit. Later hooks of the same hit accept a bump the formula no longer reads, and with no hit in progress a bump is refused. Pre hooks fire for melee, shots, and each damage node; physical hits read the same attack point, so check `dam_type` if the bump should not apply to all of them.
+- A bump lasts for a calculation. An affect is still needed for an icon, a visible flag, or a lifetime between attacks.
+- Equipping an item applies points through `ApplyPoint`, not `AddAffect`, so equipping alone cannot open a trait gate. There is no equip hook or item field naming a trait.
 
-## What traits do today
+## Mechanics outside traits
 
-- Augments: the mayhem arena augments and the Ball-Em-Up augments are Lua traits gated by augment affects. Cold blood above is one of them.
-- Modes: the battle royale defines its traits in Lua, and rage is a broadcast affect with a rage charge trait.
-- Battle tower: the boons are Lua traits, with their numbers in the tower data file.
-- Skills: ten native traits ship with the engine, among them the mana shield, terror, stealth, the hosin ward, the two buff erosions and weapon binding. Three skill traits are Lua files that sit next to the skill data: thorns, a guild bulwark and a stellar ward.
-
-The mana shield, terror, stealth and hosin were `IsAffectFlag` branches until July 2026, the erosions and weapon binding until late July. They are the same rules, moved out of the damage function. The buff erosions had been `if` chains and then a table in the damage code.
-
-Between 20 and 24 July 2026 we tried a second interface, one that only skills could use. It was an exploration. Once it was clear that traits superseded it, the work went to traits, and the skill interface was retired.
-
-## Gear-triggered traits: wanted, not built
-
-A set bonus that gates a conditional damage rule is the obvious next client, and I want it. It does not exist. There is no equip trigger among the hooks and no item field that names a trait.
-
-The reason is in the plumbing. Items reach points through `ApplyPoint`, not through `AddAffect`:
-
-```cpp
-m_pOwner->ApplyPoint(p->aApplies[j].bType, bAdd ? p->aApplies[j].lValue : -p->aApplies[j].lValue, batched);
-```
-
-The gate opens only from `AddAffect`, so equipping an item cannot open a trait gate today. Gear only ends a trait, never starts one: weapon binding removes a skill-gated buff when the weapon is wrong. Which item bonuses move onto traits, and when, is not decided.
-
-## Traps, by cause
-
-- A constant is frozen at the gate. It was resolved in the caster's context when the affect landed, so a value that changes afterward must be a variable passed to the formula.
-- A persistent gate loses its constants on reload. Constants live on the in-memory node, and an affect restored from the database has no applier to prime them, so the fallback answers. Skill affects are not saved, so skill gates never see it. Gate such a trait on a no-save affect, or take one scaled number from `gate_value()`, which persists with the affect.
-- A binding is keyed by trait and affect type for the whole process. Two skill variants that raise the same affect cannot carry different traits or formulas.
-- Only a bump from a pre hook changes the hit; later hooks of the same hit accept a bump the formula no longer reads, and with no hit in progress a bump is refused. An ungated bump hits every delivery.
-
-## What is still in the engine
-
-Traits replaced the affect-gated branches. They did not rewrite the item-point effects, which are read by hand in the damage and kill code:
-
-- Kill recovery of HP and SP.
-- Block and dodge.
-- Melee reflect.
-- Steal HP and steal SP.
-- Hit recovery.
-
-About 20 `IsAffectFlag` calls are left in the server, and one rule outside the traits that pairs poison with the mana shield. The point limit is native-only. No promise is made here about which of these becomes a trait next.
+Item-point effects are read by hand in the damage and kill code: kill recovery of HP and SP, block and dodge, melee reflect, steal HP and SP, and hit recovery. A rule outside traits also pairs poison with the mana shield. The point limit remains native only.

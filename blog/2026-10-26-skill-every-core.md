@@ -1,19 +1,19 @@
 ---
 title: A guild buff that could not leave its core
-description: Vanilla guild skills ran in the caster's body over one war map, and the game had no empire skills at all. How they were removed in 2019, came back in 2026, and became casts that run on every core with nobody performing them.
+description: Metin2 mainline guild skills ran in the caster's body over one war map, and the game had no empire skills at all. How they were removed in 2019, came back in 2026, and became casts that run on every core with nobody performing them.
 authors: luscha
 tags: [engine, skills, guilds, multi-core]
 image: /img/blog/skill-every-core.png
 slug: skill-every-core
 ---
 
-A guild is not on one core. Its members are logged in on every core of the mesh, and each core knows only its own players. In vanilla Metin2 a guild skill was computed by the caster's body, so the skill reached the guild's war members standing on the caster's war map and nobody else. A guild member on another core, or in another channel, was simply not part of it. For a guild-wide skill, that is the whole bug.
+A guild is not on one core. Its members are logged in on every core of the mesh, and each core knows only its own players. In the Metin2 mainline engine a guild skill was computed by the caster's body, so the skill reached the guild's war members standing on the caster's war map and nobody else. A guild member on another core, or in another channel, was simply not part of it. For a guild-wide skill, that is the whole bug.
 
 This post is about how long that limit lived in our code base, why the skills left in 2019, and what the second attempt in 2026 did differently. It ends with a gap I have not closed.
 
-## Guild skills in the inherited code
+## Guild skills in the Metin2 mainline engine
 
-The inherited code had guild skills only, in a fixed range of vnums from 151 up, and no empire skills of any kind. Each one was hardcoded by vnum. Using one was refused outside a guild war:
+The Metin2 mainline engine had guild skills only, in a fixed range of vnums from 151 up, and no empire skills of any kind. Each one was hardcoded by vnum. Using one was refused outside a guild war:
 
 ```cpp
 if (!UnderAnyWar() || !ch->GetWarMap())
@@ -43,11 +43,11 @@ In February 2019 we wrote the first version of the composable skill system, wher
 
 So in April 2019 we removed them. About 1,200 lines went, among them the guild's use and cross-core handlers and the guild skill handlers of the client's guild window. We decided to keep guild skills out of gameplay and plan them for a later update. In August 2019 the old guild wars went as well, leaving only the skeleton. Some remains stayed in the engine: in 2023 the skill power for the whole guild range was set to return 0, and it still does.
 
-## Back in March 2026, shaped like vanilla
+## Back in March 2026, shaped like the Metin2 mainline engine
 
 In March 2026 guild skills came back. A guild kept a table of levels and cooldowns, a packet between cores carried the changes, and a `gskill` command and a guild skill page in the client arrived. Costs and cooldowns moved to the guild. Skill data had left the database table, where it had been edited with no versioning, for the YAML files, so a guild skill was now a file like any other.
 
-It was vanilla-shaped. A guild skill went through the ordinary character path, and the code of that time said what was wrong with it in its own comment: the caster owns the skill instance, but the cooldown and the costs are owned by the guild. Every place that read a level, a cooldown or a cost had a branch on the guild skill type. The cast still ran in the caster's body, on the caster's core.
+It was shaped like the Metin2 mainline engine. A guild skill went through the ordinary character path, and the code of that time said what was wrong with it in its own comment: the caster owns the skill instance, but the cooldown and the costs are owned by the guild. Every place that read a level, a cooldown or a cost had a branch on the guild skill type. The cast still ran in the caster's body, on the caster's core.
 
 That was the second pass at the same limit, and it worked about as well as the first. A buff for every member of a guild still could not be computed anywhere, because no core holds every member.
 
@@ -119,7 +119,7 @@ The map-wide ones are different again. 155, 156 and 157 are empire skills where 
 
 ## The war-only list still catches four of them
 
-The rule that guild skills work only in a guild war survived all of this. It is now a use policy with a list of vnums, and the list still holds 151 to 157. For 151 to 153, the guild skills, that is the vanilla rule doing what it always did. For the empire skills 154 to 157 it is a bug. An empire has no war, so those four are refused outside a guild war with the message that the skill can be used only in war. 150 and 158 are not on the list, which is why the pair above works.
+The rule that guild skills work only in a guild war survived all of this. It is now a use policy with a list of vnums, and the list still holds 151 to 157. For 151 to 153, the guild skills, that is the Metin2 mainline rule doing what it always did. For the empire skills 154 to 157 it is a bug. An empire has no war, so those four are refused outside a guild war with the message that the skill can be used only in war. 150 and 158 are not on the list, which is why the pair above works.
 
 The list is a policy, not part of the owner model, so the owner code never sees it. I filed it as an issue and have not touched the list yet.
 

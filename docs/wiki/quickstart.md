@@ -5,20 +5,19 @@ displayed_sidebar: mainSidebar
 
 # Quickstart for Developers
 
-This quickstart guide will help you create and deploy a new wiki page in the game’s wiki system, as well as utilize the developer UI buttons effectively.
+This quickstart guide will help you create and deploy a new wiki page in the game’s wiki system,.
 
 ## Workspace Location
-When the client is in **__DEBUG__** mode, the wiki will try to search the file using the following priority order:
+A wiki page is the file `locale/[localization]/wiki/p/<pagePath>.html` (default localization is `universal`). The client looks for it in this order:
 
-- Development environment (`client-folder`):  `[client-folder]/locale/[localization]/wiki/...` directory.
-- Production environment: Pack file at location `locale/[localization]/wiki/<pagePath>.txt` directory.
-(default localization is `universal`)
+1. The pack file, at `locale/[localization]/wiki/p/<pagePath>.html`.
+2. The `client-folder`, at `[client-folder]/locale/[localization]/wiki/p/<pagePath>.html`.
 
-This mean that when you ar using a production launcher, you have to pack the files in a `.hpa` pack, while with a debug launcher **all wiki files** (including [configurations and localization](./configuration.md)) are loaded from the folder where the launcher is.
+The pack always wins: a page that exists in the pack is never read from the folder. During development, keep the page out of the pack and place it in the `client-folder`; for release, pack the files in a `.hpa` pack. The same order applies to the other wiki files, including [configuration and localization](./configuration.md).
 
 :::note Example
 
-With an URL like `wiki://p/items/details?vnum=2000` the engine looks first in `[client-folder]/locale/[localization]/wiki/p/items/details.html`, then in the pack `locale/[localization]/wiki/p/items/details.html`.
+With an URL like `wiki://p/items/details?vnum=2000` the engine reads `locale/[localization]/wiki/p/items/details.html` from the pack, and from `[client-folder]/locale/[localization]/wiki/p/items/details.html` when the pack has no such file.
 
 :::
 
@@ -45,7 +44,7 @@ Before starting we strongly suggest to follow some steps to setup a profiecient 
 
 This ensures suggestion and linting while writing html pages.
 
-This quickstart guide will help you create and deploy a new wiki page in the game’s wiki system, as well as utilize the developer UI buttons effectively.
+This quickstart guide will help you create and deploy a new wiki page in the game’s wiki system,.
 
 ---
 ## Your first page
@@ -73,43 +72,28 @@ And write a simple html page
 
 ---
 
-### 2. **Accessing the page via the Developer UI**
+### 2. **Opening and reloading the page**
 
-The game UI has three developer buttons: **Navigate**, **Refresh**, and **Copy URL**. Here's how to use them:
+The wiki window opens a page by URL. To reach your page, link to it from another page of the wiki (see [URL](url.md)):
 
-#### a) **Navigate Button**
-- Clicking this button opens a popup where you can enter a full URL to load a specific wiki page.
-- Enter the url to navigate to your example page
-
+```html
+<txt><hyperlink url="wiki://p/example?vnum=10">Open the example</hyperlink></txt>
 ```
-wiki://p/example?vnum=10
-```
-
-- Confirm the popup to navigate to the specified page.
-  
-:::note About The url
 
 - `p/example` matches your `example.html` file.
 - `?vnum=10` sets the `query:vnum` variable to `10` inside the page.
 
 More info in the [URL](url.md) page.
 
+:::note Testing changes
+
+Navigating to a page reads its file again, so with the page in the `client-folder` and not in the pack, save the `.html` file and navigate to the page again to see the change. The developer buttons (Navigate, Refresh, Copy URL) are disabled in the wiki window.
+
 :::
 
-#### b) **Refresh Button**
-- Use this button to reload the currently displayed wiki page.
-- Useful for testing changes made in the `client-folder` folder. Save your changes, press **Refresh**, and see them applied instantly.
+:::caution
 
-#### c) **Copy URL Button**
-- Copies the full URL of the currently loaded wiki page to your clipboard.
-- Allows you to share or reuse the page URL easily.
-
-
-:::note Example **Testing changes immediately**  
-
-When using `__DEBUG__` launchers, changes to the `.html` file are applied immediately.
-- Save the `.html` file in the `client-folder` directory.
-- Use the **Navigate** button to load the page or the **Refresh** button to reload the current page and see the changes.
+A client that is not a debug client renders the wiki from compiled pages only, ignoring the `.html` file: compile the pages with the compiler tab of the [Wiki Manager](./data-generation.md) and pack the result, or test in a debug client.
 
 :::
 
@@ -127,7 +111,7 @@ For example a very common include is an `h1` which already has the right **font 
 
 By utilizing this import we can ensure consistency of the H1 around all wiki.
 
-- Marcro (template) file `templates/header.html`
+- Marcro (template) file `templates/headers.html`
 ```
 {% macro h1(title, id=None) %}
   <h1 id={{id}}>
@@ -168,4 +152,4 @@ locale/universal/wiki/p/example.html
 ### 5. **Further Customization**  
 
 Now you can enrich your page using [templating](./jinja2.md), [functions](./jinja2-context.md) and a wide collection of [ui components](./ui-components.md).  
-We also suggest you to read about the [grid system](./grid-system.md) which manages component placement in the page following the same logic of vanilla html/css.
+We also suggest you to read about the [grid system](./grid-system.md) which manages component placement in the page following the same logic as plain HTML and CSS.

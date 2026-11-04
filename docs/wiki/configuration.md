@@ -42,9 +42,9 @@ For example `"items.origin.fishing"` key will select the string associated to th
 ## File Locations
 
 All configuration and localization files are located within the locale directory for each supported language:
-- **Configuration File:** `locale/[localization]/config.yaml`
-- **Whitelists File:** `locale/[localization]/whitelists.yaml`
-- **Localization File:** `locale/[localization]/locale.json`
+- **Configuration File:** `locale/[localization]/wiki/config.yaml`
+- **Whitelists File:** `locale/[localization]/wiki/whitelists.yaml`
+- **Localization File:** `locale/[localization]/wiki/locale.json`
 
 These files are essential for the Wiki's operation and should be maintained carefully.
 
@@ -81,7 +81,7 @@ Below the sections of `config.yaml` are explained.
 ### PACKED_QUERY
 
 **What It Is and Its Purpose:**  
-`PACKED_QUERY` defines groups of item or filter identifiers (vnums) used to set filter target values and URL parameters. When a template uses a value like `"packed_query:HELMETS_WARRIOR"`, the `fun.Var` function recognizes it and replaces it with a comma-separated list of numbers from the PACKED_QUERY section.
+`PACKED_QUERY` defines groups of item or filter identifiers (vnums) used to set filter target values and URL parameters. When a template uses a value like `"packed_query:HELMETS_WARRIOR"`, the `fun.var` function recognizes it and replaces it with a comma-separated list of numbers from the PACKED_QUERY section.
 
 :::caution
 
@@ -382,7 +382,7 @@ Using the above [INDEXED_PAGES](#indexed_pages) example, the page indexed will r
 ## ITEM/MOB Whitelists
 
 **What They Are:**  
-Whitelists control which item and mob vnums are enabled for search and Wiki build. Only those included in the whitelist will be processed and displayed in the Wiki.
+Whitelists control which item and mob vnums are enabled for search and Wiki build.
 
 **Example – Modifying Whitelists:**
 

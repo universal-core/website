@@ -15,9 +15,9 @@ Nothing in the script was wrong. The design of the manager was.
 
 The quest manager keeps one set of "current" pointers: the current PC, the current character, the selected dungeon, the running state. Every event entry overwrites them. Scripts read them implicitly, so `pc.get_name()` does not take a player, it asks the manager who the current one is. For a linear script that is fine. A script runs, yields or ends, the next event starts.
 
-Vanilla Metin2 has the same shape, and the same hole: a kill handler that kills more monsters re-enters the kill path, and every re-entry overwrites the context the outer script is still using. The guard it has is per player, and it only stops a second script on a PC that is already running one.
+The Metin2 mainline engine has the same shape, and the same hole: a kill handler that kills more monsters re-enters the kill path, and every re-entry overwrites the context the outer script is still using. The guard it has is per player, and it only stops a second script on a PC that is already running one.
 
-In my engine the hole was wider, because in 2019 I had added a `dungeon_unique_dead` event (vanilla only has a polling getter, `d.is_unique_dead`). Follow one kill through it:
+In my engine the hole was wider, because in 2019 I had added a `dungeon_unique_dead` event (the Metin2 mainline engine only has a polling getter, `d.is_unique_dead`). Follow one kill through it:
 
 1. A player kills mob 2845. The manager points the current PC and character at that player and resumes a short-lived coroutine for the `dungeon_kill` block. Call it script A.
 2. Script A calls `d.kill_all()`. That is a C function, still inside A's resume. It walks the map and calls `Dead()` on every non-player.
