@@ -26,7 +26,6 @@ ch:add_affect(700, point.ATT_SPEED, 10, 0, 60, 0, true, true)
 - **A source-bearing affect returns with stale time and no source.** The source is not persisted and character save skips that record. Make source-bearing types no-save.
 - **A particle appears twice.** Broadcast and AFF flags draw independently. Use flag 0 for the broadcast type, or omit the type from broadcast.
 - **A broadcast type has no particle or icon.** Register the effect and `AFFECT_DATA_DICT` entry in the client. The first successful registration of a key wins; correct that registration rather than adding a duplicate. See [client presentation](/docs/core/affects/client).
-- **A late viewer misses an affect on a virtual character.** Replay skips virtual characters, though live adds are delivered. The viewer sees a later add.
 - **Duration 0 lasts one second.** Except for chat blocks, 0 is an error and becomes 1 second. Use `remove_specify` or `ch:remove_affect` to remove it.
 - **`ch:get_affect_value` returns 0.** Unknown names, `NONE`, and a real value of 0 are indistinguishable. Check presence separately; `ch:has_affect_flag` takes a flag name, not a type name.
 

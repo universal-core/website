@@ -38,7 +38,7 @@ Call `grant_speed(ch, 20)` with a character to increase movement speed by 20. Th
 | No-save | A type excluded from database persistence. |
 | No-clear-on-death | A type kept when death clears affects. |
 | Forge | A Lua module environment that runs registration and game scripts; see [Forge setup](/docs/core/luna-forge/setup). |
-| Avatar / virtual character | A character represented as virtual to the engine; late-viewer affect replay treats it differently. |
+| Avatar / virtual character | A character represented as virtual to the engine; its affects reach viewers like any character's and are saved to the session cache. |
 | Override | An add option that replaces a matching record instead of always appending one. |
 | `match_exact` | An override option that requires the same point. |
 | Source VID | The runtime character identifier associated with the source of an affect. |

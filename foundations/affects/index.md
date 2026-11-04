@@ -18,7 +18,7 @@ The affect manager classifies types as data. Broadcast sends affect elements to 
 | Affect element | One entry on a character, with a type, point change, duration, optional source, and optional AFF flag. |
 | Point | The character property changed by an element. An apply identifies a change that resolves to a point. |
 | AFF flag | A bit used for status checks and some client effects. It is separate from the affect type. |
-| Virtual character | An avatar represented by a character on the server; its affects are skipped during the replay to a later viewer. |
+| Virtual character | An avatar represented by a character on the server; its affects reach viewers like any character's and are saved to the session cache. |
 
 ## Two channels carry different state
 
@@ -27,7 +27,7 @@ The server keeps affect elements in the character's list. The owner receives the
 | | AFF bitfield | Broadcast affect element |
 | --- | --- | --- |
 | Carries | Flags, without duration or source | Type, point, value, end time, and source |
-| Reaches viewers | With character insertion and updates | On changes and on replay to a later viewer, except for virtual characters |
+| Reaches viewers | With character insertion and updates | On changes and on replay to a later viewer |
 | Drives | Status checks and flag-based particles | Per-type particles or bundles and target information |
 | Recovers from a missed change | A subsequent character update carries the bitfield again | A later replay or relevant change can restore state; ordinary updates do not resend the list |
 
@@ -48,7 +48,7 @@ flowchart TD
 
 ## Broadcast is a state channel
 
-The server sends an absolute end time. The client compares it with its estimate of server time, so changing targets does not restart a countdown. An end time of zero means infinite duration. Additions, removals, expiry, and bulk clears send changes as they happen. At the end of login, broadcastable affects are sent to viewers who may have seen the character before its list was ready. A viewer who arrives later receives a replay of the whole broadcastable list, except for virtual characters, which are skipped.
+The server sends an absolute end time. The client compares it with its estimate of server time, so changing targets does not restart a countdown. An end time of zero means infinite duration. Additions, removals, expiry, and bulk clears send changes as they happen. At the end of login, broadcastable affects are sent to viewers who may have seen the character before its list was ready. A viewer who arrives later receives a replay of the whole broadcastable list.
 
 Between replays, broadcast is a delta channel. If a change packet is lost, an already present viewer can hold the wrong state until a relevant change or replay corrects it. The bitfield instead rides character updates, so a subsequent update can repair a missed flag change. A replay is useful synchronization, but it does not turn every update into a full affect snapshot.
 

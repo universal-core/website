@@ -142,7 +142,7 @@ If a subsystem must not exist in a virtual session, skip both its load and save 
 ## Shipped instances
 
 - The pet is a native custom transformer.
-- Character titles are the shipped instance of the cached Forge form. The `.forge` module wraps its database load in `with_load_cache` and its database save in `with_save_cache`, both with the stable key `char_title`: a virtual character reads and writes the cache, a real one goes through the database as before.
+- Character titles are one shipped instance of the cached Forge form; a hunting progression subsystem is the other. The `.forge` module wraps its database load in `with_load_cache` and its database save in `with_save_cache`, both with the stable key `char_title`: a virtual character reads and writes the cache, a real one goes through the database as before.
 
 ## Pitfalls
 

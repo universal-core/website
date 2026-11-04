@@ -63,6 +63,6 @@ An in-place replacement on a different point does not send viewers a removal for
 
 Broadcast is a state channel for players and monsters. Adds and removals reach the owner and viewers; the packet carries character, type, point, value, source, and absolute end time. Infinite duration uses end time 0. Flag, cost, and real-time status are not sent. State is not periodically resent.
 
-The client keys records by type, point, and source, and counts records per type. The first attaches the type's particle and the last removal detaches it. A packet arriving before the character is retained until the character appears. A later viewer receives a replay of broadcastable records with end time computed from remaining duration, except that virtual (avatar) characters are skipped in this replay. Live adds to virtual characters still reach viewers.
+The client keys records by type, point, and source, and counts records per type. The first attaches the type's particle and the last removal detaches it. A packet arriving before the character is retained until the character appears. A later viewer receives a replay of broadcastable records with end time computed from remaining duration. Virtual (avatar) characters are replayed like any other.
 
 The AFF flag channel travels in character packets and drives its own particles and `chrmgr.HasAffectByVID`; it is independent of broadcast. See [client presentation](/docs/core/affects/client) and the [overview](/docs/core/affects/overview).

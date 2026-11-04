@@ -43,7 +43,7 @@ On save, the engine copies live virtual state into the cache. It builds the data
 
 A processor cannot transform data the bulk load never hands it. A pet is loaded lazily at summon, per pet vnum, through a native C++ load hook. A **forge subsystem** is a Forge module that owns its own state and database table; it loads through a key-routed wrapper instead of the bulk player load.
 
-For a forge subsystem, `with_load_cache` calls `transform_forge_load` on a cache miss. A C++ processor can route a key to a handler with `RegisterForgeLoadHandler`. The cache holds a pet record per vnum and a forge table per key. Pet saves and forge saves through `with_save_cache` are redirected to the cache, with no save transform. A subsystem can instead opt out by skipping its load and save when the character is virtual; the battle pass does this. The shipped cached Forge instance is character titles.
+For a forge subsystem, `with_load_cache` calls `transform_forge_load` on a cache miss. A C++ processor can route a key to a handler with `RegisterForgeLoadHandler`. The cache holds a pet record per vnum and a forge table per key. Pet saves and forge saves through `with_save_cache` are redirected to the cache, with no save transform. A subsystem can instead opt out by skipping its load and save when the character is virtual; the battle pass does this. The shipped cached Forge instances are character titles and a hunting progression subsystem.
 
 The wrapper path shows why a subsystem's own storage still needs a door into the cache.
 
