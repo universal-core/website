@@ -356,8 +356,56 @@ html {
   color: var(--uc-faint);
 }
 
-.uc-essay__byline::before {
-  content: "by ";
+.uc-essay__byline a {
+  color: var(--uc-violet2);
+  text-decoration: underline;
+  text-decoration-color: var(--uc-violet-line);
+  text-underline-offset: 3px;
+}
+
+.uc-essay__byline a:hover {
+  color: var(--uc-text);
+  text-decoration-color: currentColor;
+}
+
+.uc-essay__author {
+  margin-top: 4rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  border: 1px solid var(--uc-line);
+  border-left: 2px solid var(--uc-violet);
+  border-radius: var(--uc-radius);
+  background: var(--uc-bg2);
+}
+
+.uc-essay__author-name {
+  margin: 0;
+  font-family: var(--uc-font-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--uc-text);
+}
+
+.uc-essay__author-text {
+  margin: 0.5rem 0 1.25rem;
+  color: var(--uc-muted);
+}
+
+.uc-essay__author .uc-essay__author-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border-radius: var(--uc-radius);
+  background: var(--uc-violet);
+  color: #15121d;
+  font-family: var(--uc-font-display);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.uc-essay__author .uc-essay__author-link:hover {
+  background: var(--uc-violet2);
+  color: #15121d;
 }
 
 /* The essay header carries the title; the markdown one would repeat it. */
