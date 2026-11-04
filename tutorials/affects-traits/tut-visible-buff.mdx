@@ -25,7 +25,7 @@ The server half is configuration: a name for the type and three flags. The engin
 ## Before you start
 
 - The finished module of [Your first Forge module](/tutorials/first-forge-module), and the loop you use there to compile, register and restart. This module uses the same loop.
-- The [affects reference](/docs/building-blocks/affects) open beside you, and [Affects](/foundations/affects/) for why the engine keeps a type's look, its save rule and its death rule as flags outside the code that adds it. This page uses both without repeating them.
+- The [affects reference](/docs/core/affects/overview) open beside you, and [Affects](/foundations/affects/) for why the engine keeps a type's look, its save rule and its death rule as flags outside the code that adds it. This page uses both without repeating them.
 - Two clients on a test server, where every character can use GM commands. Call the characters A and B. B needs `/kill`. On a server that is not a test server, `/vbuff` needs the low wizard GM level and `/kill` the high wizard level. Put them on an ordinary map, close together.
 - A client whose pack you can edit and rebuild. Three files change in it, and the client reads the pack at startup, so you rebuild once and restart both clients.
 - A text editor. The workbench on the right only shows the files. It highlights `.lua`, `.forge`, `.quest`, `.py`, `.yml` and `.json`, so the `.mse` particle file shows as plain text there.
@@ -179,7 +179,7 @@ The same line exists for `affect_add_no_save` and `affect_add_broadcastable`. In
 
 ## Where to go next
 
-- [Affects reference](/docs/building-blocks/affects): the registration calls, `add_affect` in full, and the flags.
+- [Affects reference](/docs/core/affects/overview): the registration calls, `add_affect` in full, and the flags.
 - [Affects](/foundations/affects/): how the engine keeps these rules outside the code that adds an affect.
 - [Send a message from the server to a client window](/tutorials/server-to-client-message): another client pack edit, a Python window that receives a server message.
 

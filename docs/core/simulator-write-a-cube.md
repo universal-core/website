@@ -8,17 +8,17 @@ displayed_sidebar: mainSidebar
 
 The engine is private; this is a recipe for engine holders and a reading example for everyone else.
 
-This cube checks the rule from [Lift the party rules on one map](/tutorials/party-join-policy): players can form a party on one map regardless of empire or level gap, while the stock rules still apply outside the guard. It checks direct admission through the policy API, without a client.
+The rule under test is an arbitrary example, chosen because the Metin2 mainline engine already enforces a same-empire and a level-gap limit on parties. The [party join policy tutorial](/tutorials/party-join-policy) lifts both on one map; the cube proves that, and only that, through the policy API and without a client. Swap in any rule of your own.
 
-## Register the tutorial's rule
+## Register the rule
 
-The tutorial's Forge registers a guard that matches when both players are on the chosen map. Its verdict sets `same_empire = false` and `level_window = 0`, removing the same-empire requirement and the level-gap limit for that pair.
+The tutorial's [forge](/foundations/luna/forge) (a Lua module the server loads at boot) registers a guard that matches when both players are on the chosen map. Its verdict sets `same_empire = false` and `level_window = 0`, removing the same-empire requirement and the level-gap limit for that pair.
 
 The cube registers the same guard and verdict through `forge.sys.game.party_join_policy` on the simulator's scratch map. This isolates the policy behavior without staging and booting the tutorial's Forge. It does not test whether that Forge loads or registers successfully.
 
 ## Choose the admission door
 
-`sim.party_join` runs the same policy `Resolve` and common admission condition that a direct invite runs, then creates or joins the party directly. It returns a party admission error for the cube to check.
+`sim.party_join` runs the same policy `Resolve` (the policy manager's call that matches the registered guards and returns the winning verdict) and the common admission condition (the engine's own party checks) that a direct invite runs, then creates or joins the party directly. It returns a party admission error for the cube to check.
 
 It does not use the party finder, replay the invite dialog, or exercise the invite packet and acceptance handlers. Use a test that drives those handlers when the invitation flow itself is what you need to prove.
 
@@ -131,7 +131,7 @@ print(T.fail == 0 and " OPEN PARTY FACES O1-O5 SOLVED" or " CUBE INCOMPLETE")
 print("")
 ```
 
-`pc()` makes the fixture prove it is live: it checks the VID, resolves the character, reads its level back, and checks the empire returned by `sim.set_empire`. `pair()` runs those checks for both players. The cube also checks that party admission is enabled before any face runs.
+`sim.destroy(vid)` removes the character, which is the simulator's logout; `drop()` uses it so one face's players do not leak into the next. `pc()` makes the fixture prove it is live: it checks the VID, resolves the character, reads its level back, and checks the empire returned by `sim.set_empire`. `pair()` runs those checks for both players. The cube also checks that party admission is enabled before any face runs.
 
 O1 establishes that the stock level rule refuses the wide gap. It checks that the guest has no party leader as well as checking the error: a refusal result alone would not prove the guest remained outside a party. O2 checks that the same levels and empire can form a party under the policy, and that the guest sees the expected leader.
 
@@ -139,9 +139,9 @@ O3 is a negative control while the policy is registered: the same level gap on a
 
 ## Run it and read the verdict
 
-Add the cube to the cube runner table and run it by its registered name, or run `game_sim --script` on the file with the simulator data staged for the run. See the [simulator reference](/docs/core/simulator/) for runner options and verdict grammar.
+Add the cube to the cube runner table and run it by its registered name, or run `game_sim --script` on the file with the simulator data staged for the run. See the [simulator reference](/docs/core/simulator/) for runner options and the [verdict rules](/docs/core/simulator#verdict-rules).
 
-Read the verdict and failure lines in the output, not the cube process exit code alone. On the passing path, expect **56 checks passed** and **0 tests failed**, followed by `OPEN PARTY FACES O1-O5 SOLVED`. The count includes the checks inside `pc()` for both players in every `pair()`, fixture cleanup, and the checks outside the faces. A lower count can mean that assertions did not execute.
+Read the verdict and failure lines in the output, not the cube process exit code alone. On the passing path, expect **56 checks passed** and **0 tests failed**, followed by `OPEN PARTY FACES O1-O5 SOLVED`. Each `pair()` contributes 8 checks (4 per player), so the faces count O1 11, O2 11, O3 11 (including the private-map check), O4 10 and O5 10, which is 53; the enabled-admission, register and unregister checks outside the faces add 3. A lower total can mean that assertions did not execute.
 
 ## Diagnose a failure
 

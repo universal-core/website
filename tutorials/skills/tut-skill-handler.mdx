@@ -22,7 +22,7 @@ You give the warrior skill 2, Vortice della spada, a Lua damage handler. When th
 
 ## Before you start
 
-- The [skill extension reference](/docs/core/skill-extension) open beside you, and [Beyond the formula](/foundations/skills/beyond-the-formula) for why a skill's damage can be shaped from Lua. This page uses both without repeating them. The [skill file reference](/docs/core/skill-file) explains the keys of the YAML file.
+- The [skill extension reference](/docs/core/skills/extension) open beside you, and [Beyond the formula](/foundations/skills/beyond-the-formula) for why a skill's damage can be shaped from Lua. This page uses both without repeating them. The [skill file reference](/docs/core/skills/file) explains the keys of the YAML file.
 - A test server, where `server.type.test_server` is set in the core config. The breakdown line in step 2 exists only there. On a test server every character is a GM implementor, so `/setskill` works for anyone. Verification stays on a test server: the line sits in the live damage path behind that flag.
 - A warrior with skill 2 and a sword or a two-handed weapon, the weapons the skill allows. Set the level with `/setskill 2 <level>` if the character does not have it.
 - Two or more ordinary monsters of one kind standing near each other. Not bosses or metin stones.
@@ -141,7 +141,7 @@ Every fault in the Lua side is gentler. The core boots, one line goes to `logs/s
 
 ## Where to go next
 
-- [Skill extension reference](/docs/core/skill-extension): the three slots, `gate`, `damage_intent` and `applied`, and every field of the intent.
+- [Skill extension reference](/docs/core/skills/extension): the three slots, `gate`, `damage_intent` and `applied`, and every field of the intent.
 - [Beyond the formula](/foundations/skills/beyond-the-formula): why this hook sits before defence and where the old vnum branches went.
 - [A bonus that only counts when](/tutorials/first-trait): the same test-server readout habit, for a trait.
 

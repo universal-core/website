@@ -15,6 +15,22 @@ describe("tutorial state", () => {
   const start = { "/quest/a.quest": "one\ntwo\n", "config.yml": "x: 1\n" };
   const solution = { "quest/a.quest": "one\nTWO\n", "quest/lib/b.lua": "b\n", "config.yml": "x: 1\n" };
 
+  test("a stage swaps the files and the solution, and Check compares against it", () => {
+    let state = createState(start, solution);
+    state = reducer(state, {
+      type: "stage",
+      files: { "x.lua": "a\n" },
+      solution: { "x.lua": "a\nb\n" },
+      label: "Step 2 of 3",
+      path: "x.lua",
+    });
+    expect(Object.keys(state.files)).toEqual(["x.lua"]);
+    expect(state.stage).toBe("Step 2 of 3");
+    expect(reducer(state, { type: "check" }).check?.differs).toEqual(["x.lua"]);
+    state = reducer(state, { type: "edit", path: "x.lua", code: "a\nb\n\n" });
+    expect(reducer(state, { type: "check" }).check?.differs).toEqual([]);
+  });
+
   test("paths are normalised and the first file opens", () => {
     const state = createState(start, solution);
     expect(Object.keys(state.files).sort()).toEqual(["config.yml", "quest/a.quest"]);

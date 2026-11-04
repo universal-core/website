@@ -6,197 +6,74 @@ description: How affects hold character state, how their lifecycle works, and ho
 
 ## Affects hold character state
 
-An affect is a timed state on a character: a buff, poison, stun, quest bonus, or item blend. In the Metin2 mainline engine, behavior uses server macros and switches, while visibility uses an AFF bit, a client particle table, and a separate Python icon table. A visible state requires changes across those representations.
+An affect is a timed state on a character: a buff, poison, stun, or quest bonus. In the Metin2 mainline engine, behavior depends on server macros and switches, while visibility depends on an AFF bit and separate client tables. A visible state crosses several representations, and the fixed-size bitfield is finite.
 
-The affect manager classifies states as data, and broadcast sends the affect element to viewers. This gives the client the state and its duration without allocating an AFF bit or maintaining a separate target table. The fixed bitfield has 95 usable flags, of which 91 are taken.
+The affect manager classifies types as data. Broadcast sends affect elements to viewers, so a client can show a state and its duration without allocating another AFF bit. The [overview](/docs/core/affects/overview) covers the representation and setup; this page explains the decisions behind it.
 
-## Two channels to the client
+## Glossary
 
-The server holds each affect as an element: a type, one point change, a duration, an optional source, and optionally one AFF bit. The type is the identity. Skill vnums sit below 400, engine ids start at 400, quest affects start at 1000, and content ids such as 3010 come after. Several affects of one type can coexist in a character's list.
+| Term | Meaning |
+| --- | --- |
+| Affect type | The identifier for a kind of state. Several elements of the same type can coexist. |
+| Affect element | One entry on a character, with a type, point change, duration, optional source, and optional AFF flag. |
+| Point | The character property changed by an element. An apply identifies a change that resolves to a point. |
+| AFF flag | A bit used for status checks and some client effects. It is separate from the affect type. |
+| Virtual character | An avatar represented by a character on the server; its affects are skipped during the replay to a later viewer. |
 
-The client hears about an element through two channels that never touch.
+## Two channels carry different state
 
-| | AFF bitfield | Affect element |
+The server keeps affect elements in the character's list. The owner receives the elements directly. Viewers receive the AFF bitfield with character data and, for broadcastable types, receive affect elements tagged with the character's VID.
+
+| | AFF bitfield | Broadcast affect element |
 | --- | --- | --- |
-| Carries | one bit per flag, no duration, no source | type, point, value, end time, source |
-| To the owner | inside char-add and char-update | affect add and remove packets |
-| To everyone else | inside char-add and char-update | only if the type is broadcastable: the same add and remove, tagged with the VID |
-| Client draws | a particle from a C++ table at `EFFECT_AFFECT` plus the flag index | a particle or bundle registered at `EFFECT_BROADCAST_AFFECT` plus the type |
-| Self-healing | yes, it rides every update | no, pure deltas |
+| Carries | Flags, without duration or source | Type, point, value, end time, and source |
+| Reaches viewers | With character insertion and updates | On changes and on replay to a later viewer, except for virtual characters |
+| Drives | Status checks and flag-based particles | Per-type particles or bundles and target information |
+| Recovers from a missed change | A subsequent character update carries the bitfield again | A later replay or relevant change can restore state; ordinary updates do not resend the list |
 
-The bitfield reaches viewers through character updates. The owner receives affect elements directly; broadcastable elements also reach viewers with the character's VID.
+A character update is sent when an affect changes a flag or movement speed. The two channels can describe the same state, but neither substitutes for the other: a flag supports engine checks, while an element carries the detail needed to show a duration and distinguish sources.
 
-The character update carries the bitfield when a flag or movement speed changes.
+The flow below follows an element from the server list to the two client representations.
 
-```cpp
-if (pkAff->dwFlag || wMovSpd != GetPoint(POINT_MOV_SPEED) || wAttSpd != GetPoint(POINT_ATT_SPEED))
-    UpdatePacket();
-
-StartAffectEvent();
-```
-
-The sender includes the element and its end time in the packet sent around the character.
-
-```cpp
-static bool ShouldBroadcastAffect(LPCHARACTER ch, uint32_t dwType)
-{
-    return AffectManager::instance().IsBroadcastableAffect(dwType);
-}
-
-static void SendAffectAddPacketAround(LPCHARACTER ch, CAffect* pkAff)
-{
-    TPacketGCAffectAddByVID p;
-    p.bHeader       = HEADER_GC_AFFECT_ADD_VID;
-    p.dwVID         = ch->GetVID();
-    p.lEndTime      = (pkAff->lDuration >= INFINITE_AFFECT_DURATION) ? 0 : static_cast<int32_t>(get_global_time() + pkAff->lDuration);
-    p.dwType        = pkAff->dwType;
-    p.bApplyOn      = pkAff->bApplyOn;
-    p.lApplyValue   = pkAff->lApplyValue;
-    p.unSourceVid   = pkAff->unSourceVID;
-    ch->PacketAround(&p, sizeof(p));
-}
+```mermaid
+flowchart TD
+    A["Server adds affect"] --> B["Character affect list and AFF bitfield"]
+    B --> C["Owner receives affect element"]
+    B --> D["Viewers receive bitfield"]
+    B -->|"if broadcastable"| E["Viewers receive element with VID and end time"]
+    E --> F["Per-VID store, counted per type"]
+    F --> G["Particle or bundle"]
+    F --> H["Target information"]
 ```
 
 ## Broadcast is a state channel
 
-The packet carries an absolute end time, not a remaining duration. The client compares it against its own estimate of server time, so retargeting does not restart the countdown, and a duration of 0 means infinite.
+The server sends an absolute end time. The client compares it with its estimate of server time, so changing targets does not restart a countdown. An end time of zero means infinite duration. Additions, removals, expiry, and bulk clears send changes as they happen. At the end of login, broadcastable affects are sent to viewers who may have seen the character before its list was ready. A viewer who arrives later receives a replay of the whole broadcastable list, except for virtual characters, which are skipped.
 
-The server sends deltas at the places where the affect list changes: add, remove, expiry, the bulk clear, the end of login, and the moment a new viewer sees the character, when the whole broadcastable list is replayed to that one viewer. Nothing repeats. That is the price of a delta channel: if a packet is lost the client is wrong until the next change. The AFF bitfield heals itself on every update. Broadcast does not.
+Between replays, broadcast is a delta channel. If a change packet is lost, an already present viewer can hold the wrong state until a relevant change or replay corrects it. The bitfield instead rides character updates, so a subsequent update can repair a missed flag change. A replay is useful synchronization, but it does not turn every update into a full affect snapshot.
 
-The client keeps a store per VID. It upserts an element by type, point and source, and it counts elements per type. The particle is attached when the count goes from 0 to 1 and detached when it goes from 1 to 0, so two affects of one type drive one particle:
+The client stores elements per VID, keyed by type, point, and source. It counts elements per type: the first attaches the type's particle or bundle, and the last removal detaches it. An actor created after its affects arrive attaches the stored types; when the actor leaves, its entry is purged. Target information reads the same store. The [client reference](/docs/core/affects/client) describes the registrations and interfaces.
 
-```cpp
-const uint32_t effectKey = EFFECT_BROADCAST_AFFECT + dwServerType;
-const auto bundle = ms_astAffectBundlePath.find(effectKey);
-if (bundle != ms_astAffectBundlePath.end()) {
-    AttachBundle(bundle->second, "broadcast_affect:" + std::to_string(dwServerType));
-    return;
-}
-// AttachEffect early-returns when no effect is registered, so a UI-only affect attaches nothing.
-__EffectContainer_AttachEffect(effectKey, 0, 1.0f, EFFECT_KIND_AFFECT, EFFECT_NOTATION_AFFECT);
-```
+AFF flags have no equivalent count. If two live elements carry the same flag, removing either clears that bit even while the other element remains. The broadcast count avoids that particular problem for the visual attached to a type.
 
-An actor created after its affects arrived reattaches the stored types, and an actor that leaves purges its entry. The target board reads the same store through `net.GetBroadcastAffectsByVID(vid)` and is the main character's affect shower pointed at another VID.
+## Classification is data
 
-The server AFF bit has no such count:
+The affect manager holds sets for no-save, no-clear-on-death, and broadcastable types, as well as named sets used for classification and removal. This puts decisions about a type in registrations instead of scattering each decision across a switch. The sets are independent: a state that must survive death and remain absent from the database needs both properties.
 
-```cpp
-if(pkAff->dwFlag)
-{
-    if(!bAdd)
-        m_afAffectFlag.Reset(pkAff->dwFlag);
-    else
-        m_afAffectFlag.Set(pkAff->dwFlag);
-}
-```
+Classification and removal answer different questions. A good affect can survive a dispel, and a dispellable state need not count as a buff. Keeping those sets separate lets the engine ask the question it actually needs instead of treating every beneficial state as removable by the same operation.
 
-If two live affects carry the same flag, removing either clears the bit for every viewer while the other still runs. Broadcast counts per type, so it does not fail this way.
-
-The particle can be configured by the effect artist. A broadcast type binds its effect from Python with `RegisterEffect` under `EFFECT_BROADCAST_AFFECT`, and a bundle path can be edited in the editor's bundle pane. It still needs a client pack rebuild, but no C++ and no new AFF bit.
-
-```mermaid
-flowchart TD
-    A["AddAffect on the server"] --> B["character affect list and AFF bitfield"]
-    B -->|"always"| C["owner client: affect element"]
-    B -->|"bitfield rides char-add and update"| D["every viewer: AFF particle"]
-    B -->|"only if broadcastable"| E["every viewer: element with VID and end time"]
-    E --> F["per-VID store, counted per type"]
-    F -->|"count 0 to 1"| G["attach particle or bundle"]
-    F --> H["target board"]
-```
-
-## Classes are data: the affect manager
-
-The affect manager is the server object that answers the questions the macros used to answer. It holds four sets, and the file `affect_config.yaml` fills them:
-
-- no-save: the type is never written to the database;
-- no-clear-on-death: the type survives a death;
-- broadcastable: the type is sent to viewers;
-- macros: named sets that other entries and the engine refer to.
-
-Entries are numbers, names resolved through the name map, ranges with `to_inclusive` or `to_exclusive`, or the name of another macro. A circular macro or an undefined name is a named, fatal error. The file loads after the quest system has initialized, because Lua may add names, and a broken file stops the game core.
-
-```yaml
-BROADCASTABLE_AFFECTS:
-- 296
-- 150 # Luce Stellare: every viewer draws the sanctuary's aura on its holders
-```
-
-The classification questions are macros in the same file: good, bad, party buff, untargetable, curse, and two removal sets. Good and bad answer "does this count as a buff" for assists and triggers. They do not answer "can a dispel tear it off", which is a separate set, because the two diverge in both directions. A buff can be good and survive a dispel; a debuff-like state can be dispellable without counting as a buff for assists. The cleanse set shows how deliberate the split is:
-
-```yaml
-## Removal set: what a CLEANSE strips (CHARACTER::RemoveBadAffect, the
-## REMOVE_BAD_AFFECT node). Poison and fire are cleansed too, but by their own
-## removers — each owns a tick event that has to be cancelled with the affect,
-## so they are not listed here. Bleeding is absent for the same reason plus a
-## design one: it is lifted only by REMOVE_BLEEDING.
-IS_CLEANSABLE_AFFECT:
-- STUN
-- SLOW
-- PARALYZE
-```
-
-A skill file declares its own classes with `affect_class`, and the skill loader adds the skill's affect to those macros when it loads. A new skill does not need to edit a central list. The engine affects stay listed in the YAML.
-
-Two traps live here. Runtime registration and the YAML file meet at boot: Lua and the skill loader may have registered entries before the YAML loads, so the load merges into the sets and does not replace them. The second trap is the order of macro expansion. A macro name used inside the no-save or no-clear list is expanded when the YAML loads. A skill that registers into that macro later changes the macro, not the list that already took a copy.
+Registrations from Lua and the skill loader can exist before the configuration loads. The load merges them into the manager's sets rather than replacing them. Named sets used by the no-save or no-clear lists are expanded when configuration loads: adding a member to the named set later does not update the list that already copied it. A missing name or circular definition stops the load rather than leaving a partially understood classification. See [registration](/docs/core/affects/registration) for the configuration and registration interfaces.
 
 ## The affect lifecycle
 
-**Loading.** At login the database list of affects arrives while other systems may add affects. `AddAffect` on a player who has not finished loading puts the affect in a pending list in the affect manager and returns `nullptr`. A caller must account for that null return.
+A player can receive an affect while its database list is still loading. The manager queues that addition until loading and entry into the game are both ready. A caller adding an affect during that interval must handle a null return; it cannot assume the element is already in the character's list. Once loading finishes, pending additions are replayed, the affect event starts, and viewers receive the broadcastable state.
 
-The load buffers database elements through `AddAffect`. `EnterGameAffect` finalizes the load when both the database list and the game phase have arrived: it replays the pending list, strips good and bad affects on PvP arena maps, starts the affect event, refills HP and SP, and sends broadcastable affects to viewers who saw the character appear with an empty list. A later viewer receives a replay on view insert.
+The server counts durations down in relative time, while the client sees an absolute end time. Real-time affects also count time spent offline: loading subtracts the interval since logout, and an element whose time has run out expires on the next tick. Removal and expiry update the list and notify viewers. Some affect types also have engine-owned side effects on expiry, so removing an entry is more than deleting a row.
 
-**Durations.** The server counts down once a second in relative terms; the wire carries an absolute end time. Real-time affects count while the player is offline, so the load subtracts the logoff interval. A negative result expires on the first tick. An open TODO proposes storing an absolute end time instead of subtracting the interval.
+Override makes identity important. The lookup considers type and, when present, source; the point can also be required to match. Without an exact point match, an override can replace the first element of that type on a different point. That matters when a single type contains both a marker and a point change. The [behavior reference](/docs/core/affects/behaviour) describes matching, loading, death, and expiry in detail.
 
-**Point identity.** `AddAffect` with override looks for an existing affect of the same type and, when present, source. The point can also be part of the identity, so a node without a point does not overwrite a valued sibling. The exact-point argument is `bMatchApplyExactly` in C++; the Lua stub calls the argument in that position `is_cube`.
+Source identity has a persistence limit. Logout saving skips sourced affects, while an affect saved when added can reach the database without its source: the stored row has no source field. On reload that source is zero. Do not depend on source identity surviving a save and load cycle.
 
-**Death.** Death clears affects except those in no-clear-on-death, plus skill-tree and priv affects. No-save and no-clear-on-death are independent, so a type that needs both properties must be in both lists. `QUEST_START_IDX` names only 1000: a quest affect survives death only if its own id is listed.
+## The two channels can draw twice
 
-**Expiry and removal.** Expiry runs hardcoded side effects for toggle skills, mob ambience, blessing, autohunt, and casual mode, and tells viewers. Traits are notified after the list walk because a deactivate hook can touch the list held by the iterator. Skill end events are drained after the update for the same reason, avoiding a double delete when a toggle turns off.
-
-**Double free guard.** The guard logs `trying to double free affect` when it detects a repeated free. It compares pointers from a pool, so a slot freed and reused by a new affect can still pass the guard.
-
-**Saving sources.** Saving at logout skips affects with a source; saving at add time does not. The database row has no source column, so a sourced affect written at add time reloads with source 0.
-
-**Quest duplicate guard.** The quest `affect.add` duplicate guard checks only id 1000. For a quest index above 0, it does not prevent the same quest affect from being added again.
-
-## Registration from Lua and C++
-
-Registration is open from both sides. Lua has `affect.add_name_definition`, `affect.add_no_save`, `affect.add_no_clear_on_death`, `affect.add_broadcastable`, `affect.add_to_macro` and `affect.is_in_macro`. C++ calls the same public methods on the affect manager. A wrong argument type is logged and ignored.
-
-A forge registers what its content needs while the quest system loads, before the YAML does, and the sets live in the manager, not in the forge. The following example registers the sets rage needs. Run inside a forge's init, it registers the names and sets once:
-
-```lua
-affect.add_name_definition("RAGE_CHARGE", 618)
-affect.add_broadcastable(affect.name_map.RAGE)
-affect.add_broadcastable(affect.name_map.SUB_RAGE)
-affect.add_no_save(affect.name_map.RAGE)
-affect.add_no_save(affect.name_map.SUB_RAGE)
-affect.add_no_clear_on_death(affect.name_map.RAGE_CHARGE)
-```
-
-The post [Rage in a forge](/blog/rage-in-a-forge) tells that story. The registry pattern behind both doors is the same as in [policies](/foundations/policies/).
-
-## Native registrations
-
-The skill loader registers macro membership from `affect_class` in skill files. The manager loads YAML at boot. C++ exposes the same registration methods as Lua; content registers no-save, no-clear-on-death, broadcastable types, and names through Lua.
-
-Engine ids live in a static name map in C++, mirrored by the generated `affect.name_map` stub. A new engine-known id takes a C++ edit. Content ids use `add_name_definition`.
-
-The reference for every function is [Affects](/docs/building-blocks/affects).
-
-## The parallel channel and the double-draw trap
-
-Broadcast does not replace the AFF bitfield. The bitfield still drives status state: invisibility, sleep, the glow of a few items, resist-fallen. It also draws the legacy particles, from keys that do not collide with broadcast keys, since `EFFECT_BROADCAST_AFFECT` is 1,000,000 and the AFF particles sit at `EFFECT_AFFECT` plus an index.
-
-That is exactly the trap. If a broadcastable type also drives an AFF flag with a legacy particle, both draw the particle, and there is no runtime guard. The check is config discipline: a type that is broadcastable carries `dwFlag` of 0 unless you want the bit for its status meaning. Two more silent failures: a broadcast type without an entry in the client's affect data shows no target icon, and one with no registered effect shows no particle. Nothing logs either.
-
-New visible states should take the broadcast road. The bitfield has 4 usable flags remaining.
-
-## Engine responsibilities
-
-- The AFF bitfield itself: 96 bits, 91 used, sent in char-add and char-update, with 25 places in the server that test a flag. The set and clear have no count.
-- Its particles: 65 `EFFECT_AFFECT` rows in a C++ client table, and the `AFFECT_*` enum on the client.
-- The static name map for engine-known ids.
-- Expiry side effects: toggle skills by type below 400, mob ambience, blessing, autohunt, casual mode. Also the auto-recovery item check in `AddAffect`, block-chat messages, premium durations, and the PvP arena strip in `EnterGameAffect`.
-- Relative durations and the logoff subtraction.
+A broadcastable type with an AFF flag can drive both a broadcast particle and a flag-based particle. There is no runtime guard against drawing both. Use a zero flag for a broadcast visual unless the flag is also needed for its status meaning, and check the client registrations for both paths. A missing affect-data entry can leave the target icon absent; a missing effect registration leaves the particle absent. The [pitfalls](/docs/core/affects/pitfalls) and [examples](/docs/core/affects/examples) show the checks, and the [Lua API](/docs/core/affects/lua-api) covers script operations.

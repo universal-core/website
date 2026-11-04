@@ -12,6 +12,7 @@ import {
   syntaxHighlighting,
 } from "@codemirror/language";
 import { lua } from "@codemirror/legacy-modes/mode/lua";
+import { html } from "@codemirror/legacy-modes/mode/xml";
 import {
   Annotation,
   EditorState,
@@ -53,8 +54,36 @@ const quest: StreamParser<LuaState> = {
   },
 };
 
+// Metin2 effect files (.mse, .msfvx, .msattach): `Key value...` lines, `Group`/`List` blocks in braces.
+const effectText: StreamParser<unknown> = {
+  name: "effect-text",
+  startState: () => ({}),
+  token(stream) {
+    if (stream.eatSpace()) return null;
+    if (stream.match("//")) {
+      stream.skipToEnd();
+      return "comment";
+    }
+    if (stream.eat('"')) {
+      while (!stream.eol() && stream.next() !== '"');
+      return "string";
+    }
+    if (stream.match(/^-?\d+(\.\d+)?\b/)) return "number";
+    if (stream.match(/^(Group|List)\b/)) return "keyword";
+    if (stream.match(/^[{}]/)) return "bracket";
+    if (stream.sol() || stream.string.slice(0, stream.start).trim() === "") {
+      stream.match(/^[^\s{}"]+/);
+      return "propertyName";
+    }
+    stream.match(/^[^\s{}"]+/);
+    return "atom";
+  },
+};
+
+const effectLanguage = StreamLanguage.define(effectText);
 const luaLanguage = StreamLanguage.define(lua);
 const questLanguage = StreamLanguage.define(quest);
+const htmlLanguage = StreamLanguage.define(html);
 
 export const languageFor = (path: string): Extension => {
   const ext = path.split(".").pop()?.toLowerCase();
@@ -64,6 +93,13 @@ export const languageFor = (path: string): Extension => {
       return questLanguage;
     case "lua":
       return luaLanguage;
+    case "mse":
+    case "msfvx":
+    case "msattach":
+      return effectLanguage;
+    case "html":
+    case "htm":
+      return htmlLanguage;
     case "py":
       return python();
     case "yml":
@@ -77,6 +113,7 @@ export const languageFor = (path: string): Extension => {
     case "cxx":
     case "h":
     case "hpp":
+    case "hlsl":
       return cpp();
     default:
       return [];

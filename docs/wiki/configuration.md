@@ -89,7 +89,7 @@ Since `PACKED_QUERY` are expected to be lists, it is important to pass an empty 
 
 :::
 
-**Example – Creating a New Packed Query and using it as filger:**
+**Example to Creating a New Packed Query and using it as filger:**
 
 *Configuration (in `config.yaml`):*
 
@@ -118,9 +118,9 @@ PACKED_QUERY:
 ```
 
 When one of the buttons (filter) is clicked, the page puts `packed_query:NEW_FILTER` or `packed_query:OLD_FILTER` in the variable `query:race`.  
-Then using `fun.getv("query:race", [])` we can unpack and use the single values to iterate over them and, for example, place an [`<item-stats>`](./ui-components.md#item-stats) for each vnum.
+Then using `fun.getv("query:race", [])` we can unpack and use the single values to iterate over them and, for example, place an [`<item-stats>`](./tags-items.md#item-stats) for each vnum.
 
-**Example – Using PACKED_QUERY as a Category/Hyperlink Parameter:**
+**Example to Using PACKED_QUERY as a Category/Hyperlink Parameter:**
 
 *Configuration (in `config.yaml`):*
 ```yaml
@@ -162,7 +162,7 @@ The Mob/Item Origin sections (`ITEM_ORIGIN_LOCALE_MAPPING` and `MOB_ORIGIN_LOCAL
 
 Tags such as `<monster-card>` and `<chest-card>` will display this origin information.
 
-**Example – Creating a New Origin Group:**
+**Example to Creating a New Origin Group:**
 
 *Configuration (in `config.yaml`):*
 ```yaml
@@ -204,9 +204,9 @@ These configuration sections associate identifiers with locale keys (and in the 
   *Example:*
   ```yaml
   QUEST_NAMES:
-    ue_main_quest_lv10: "quest_names.ue_main_quest_lv10"
-    ue_main_quest_lv25: "quest_names.ue_main_quest_lv25"
-    ue_main_quest_lv40: "quest_names.ue_main_quest_lv40"
+    example_quest_lv10: "quest_names.example_quest_lv10"
+    example_quest_lv25: "quest_names.example_quest_lv25"
+    example_quest_lv40: "quest_names.example_quest_lv40"
   ```
   
 #### RAID_NAMES 
@@ -215,8 +215,8 @@ These configuration sections associate identifiers with locale keys (and in the 
   *Example:*
   ```yaml
   RAID_NAMES:
-    ue_raid_solo_rounds_1: "raid_names.ue_raid_solo_rounds_1"
-    ue_miliarstone_raid: "raid_names.ue_miliarstone_raid"
+    example_raid_a: "raid_names.example_raid_a"
+    example_raid_b: "raid_names.example_raid_b"
   ```
   
 #### DUNGEON_NAMES 
@@ -225,8 +225,8 @@ These configuration sections associate identifiers with locale keys (and in the 
   *Example:*
   ```yaml
   DUNGEON_NAMES:
-    ue_dungeon_30min_specquest: dungeon_names.ue_dungeon_30min_specquest
-    ue_dungeon_diseased_peak: dungeon_names.ue_dungeon_diseased_peak
+    example_dungeon_a: dungeon_names.example_dungeon_a
+    example_dungeon_b: dungeon_names.example_dungeon_b
   ```
   
 #### MAP_INFO 
@@ -250,17 +250,17 @@ These configuration sections associate identifiers with locale keys (and in the 
 ```json
 {
   "quest_names": {
-    "ue_main_quest_lv10": "Main Quest Level 10",
-    "ue_main_quest_lv25": "Main Quest Level 25",
-    "ue_main_quest_lv40": "Main Quest Level 40"
+    "example_quest_lv10": "Main Quest Level 10",
+    "example_quest_lv25": "Main Quest Level 25",
+    "example_quest_lv40": "Main Quest Level 40"
   },
   "raid_names": {
-    "ue_raid_solo_rounds_1": "Solo Rounds Raid",
-    "ue_miliarstone_raid": "Miliarstone Raid"
+    "example_raid_a": "Example Raid A",
+    "example_raid_b": "Example Raid B"
   },
   "dungeon_names": {
-    "ue_dungeon_30min_specquest": "30-Minute Special Quest Dungeon",
-    "ue_dungeon_diseased_peak": "Diseased Peak Dungeon"
+    "example_dungeon_a": "Example Dungeon A",
+    "example_dungeon_b": "Example Dungeon B"
   },
   "maps": {
     "snow": "Snow Map",
@@ -275,7 +275,7 @@ These configuration sections associate identifiers with locale keys (and in the 
 **What It Does:**  
 `WIKI_CATEGORIES` defines the navigational structure of the Wiki by creating a category-subcategory tree. Each category can have multiple subcategories, each linking to a Wiki page.
 
-**Example – Creating a New Category-Subcategory:**
+**Example to Creating a New Category-Subcategory:**
 
 *Configuration (in `config.yaml`):*
 ```yaml
@@ -316,7 +316,7 @@ Page not indexed are not returned from the search bar.
 
 :::
 
-**Example – Adding a Document to the Search Engine:**
+**Example to Adding a Document to the Search Engine:**
 
 *Configuration (in `config.yaml`):*
 ```yaml
@@ -342,7 +342,7 @@ This entry makes the new dungeon page searchable and categorizes it under "dunge
 `SEARCH_RESULT_CATEGORY` configures how search results are grouped and displayed. Each category has a defined color and a display name used in the search result visualization.  
 The category defined in [INDEXED_PAGES](#indexed_pages) refers to this section. When a page with a given category is returned, the name of category is appended in front of the page name in the search result list.
 
-**Example – Creating a New Search Result Category:**
+**Example to Creating a New Search Result Category:**
 
 *Configuration (in `config.yaml`):*
 ```yaml
@@ -384,7 +384,7 @@ Using the above [INDEXED_PAGES](#indexed_pages) example, the page indexed will r
 **What They Are:**  
 Whitelists control which item and mob vnums are enabled for search and Wiki build.
 
-**Example – Modifying Whitelists:**
+**Example to Modifying Whitelists:**
 
 *ITEM_WHITELIST (in `whitelists.yaml`):*
 ```yaml

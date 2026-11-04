@@ -1,5 +1,5 @@
 ---
-title: Wiki Quickstart
+title: Wiki quickstart
 displayed_sidebar: mainSidebar
 ---
 
@@ -93,7 +93,7 @@ Navigating to a page reads its file again, so with the page in the `client-folde
 
 :::caution
 
-A client that is not a debug client renders the wiki from compiled pages only, ignoring the `.html` file: compile the pages with the compiler tab of the [Wiki Manager](./data-generation.md) and pack the result, or test in a debug client.
+A client that is not a debug client still opens the `.html` file, but renders from the page's compiled module. A page with no compiled module does not render, and one without its `.html` fails to load: compile the pages with the compiler tab of the [Wiki Manager](./data-generation.md) and ship both, or test in a debug client. See [compiled templates](../uchtml/compiled-templates.md).
 
 :::
 
@@ -104,12 +104,12 @@ Changes to [configuration, locale](./configuration.md) files, or files containin
 :::
 
 ### 3. **Importing templates**
-There are some predefined [jinja](./jinja2.md) templates in the wiki. These templates are "lego blocks" you can reuse everywhere in the Wiki.  
+There are some predefined [jinja](../uchtml/jinja2.md) templates in the wiki. These templates are "lego blocks" you can reuse everywhere in the Wiki.  
 For example a very common include is an `h1` which already has the right **font name**, **font size**, **text color** and **text position** and an optional `id` for [anchoring](url.md#location).
 
 > You can fin the templates in `/locale/[localization]/wiki/templates`.
 
-By utilizing this import we can ensure consistency of the H1 around all wiki.
+By using this import we can ensure consistency of the H1 around all wiki.
 
 - Marcro (template) file `templates/headers.html`
 ```
@@ -151,5 +151,5 @@ locale/universal/wiki/p/example.html
 
 ### 5. **Further Customization**  
 
-Now you can enrich your page using [templating](./jinja2.md), [functions](./jinja2-context.md) and a wide collection of [ui components](./ui-components.md).  
-We also suggest you to read about the [grid system](./grid-system.md) which manages component placement in the page following the same logic as plain HTML and CSS.
+Now you can enrich your page using [templating](../uchtml/jinja2.md), [functions](../uchtml/jinja2-context.md), the [data namespaces](./data-core.md) and the [UCHTML tags](../uchtml/components-common.md) with the [wiki tags](./tags-items.md).  
+We also suggest you to read about the [grid system](../uchtml/grid-system.md) which manages component placement in the page following the same logic as plain HTML and CSS.

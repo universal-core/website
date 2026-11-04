@@ -12,6 +12,10 @@ export type TutorialState = {
   active: string | null;
   tabs: string[];
   highlight: Highlight | null;
+  /** Label of the step the reader is on ("Step 2 of 5: ..."). */
+  stage: string | null;
+  /** Result of the last Check: files that differ from the solution. */
+  check: { differs: string[] } | null;
 };
 
 export type Action =
@@ -19,6 +23,8 @@ export type Action =
   | { type: "edit"; path: string; code: string }
   | { type: "open"; path: string }
   | { type: "close"; path: string }
+  | { type: "stage"; files?: Files; solution?: Files; label?: string; path?: string }
+  | { type: "check" }
   | { type: "reset" }
   | { type: "solve" };
 
@@ -43,6 +49,7 @@ export const createState = (
   files: Files,
   solution?: Files,
   active?: string,
+  stage?: string,
 ): TutorialState => {
   const base = normalizeFiles(files);
   const first = active ? normalizePath(active) : Object.keys(base).sort()[0];
@@ -54,8 +61,13 @@ export const createState = (
     active: first ?? null,
     tabs: first ? [first] : [],
     highlight: null,
+    stage: stage ?? null,
+    check: null,
   };
 };
+
+export const differsFromSolution = (files: Files, solution: Files): string[] =>
+  Object.keys(solution).filter((p) => (files[p] ?? "").trimEnd() !== solution[p].trimEnd());
 
 const withTab = (tabs: string[], path: string) =>
   tabs.includes(path) ? tabs : [...tabs, path];
@@ -90,6 +102,7 @@ export const reducer = (state: TutorialState, action: Action): TutorialState => 
         base: { ...state.base, [path]: action.code },
         files: { ...state.files, [path]: action.code },
         solved: false,
+        check: null,
         active: path,
         tabs: withTab(state.tabs, path),
         highlight: { path, lines, seq },
@@ -100,6 +113,7 @@ export const reducer = (state: TutorialState, action: Action): TutorialState => 
       return {
         ...state,
         files: { ...state.files, [action.path]: action.code },
+        check: null,
         highlight: state.highlight?.path === action.path ? null : state.highlight,
       };
     }
@@ -111,9 +125,24 @@ export const reducer = (state: TutorialState, action: Action): TutorialState => 
       if (state.active !== action.path) return { ...state, tabs };
       return { ...state, tabs, active: tabs[Math.max(0, index - 1)] ?? null };
     }
+    case "stage": {
+      const base = action.files ? normalizeFiles(action.files) : state.base;
+      const files = { ...base };
+      const solution = action.solution ? normalizeFiles(action.solution) : state.solution;
+      const path = action.path ? normalizePath(action.path) : undefined;
+      const next = { ...state, base, files, solution, solved: false, check: null, highlight: null };
+      const view = path && path in files
+        ? { active: path, tabs: withTab(state.tabs.filter((t) => t in files), path) }
+        : focus(state, files);
+      return { ...next, ...view, stage: action.label ?? state.stage };
+    }
+    case "check": {
+      if (!state.solution) return state;
+      return { ...state, check: { differs: differsFromSolution(state.files, state.solution) } };
+    }
     case "reset": {
       const files = { ...state.base };
-      return { ...state, files, ...focus(state, files), highlight: null };
+      return { ...state, files, ...focus(state, files), highlight: null, check: null };
     }
     case "solve": {
       if (!state.solution) return state;
@@ -128,6 +157,7 @@ export const reducer = (state: TutorialState, action: Action): TutorialState => 
       return {
         ...next,
         ...view,
+        check: null,
         highlight: view.active && lines.length ? { path: view.active, lines, seq } : null,
       };
     }

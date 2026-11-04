@@ -36,7 +36,7 @@ The one door from the server is the [skill loadout](/docs/building-blocks/loadou
 
 ## Step 1: the skill file
 
-The shape is a map-wide empire skill: the AFFECT of the [skill file reference](/docs/core/skill-file) with `collect.from: map` and `accept.of: ALLY`. The affect is a movement speed point, `5+3*skill_level`, for 60 seconds.
+The shape is a map-wide empire skill: the AFFECT of the [skill file reference](/docs/core/skills/file) with `collect.from: map` and `accept.of: ALLY`. The affect is a movement speed point, `5+3*skill_level`, for 60 seconds.
 
 The model is 156, a shipped map-wide empire skill. Its top node sweeps the caster's map and its affect lands on every player it accepts:
 
@@ -71,7 +71,7 @@ You should see:
 
 ## Step 2: the description
 
-The client builds the skill tooltip from a description file. The `$speed` in it is the `speed` variable of the skill file: it reads the node's `amountPoly` at the empire's level, so the tooltip always shows the real number. The colour codes are the client's `|c...|r` form. See [Skill descriptions](/docs/core/skill-descriptions).
+The client builds the skill tooltip from a description file. The `$speed` in it is the `speed` variable of the skill file: it reads the node's `amountPoly` at the empire's level, so the tooltip always shows the real number. The colour codes are the client's `|c...|r` form. See [Skill descriptions](/docs/core/skills/descriptions).
 
 <CreateFile path="Client-Files/locale/locale/universal/skill_desc/360.ucskilldesc.yaml" code={desc} />
 
@@ -176,8 +176,8 @@ A forge that fails to load makes the quest manager initialisation fail, and the 
 
 ## Where to go next
 
-- [Skill file reference](/docs/core/skill-file): every key, `collect.from`, `accept` and the loader errors.
+- [Skill file reference](/docs/core/skills/file): every key, `collect.from`, `accept` and the loader errors.
 - [Loadout policy](/docs/building-blocks/loadout-policy): the pages, the rule order and what a loadout saves.
-- [Skills: owned by a character, a guild or an empire](/foundations/skills/owners): the subject, the purse and `eskill`.
+- [Skills: owned by a character, a guild or an empire](/foundations/skills/owners-and-cores): the subject, the purse and `eskill`.
 
 </Tutorial>

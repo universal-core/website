@@ -5,13 +5,22 @@ description: Drive the real game engine from Lua, control its world and boundari
 
 ## The simulator runs the game engine without a client
 
-The headless simulator lets you exercise server behaviour through Lua without running a client or connecting a live server. It supports unit, integration and regression tests, as well as calibration against an objective such as a target mob difficulty.
+The headless simulator lets you exercise server behaviour through Lua without running a client or connecting a live server. It supports unit, integration and regression tests, as well as calibration against a measurable objective, such as a target damage range.
 
 `game_sim` is the game server built a second time from the same sources, with a different entry point. It boots without a socket, a database or a disk map. A Lua driver stages a world and calls real engine entry points, including combat and skill execution.
 
 The Metin2 mainline engine has a test server for testing gameplay in a server environment. The simulator adds a headless level where a driver can construct and observe a scenario directly.
 
 The engine is private, so you cannot run the simulator as a reader. The [simulator reference](/docs/core/simulator) describes its interface, and [Write a cube](/docs/core/simulator-write-a-cube) describes the test harness.
+
+## Glossary
+
+- **Driver:** the Lua script that stages a world, acts on it and reads the result.
+- **Boundary:** a place where the engine meets infrastructure it does not own: network, database, disk, clock.
+- **Forge:** a Lua module the server loads at boot and keeps alive for the whole process; see [How Forge modules work](/foundations/luna/forge).
+- **Cube:** a driver script that asserts a specification and ends in a verdict.
+- **Face:** one independent scenario inside a cube.
+- **Differential gate:** a comparison of two recorded runs, not a pass or fail against fixed values.
 
 ## The driver calls the real engine through Lua
 
@@ -46,11 +55,9 @@ The simulator substitutes infrastructure around the game, while keeping the game
 
 ## Forge and bridge carry the scenario into the engine
 
-The simulator stands on the same Forge and bridge machinery that exposes engine managers to Lua. The driver uses native simulator bindings alongside the ordinary Lua-facing manager and processor interfaces. It can deliver messages through engine handlers and inspect the state they change.
+The simulator stands on the same [Forge](/foundations/luna/forge) and bridge machinery that exposes engine managers to Lua. The driver uses native simulator bindings alongside the ordinary Lua-facing manager and processor interfaces, delivers messages through engine handlers and inspects the state they change.
 
-A forge can have both a game artifact and a quest object. The game artifact can define a manager while the quest object registers its processors at boot. Loading a populated manager table therefore does not prove that a processor is listening. Stage both artifacts where they are needed, run the quest boot path and assert that the engine holds the expected processor.
-
-Each forge has its own `package.loaded`. A module required by the driver and the same module required by a forge are separate tables. Changing the driver's copy does not change the forge's copy. Set up the condition through the engine and assert the state the engine actually holds.
+Each forge has its own `package.loaded`, so a module required by the driver and the same module required by a forge are separate tables. Set up a condition through the engine and assert the state the engine actually holds. The [reference](/docs/core/simulator#pitfalls) lists the processor trap that follows from this.
 
 ## Native registrations expose the simulator by area
 
@@ -72,10 +79,6 @@ A real peer link is also opt-in. It lets a scenario exercise communication acros
 
 `sim.advance_time` advances global time one second at a time and drives the corresponding pulses after each increment. Use the clock that the behaviour under test reads: pulses for pulse-driven work, and global time for a deadline based on global time.
 
-## Affect durations use the engine's affect event
-
-Affect durations tick once per simulated second through the engine's own affect event, as they do on the live server. The event must be scheduled and the relevant pulses must be driven for the duration to decrease.
-
 ## Differential gates compare behaviour
 
 A differential gate records observations from probes and compares two records. It has no expected value for each measurement: the question is what moved between the records and whether the declared expectations permit that change.
@@ -88,11 +91,11 @@ Comparable records need the same fixtures and build flavor. Scenario order matte
 
 A cube uses assertions as its oracle. Its faces stage scenarios and check the behaviour the specification requires. Each face can fail independently, and the harness collects the checks into a verdict.
 
-A cube can exercise gameplay through the same forge and processor paths as the engine. Its assertions need to cover both the intended effect and the prerequisites that make that effect meaningful. Cubes that assert the engine on its own fixtures are kept with the simulator. Cubes that load shipped gameplay assert content that designers change, so they are kept outside the engine repository as local agent tooling. An agent writes the feature and its cubes, runs the sweep and reads the verdict. The [cube guide](/docs/core/simulator-write-a-cube) describes how to write one.
+A cube can exercise gameplay through the same forge and processor paths as the engine. Its assertions need to cover both the intended effect and the prerequisites that make that effect meaningful. A cube decides pass or fail from its own checks, but the runner, not the cube, applies the final verdict; the [reference](/docs/core/simulator#verdict-rules) tabulates the rules. The [cube guide](/docs/core/simulator-write-a-cube) shows how to write one.
 
 ## Calibration measures against an objective
 
-A calibration pipeline uses an objective rather than a reference record. It runs scenarios and adjusts inputs until measurements reach a target range, such as a required mob difficulty. The engine still supplies the behaviour being measured, and the scenario still has to establish that the measurement is meaningful.
+A calibration pipeline uses an objective rather than a reference record. It runs scenarios and adjusts inputs until measurements reach a target range. The engine still supplies the behaviour being measured, and the scenario still has to establish that the measurement is meaningful.
 
 ## A probe must prove that it measured something
 

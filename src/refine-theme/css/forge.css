@@ -269,8 +269,15 @@ html {
   background: rgba(255, 255, 255, 0.02);
 }
 
-.refine-prose table td:first-child {
-  white-space: nowrap;
+.refine-prose table td,
+.refine-prose table th {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.refine-prose table td > code {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .refine-prose table td > code,

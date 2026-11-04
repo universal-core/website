@@ -5,7 +5,7 @@ displayed_sidebar: mainSidebar
 
 # Wiki Data
 
-Wiki pages never carry game facts by hand. Item, mob, shop, refine, cube and quest facts are generated offline from the server's own files into static JSON that the client reads from its pack. A page asks for them through the `item`, `mob`, `quest` and `world` namespaces of the [template context](./jinja2-context.md).
+Wiki pages never carry game facts by hand. Item, mob, shop, refine, cube and quest facts are generated offline from the server's own files into static JSON that the client reads from its pack. A page asks for them through the `item`, `mob`, `quest` and `world` namespaces of the [template context](../uchtml/jinja2-context.md).
 
 The tool that generates and edits all of this is the **Wiki Manager**, a desktop application (PyQt) with one tab per task.
 
@@ -150,11 +150,13 @@ and two reports into the builder's own `build` folder, `mobs_by_map.json` and `m
         ],
         "chest_content": {
             "multidrop": false|"all"|number,
-            "items": {
-                "vnum": vnum,
-                "count": count,
-                "rarity": number
-            }
+            "items": [
+                {
+                    "vnum": vnum,
+                    "count": count,
+                    "rarity": number
+                }
+            ]
         },
         "reward_of": [
             {

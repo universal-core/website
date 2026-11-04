@@ -25,7 +25,7 @@ The point is the line between the two. Everything the player does in the room ha
 ## Before you start
 
 - The finished module of [Your first Forge module](/tutorials/first-forge-module), and the loop you use there to compile, register and restart. This module uses the same loop.
-- The [player virtualization reference](/docs/core/player-virtualization) open beside you, and [Player virtualization](/foundations/player-virtualization/) for why the engine keeps a copy instead of the real rows. This page uses both without repeating them.
+- The [player virtualization reference](/docs/core/player-virtualization/overview) open beside you, and [Player virtualization](/foundations/player-virtualization/) for why the engine keeps a copy instead of the real rows. This page uses both without repeating them.
 - A test server and one character with GM rights, with a level above 30, some gold and something in the bag, so the reset is visible.
 - The NPC with vnum 9006 (Vecchietta) standing on a map your game core hosts. She stays on the real map. If you have none, add a line to that map's `npc.txt` (`m cx cy 0 0 0 0 1m 100 1 9006`, in map cells). The room is a copy of the map you talk to her on, and the dog is spawned inside the copy by the module, so nothing is placed by hand in the room.
 - A text editor. The workbench on the right only shows the files; you create the real ones in `share/locale/italy/system/tutorial/`.
@@ -147,7 +147,7 @@ If the NPC does nothing and `logs/syserr` has `practice_room: no private copy of
 
 ## Where to go next
 
-- [Player virtualization reference](/docs/core/player-virtualization): the 15 functions, the 9 hooks and what the boundary keeps real.
+- [Player virtualization reference](/docs/core/player-virtualization/hooks): the 15 functions, the 9 hooks and what the boundary keeps real.
 - [Player virtualization](/foundations/player-virtualization/): why the only road back is a commit.
 - [Write a battle arbiter rule](/tutorials/battle-arbiter-rule): another Forge registered rule, on the combat side.
 

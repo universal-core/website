@@ -26,7 +26,7 @@ Three files make the trip: a `.proto` both sides compile, the forge that sends, 
 
 - The finished module of [Your first Forge module](/tutorials/first-forge-module), compiled and registered in `quest_list`, and the way you restart the game cores from that page.
 - Docker, to run the protobuf generator, and a client whose `root` folder you can edit and repack with your packing tool.
-- The [Forge API reference](/docs/core/luna-forge) for `send_client`. [How messages travel](/foundations/luna/transport) and [How the client receives them](/foundations/luna/client) explain what happens underneath.
+- The [Forge API reference](/docs/core/luna-forge/setup) for `send_client`. [How messages travel](/foundations/luna/transport) and [How the client receives them](/foundations/luna/client) explain what happens underneath.
 - A text editor. The workbench on the right only shows the files; you create the real ones in your server tree and in the client `root`.
 
 ## Step 1: define the message and generate the bindings
@@ -153,7 +153,7 @@ When something is off, find the symptom here:
 
 ## Where to go next
 
-- [Forge API reference](/docs/core/luna-forge): `send_client`, calling context and errors.
+- [Forge API reference](/docs/core/luna-forge/setup): `send_client`, calling context and errors.
 - [How messages travel](/foundations/luna/transport): the packet, the namespace and the handler id.
 - [How the client receives them](/foundations/luna/client): registration, the lifetime of handlers and the game window fallback.
 - [Your first Forge module](/tutorials/first-forge-module): the module this one extends.

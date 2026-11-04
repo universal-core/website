@@ -27,8 +27,8 @@ Two files make it: an HTML template that lives in the client pack, and a Forge t
 ## Before you start
 
 - The finished module of [Your first Forge module](/tutorials/first-forge-module), and its compile and restart loop.
-- The [UCHTML reference](/docs/wiki/jinja2) open beside you, and [UCHTML](/foundations/uchtml/) for why a page is a template and not a hand-built window.
-- A **debug client**. A release client renders compiled templates only and ignores the `.html` file, so your new page shows nothing there until you compile it with the Compiler tab of the [Wiki Manager](/docs/wiki/data-generation). In a debug client the `.html` is read as it is.
+- The [UCHTML reference](/docs/uchtml/jinja2) open beside you, and [UCHTML](/foundations/uchtml/) for why a page is a template and not a hand-built window.
+- A **debug client**. A release client still opens the `.html` file but renders from the compiled module, so your new page shows nothing there until you compile it with the Compiler tab of the [Wiki Manager](/docs/wiki/data-generation). In a debug client the `.html` is read as it is.
 - A test character that can use GM commands and can stand inside any dungeon. The panel is bound to a dungeon instance, so outside one the Forge refuses.
 
 ## Read the shipped macros
@@ -87,6 +87,6 @@ If the window appears with nothing in it, the client could not render the templa
 
 - [UCHTML](/foundations/uchtml/): the pipeline from template to native widgets, and the reactive zones.
 - [Wiki Manager and data generation](/docs/wiki/data-generation): the Compiler tab.
-- [Luna Forge](/docs/core/luna-forge): the Forge module format used here.
+- [Luna Forge](/docs/core/luna-forge/setup): the Forge module format used here.
 
 </Tutorial>

@@ -1,24 +1,22 @@
 ---
-title: UniversalCore InGame Wiki
+title: In-game wiki
+description: "The in-game wiki, a client built on UCHTML: quickstart, configuration, URLs, generated data and its tags."
 displayed_sidebar: mainSidebar
 ---
 
-# UniversalCore InGame Wiki
+# In-game wiki
 
-UniversalCore's InGame-Wiki is a **framework** for composing Metin2 interfaces relying on a custom HTML engine name `UCHTML` coupled with `Jinja2` for templating.  
-`UCHTML` allows the developer to write reactive interfaces with normal **html** and **jinja2** templating syntax, for conditional rendering, binding `tags` and `attributes` to native Metin2 interface components.
+The in-game wiki is a client built on [UCHTML](../uchtml/): pages are templates, and the facts they show are generated offline from the server's files. The framework pages (layout, Jinja2, generic tags) live under UCHTML; these pages cover what the wiki adds.
 
-`UCHTML` implements in a seamingly complete way html's native grid system, allowing for element to be displayed as **block**, **flex** or **relative** with an expressive set of attributes to design and realize pretty complex layouts and compositions.
-
-Thanks to **jinja** the html document is enhanced with and extendable set of functions provided by the Metin2 client backend (Launcher), allowing for responsiveness and bidirectional communication between the pages and the backend.
-
-Because of the extension of the framework, we will split the documentation per topics:
-
-- [`UCHTML` Grid system](./grid-system.md)
-- [`UCHTML` Jinja2 Templating](./jinja2.md)
-- [`UCHTML` Embedded Context](./jinja2-context.md)
-- [Wiki Quickstart](./quickstart.md)
-- [Wiki Configuration](./configuration.md)
-- [Wiki URL](./url.md)
-- [UI Component Tags](./ui-components.md)
-- [Wiki Data Generation](./data-generation.md)
+| Page | What it covers |
+| --- | --- |
+| [Quickstart](./quickstart.md) | Create and open a page |
+| [Configuration](./configuration.md) | `config.yaml`, whitelists and locale binding |
+| [URL format](./url.md) | `wiki://` addresses, query parameters and location |
+| [Data generation](./data-generation.md) | The Wiki Manager and its outputs |
+| [Data namespaces: i18n, quest, mob](./data-core.md) | Template functions for names, quests and mobs |
+| [Data namespace: item](./data-item.md) | Template functions for items |
+| [Data namespace: world](./data-world.md) | Higher-level item, mob, cube and refine queries |
+| [Item and equipment tags](./tags-items.md) | Data-bound item, equipment and cube tags |
+| [Monster and chest tags](./tags-mobs.md) | Data-bound monster and chest tags |
+| [Shop and ranking tags](./tags-clients.md) | Tags for the item shop and ranking clients |

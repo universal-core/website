@@ -283,6 +283,9 @@
 }
 
 .uc-tutorial__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
   flex-shrink: 0;
   padding: 4px 12px;
   border-top: 1px solid var(--uc-line);
@@ -454,3 +457,6 @@
   white-space: normal;
   overflow-wrap: anywhere;
 }
+
+.uc-tutorial__check--ok { color: #7fd1c0; }
+.uc-tutorial__check--no { color: #e3a07a; }

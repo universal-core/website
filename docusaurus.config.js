@@ -184,10 +184,33 @@ const siteConfig = {
       {
         // The docs layer "Foundations" became "Core" when Foundations became its own section.
         createRedirects(existingPath) {
+          const moved = {
+            "/docs/core/affects/overview": ["/docs/core/affects", "/docs/building-blocks/affects"],
+            "/docs/building-blocks/ui-shader-quad": "/docs/core/ui-shader-quad",
+            "/docs/building-blocks/effects-and-materials": "/docs/core/effects-and-materials",
+            "/docs/uchtml/grid-system": "/docs/wiki/grid-system",
+            "/docs/uchtml/jinja2": "/docs/wiki/jinja2",
+            "/docs/uchtml/jinja2-context": "/docs/wiki/jinja2-context",
+            "/docs/uchtml/components-common": ["/docs/uchtml/ui-components", "/docs/wiki/ui-components"],
+            "/docs/core/luna-forge/setup": "/docs/core/luna-forge",
+            "/docs/core/traits/concepts": "/docs/core/traits",
+            "/docs/core/player-virtualization/overview": "/docs/core/player-virtualization",
+            "/docs/core/player-metrics/overview": "/docs/core/player-metrics",
+            "/docs/core/skills/file": "/docs/core/skill-file",
+            "/docs/core/skills/extension": "/docs/core/skill-extension",
+            "/docs/core/skills/descriptions": "/docs/core/skill-descriptions",
+            "/foundations/skills/nodes-and-phases": "/foundations/skills/reach",
+            "/foundations/skills/beyond-the-formula": "/foundations/skills/formulas",
+            "/foundations/skills/one-file": "/foundations/skills/descriptions",
+            "/foundations/skills/owners-and-cores": ["/foundations/skills/owners", "/foundations/skills/every-core"],
+          };
+          const from = [];
+          const key = existingPath.replace(/\/$/, "");
+          if (moved[key]) from.push(...[].concat(moved[key]));
           if (existingPath.startsWith("/docs/core")) {
-            return [existingPath.replace("/docs/core", "/docs/foundations")];
+            from.push(existingPath.replace("/docs/core", "/docs/foundations"));
           }
-          return undefined;
+          return from.length ? from : undefined;
         },
       },
     ],

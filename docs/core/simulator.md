@@ -8,6 +8,15 @@ displayed_sidebar: mainSidebar
 
 The simulator runs game engine behavior headlessly under a Lua driver, with a staged world and observable infrastructure boundaries. Use it to test scenarios, compare behavior, and calibrate outcomes; the [simulator foundations](/foundations/simulator/) describe its design.
 
+## Glossary
+
+- **Driver:** the Lua script that stages a world and acts on it.
+- **Cube:** a driver script of faces that assert a specification and end in a verdict.
+- **Face:** one scenario inside a cube; a failing face does not stop the others.
+- **Forge:** a Lua module the server loads at boot and keeps for the whole process; see [How Forge modules work](/foundations/luna/forge). Its tables are reached through `forge.sys.game.*`.
+- **Differential gate:** a comparison of two recorded runs, classified against declared expectations.
+- **Boundary:** the simulated edge to network, database, disk and clock.
+
 The engine is private.
 
 ## Running cubes
@@ -61,9 +70,25 @@ print(T.fail == 0 and " SKELETON FACES A1-A1 SOLVED" or " CUBE INCOMPLETE")
 
 Start the file with a comment that lists each face on one line, the fixtures it loads, and the command that runs it. A binding that returns nothing is read back through its getter; never wrap it in `check`.
 
-## Verdict grammar
+## Verdict rules
 
-A cube prints `checks passed: N    tests failed: N`, followed by a line ending in `SOLVED` or `CUBE INCOMPLETE`. The runner also recognizes uppercase verdict tokens ending in `_OK` or `_FAILED`, and inspects `FAIL ` lines and the `tests failed: N` count. A failure takes precedence over a success token. `tests failed: 0` can count as a pass without a token; output with no recognized verdict is reported separately.
+Who prints what:
+
+| Source | Final line |
+| --- | --- |
+| A cube | `<NAME> FACES a-b SOLVED`, or `CUBE INCOMPLETE` |
+| A unit script | `<NAME>_OK` or `<NAME>_FAILED` |
+| Either | `checks passed: N    tests failed: N`, and one `FAIL ` line per failed face |
+
+The runner reads the output and applies these rules in order; the first match wins. The process exit code is not part of the verdict, because each face runs under `pcall`.
+
+| Order | Condition | Verdict |
+| --- | --- | --- |
+| 1 | Last token is `CUBE INCOMPLETE` or `_FAILED`, or `tests failed: N` with N not `0`, or any `FAIL ` line | FAIL |
+| 2 | Last token is `SOLVED` or `_OK`, or `tests failed: 0` | PASS |
+| 3 | None of the above | NO VERDICT |
+
+Failure beats success: a cube that prints `SOLVED` after a `FAIL ` line still fails.
 
 Compare the check count with the last run. A passing verdict with fewer checks may mean that a face or assertion no longer runs.
 
@@ -73,7 +98,7 @@ The simulator registers more than 200 bindings under `sim`. This table is an ind
 
 | Area | Names |
 |---|---|
-| World and lifecycle | `seed`, `step`, `reset`, `fork_scenario`, `child_exit`, `timeline`, `report`, `bench`, `pulse`, `log`, `map_index`, `leak_check`, `kill`, `destroy`, `sync`, `set_event_flag`, `set_quest_flag`, `quest_flag` |
+| World and lifecycle | `seed`, `step`, `reset`, `fork_scenario`, `child_exit`, `timeline`, `report`, `bench`, `pulse`, `log`, `map_index`, `leak_check`, `kill`, `destroy` (removes the PC, the logout), `sync`, `set_event_flag`, `set_quest_flag`, `quest_flag` |
 | PC and party | `spawn_pc`, `pc_pos`, `pc_place`, `pc_hp`, `pc_att`, `set_empire`, `party_enable`, `party_join`, `party_link`, `party_guild_group`, `party_alive` |
 | Combat and observation | `attack`, `cast_skill`, `use_skill`, `client_hit`, `mob_skill`, `mob_skill_info`, `shoot`, `affects`, `points`, `point`, `flags`, `skill_state`, `can_target` |
 | Guild and empire | `guild_create`, `guild_join`, `guild_set_name`, `guild_set_skill`, `guild_gold`, `guild_war`, `empire_gold`, `intracore_deliver` |
@@ -94,9 +119,10 @@ Selected contracts:
 | `sim.step([pulses = 1])` | Drives pulses and returns no Lua values. It does not advance global time. |
 | `sim.advance_time(seconds)` | Advances global time and drives each second's pulses. Negative input raises an error. |
 | `sim.spawn_pc{ x=, y=, job= \| player_file=, ... }` | Spawns a PC and returns its VID. Options include `map`, `immortal`, `bonuses`, `items`, `skill`, `buff`, and `hp`. |
+| `sim.destroy(vid)` | Removes the PC, which is the simulator's logout. Returns `false` when the VID is unknown. |
 | `sim.set_empire(vid, empire)` | Sets and returns the resulting empire integer. |
 | `sim.party_enable(boolean)` | Sets and returns whether party admission is enabled. |
-| `sim.party_join(leader_vid, guest_vid)` | Resolves policy and the common admission condition, then admits directly. Returns a numeric party admission error. It does not replay the invite dialog or acceptance path. |
+| `sim.party_join(leader_vid, guest_vid)` | Resolves the party join policy and the common admission condition, then admits directly. Returns a numeric party admission error. It does not replay the invite dialog or acceptance path. |
 | `sim.quest_boot()` | Returns `boot_init_ok, boot_ok`. A false boot-event return can mean no quest handled the event. |
 | `sim.quest_login(vid)` | Establishes the quest-loaded state required for PC quest events. |
 | `sim.forge_has_processor(ns, header[, kind])` | Checks for a registered processor. Kind `1` selects peer processors. |
@@ -121,11 +147,7 @@ A staged world proves behavior under that setup. It does not by itself prove tha
 
 ## Harness families
 
-A **differential gate** starts with a manifest. The probe runner resets and stages each probe, observes before and after an action, checks liveness, and emits records. A diff report compares records and classifies changed keys against declared expectations. Keep fixture identity, build flavor, and manifest order consistent across comparable runs: the pulse count accumulates across resets. A clean diff alone does not prove a probe measured anything.
-
-A **cube** states expected behavior as assertions. Its faces accumulate checks and failures and print a verdict. Use setup assertions and negative controls to establish that each face exercises the behavior it claims.
-
-Calibration is another simulator use: it tunes toward an objective rather than comparing two records.
+A **differential gate** starts with a manifest; the probe runner resets and stages each probe and emits records that a diff classifies. Keep fixture identity, build flavor and manifest order consistent across comparable runs, because the pulse count accumulates across resets. A **cube** states expected behavior as assertions and prints a verdict; see [Write and run a cube](/docs/core/simulator-write-a-cube). Calibration tunes toward an objective rather than comparing two records. The [foundations](/foundations/simulator/) explain why each exists.
 
 ## C++ registration
 
@@ -145,7 +167,7 @@ The bindings are registered natively in C++. A cube uses the registered table; i
 
 **PC quest events never reach Lua.** A spawned PC needs quest-loaded state. Call `sim.quest_login(vid)` before testing its quest events.
 
-**A Forge table exists but its processor is absent.** Some processors register through the boot quest object. Stage both the compiled Forge artifact and quest object, call `sim.quest_boot()`, and check `sim.forge_has_processor`.
+**A Forge table exists but its processor is absent.** A forge can have a game artifact and a quest object, and some processors register only through the quest object at boot. Stage both the compiled Forge artifact and quest object, call `sim.quest_boot()`, and check `sim.forge_has_processor`.
 
 **A cooldown never expires.** `sim.step` drives pulses without moving global time. Use `sim.advance_time` for a gate based on global time.
 

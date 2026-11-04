@@ -22,7 +22,16 @@ flowchart TD
     F --> G["Output"]
 ```
 
-This is a client subsystem with no Lua surface. Python reaches rendering through graphics options and [`ui.ShaderQuad`](/docs/core/ui-shader-quad).
+The server is untouched by all of this. It is a client subsystem with no Lua surface, and work on it is optional: you only need it if you ship your own shaders or materials. Python reaches rendering through graphics options and [`ui.ShaderQuad`](/docs/building-blocks/ui-shader-quad); effect authors use [effects and materials](/docs/building-blocks/effects-and-materials).
+
+## Glossary
+
+- **RHI:** the rendering hardware interface, a device-neutral layer for creating GPU resources and recording commands.
+- **Render graph:** the per-frame list of passes, each declaring the resources it reads and writes.
+- **Blackboard:** a type-keyed store where graph-building code publishes handles for later passes to find.
+- **Transient and persistent resources:** a transient resource lives for one frame and comes from a pool; a persistent one is named and kept across frames.
+- **G-buffer:** the textures a deferred renderer fills with surface data before lighting.
+- **SSR, SSGI:** screen-space reflections and screen-space global illumination, computed from the rendered frame.
 
 ## A frame, pass by pass: forward by default, deferred behind a switch
 
@@ -34,9 +43,9 @@ The forward builder declares the following work. Declaration order describes the
 
 1. **Cascaded shadows**, when enabled and a map is ready, render the shadow maps used by the scene.
 2. **Forward scene** writes scene color and depth. It renders the sky, lens-flare preparation, clouds, map, actors, water, snow, and map effects in that order. Effect writer targets are set around this work.
-3. **Ground decals**, **transparent map areas**, and the **PC blocker** draw against the scene targets. Ground decals load the existing color and depth rather than clearing them.
-4. **Forward effects** render effects with distortion and selective-glow writer targets available. Hazard walls and arc particles add conditional work.
-5. **Forward post effects**, terrain overlays, and optional scene overlays add their contributions. Scene overlays can include deployment markers and debug primitives.
+3. **Ground decals** and **transparent map areas** draw against the scene targets. Ground decals load the existing color and depth rather than clearing them.
+4. **Forward effects** render effects with distortion and selective-glow writer targets available.
+5. **Forward post effects**, terrain overlays, and optional scene overlays add their contributions. Scene overlays can include debug primitives.
 6. **Resolve passes**, when needed, resolve multisampled color and depth for later consumers.
 7. **Screen-space passes** produce enabled results such as god rays and volumetric scattering. Post-processing reads the scene and the available effect outputs, then writes the output.
 
@@ -44,16 +53,7 @@ The deferred path separates material collection from lighting. It declares shado
 
 ## The render graph: declared reads and writes decide what runs
 
-A graph pass combines an execution function with declarations of the resources it reads and writes. Those declarations tell the compiler what must exist before the pass and which results later work depends on. This ground-decal pass loads the scene targets and writes back to them:
-
-```cpp
-//=== Ground decals (hardware depth test + vertex Z_BIAS) ===
-graph.AddPass("GroundDecals", [](RHI::CommandBuffer* cmd, const RHI::PassResources& res) {
-    if (!RENDER_CONFIG.IsSubsystemEnabled(RHI::RenderSubsystem::Decals)) return;
-    DECAL_MANAGER.RenderGround(cmd);
-}).WriteColor(sceneColor, 0, RHI::LoadOp::Load)
-  .WriteDepthStencil(sceneDepth, RHI::LoadOp::Load);
-```
+A graph pass combines an execution function with declarations of the resources it reads and writes. Those declarations tell the compiler what must exist before the pass and which results later work depends on. A ground-decal pass, for instance, loads the scene color and depth and writes back to them.
 
 Compilation builds dependencies from reads and writes, propagates references from outputs and passes with side effects, culls unreferenced work, sorts the remaining passes, calculates resource lifetimes, and validates the result. A pass that has an externally visible effect needs that fact declared: a function that executes a draw does not by itself tell the graph why the pass must survive.
 
@@ -73,11 +73,7 @@ The RHI device creates resources including buffers, textures, samplers, shaders,
 
 The interface names several backend types, but the device factory creates a DirectX 11 device. An enum value for another API does not establish a working backend.
 
-Resources use typed handles. A buffer handle and a texture handle are distinct types; each carries an ID and a generation. The device keeps separate pools for resource categories. Freeing a slot releases its payload, increments its generation, and returns its ID for reuse. A pool lookup checks the generation, so an old handle does not resolve to the new occupant of that slot.
-
-The handle’s own `IsValid()` checks only that the ID is nonzero. It is a useful test for an invalid sentinel, not proof that a resource remains alive.
-
-The swapchain backbuffer is imported as an RHI handle while remaining a swapchain resource. Resizing releases its backbuffer resources, resizes the swapchain buffers, and recreates those resources. Presentation uses the selected sync interval and permits tearing when supported and enabled.
+Resources use typed handles that carry an ID and a generation, so a stale handle never resolves to the resource that reused its slot. `IsValid()` only tests for the invalid sentinel; it does not prove the resource is alive.
 
 ## Renderers, frame context and pass context: how a draw reaches the device
 
@@ -128,23 +124,21 @@ The effect renderer can keep particle simulation state resident on the GPU and u
 
 The resident chain dispatches simulation first. It then dispatches billboard generation over both resident-produced state and any CPU-uploaded particle state. GPU billboarding therefore does not require resident simulation. Before graphics consumes the generated buffers, the command buffer unbinds compute resources; the renderer then draws the generated geometry in batches.
 
-If the required GPU billboard resources are unavailable, the effect renderer uses CPU billboarding. It also blocks that GPU path for specified older Intel devices.
+If the required GPU billboard resources are unavailable, the effect renderer uses CPU billboarding.
 
 ## Settings and what ships on: declaration defaults versus the client settings
 
-Forward lighting is the default. Deferred lighting, screen-space reflections (SSR), and screen-space global illumination (SSGI) ship off. The identified deferred runtime control is in the debug interface, subject to the compile-time guard; ordinary graphics options do not select it.
+Forward lighting is the default. Deferred lighting, screen-space reflections (SSR), and screen-space global illumination (SSGI) ship off. Ordinary graphics options do not switch them on; only a debug build exposes a runtime control.
 
-Declaration defaults are not the whole settings story. Client settings apply volumetric scattering, volumetric rays, SSAO, and bloom after the initial render configuration. The loader’s fallback enables volumetric scattering and SSAO, while bloom’s fallback is off. Graphics presets also set volumetrics, rays, and SSAO. Volumetric rays additionally require shadows; the unshadowed haze is a separate part of the effect. Bloom enable and intensity are separate ambience controls.
+Declaration defaults are not the whole settings story. Client settings apply volumetric scattering, volumetric rays, SSAO, and bloom after the initial render configuration. The loader’s fallback enables volumetric scattering and SSAO, while bloom’s fallback is off. Volumetric rays additionally require shadows; the unshadowed haze is a separate part of the effect. Bloom enable and intensity are separate ambience controls.
 
 Post-processing executes HDR-stage effects, tone mapping, and then LDR-stage effects. Scene bloom reads the full-resolution scene into a quarter-resolution bright target, then applies horizontal and vertical blur using two targets. Each additional blur iteration adds another pair of quarter-resolution passes.
 
 Selective glow is a separate, writer-fed effect: scene and effect rendering can write its contribution to a target for later post-processing. Its six-level down-and-up chain is distinct from scene bloom’s quarter-resolution bright pass and blur.
 
-## Hardware floor: feature level 11_0 and the older-Intel blocklist
+## Hardware floor: feature level 11_0
 
-The minimum accepted DirectX feature level is `11_0`. Device creation can request lower levels, but the client rejects a result below `11_0` because its shaders require shader model 5.
-
-The effect renderer’s older-Intel blocklist selects CPU billboarding for matching devices that reach that renderer. It does not make a device reporting only feature level `10_x` supported: device creation rejects that device before the billboard fallback can run.
+The minimum accepted DirectX feature level is `11_0`. The client rejects a device below it because its shaders require shader model 5; a device reporting only `10_x` is refused at creation, before any effect fallback runs.
 
 ## Diagnosing a frame: graph first, then bindings, then the debug layer
 
@@ -158,10 +152,7 @@ In-app RenderDoc loading is opt-in through `UE_RENDERDOC=1`. Its hook replaces t
 
 ## Common traps: the failures that log nothing
 
-- **A shader edit appears ignored.** Cache validation depends on the source and include content the virtual file system actually supplies. Check loose-file versus packed-file selection and the cached result; changing a file the client does not read cannot change the compiled shader.
 - **A fullscreen draw uses the previous vertex input.** A pipeline with no vertex input needs a null input layout. Leaving the preceding layout bound can retain its referenced vertex buffers and make the draw depend on unrelated earlier state.
 - **A buffer looks valid but compute has no usable view.** A nonzero handle alone does not prove that the required shader-resource or unordered-access view exists. Failed view creation must return an invalid resource handle rather than let a dispatch proceed with a null view.
 - **A depth texture cannot also be sampled.** The underlying depth resource must use a typeless format so the backend can create compatible depth and shader-resource views.
-- **Validation messages disappear during an in-app capture.** The RenderDoc hook replaces the DirectX debug layer. Run without the hook when investigating the validation queue.
-- **A second path changes device state.** Direct context calls bypass the command buffer’s state cache. Its next filtered bind can trust a state that no longer exists on the device; use the RHI path and invalidate tracked state when a direct path is necessary.
 - **A pass never executes.** A pass whose writes are not referenced can be culled. Declare the resources its consumers read, and mark genuine side effects so the compiler can retain the work.

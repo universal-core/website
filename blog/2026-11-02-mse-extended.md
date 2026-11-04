@@ -80,7 +80,7 @@ MaterialFile             "d:/ymir work/special/cosmetics/material/effect/rage_fl
 
 The existing effect still controls the particle's motion and lifetime. The material changes its pixels. There is no engine change or engine build for this gradient.
 
-The input texture matters. A brightness gradient on a pure white texture produces one flat color, because every pixel supplies the same value. Using alpha as the input can flood a sprite when its alpha covers the whole quad. The [particle gradient tutorial](/tutorials/particle-gradient) builds the example step by step; the [effects and materials reference](/docs/core/effects-and-materials) covers the format.
+The input texture matters. A brightness gradient on a pure white texture produces one flat color, because every pixel supplies the same value. Using alpha as the input can flood a sprite when its alpha covers the whole quad. The [particle gradient tutorial](/tutorials/particle-gradient) builds the example step by step; the [effects and materials reference](/docs/building-blocks/effects-and-materials) covers the format.
 
 ## A day of families, and two things removed
 

@@ -47,11 +47,24 @@ Inside it, the step buttons:
 of the computed diff. Any of the three takes children to replace the default
 button label.
 
+### Several steps
+
+A tutorial of several steps adds one `Stage` button at the top of each step from the second on:
+
+```mdx
+<Stage label="Step 2 of 4: register it" files={s1} solution={s2} path="quest/hello.quest">Start step 2</Stage>
+```
+
+It replaces the workbench with `files` (what the previous step left, so a reader who skipped ahead lands in a known
+state, edits included), makes `solution` what **Solve** and **Check** use, and writes `label` in the status line.
+The `Tutorial` props are step 1: `solution` is step 1's solution and `stage` its label. **Check** lists the files whose
+content differs from the current solution (trailing whitespace ignored).
+
 **Reset** throws away the reader's edits and returns every file to what the last
 step left. A step button always overwrites the file it writes, edits included.
 
 Languages are picked by extension: `.lua`, `.forge` and `.quest` (Lua, with the
-quest block keywords), `.py`, `.yml`/`.yaml`, `.json`, and C/C++ headers and
+quest block keywords), `.mse`/`.msfvx`/`.msattach` (key/value effect text), `.py`, `.yml`/`.yaml`, `.json`, and C/C++ headers and
 sources. Anything else shows as plain text.
 
 ## Where the code lives

@@ -27,14 +27,14 @@ wiki://p/items/belt?vnum=100
 ```
 `?vnum=100` is the query parameter and allows you to dynamically select data to be displayed. 
 
-These parameter are enbedded in the document using [jinja2-context](./jinja2-context.md) and cane be retrieved inside page using [fun.getv](./jinja2-context.md#funcgetv)(query:vnum) or [fun.getvi](./jinja2-context.md#funcgetvi)(query:vnum).
+These parameter are enbedded in the document using [jinja2-context](../uchtml/jinja2-context.md) and cane be retrieved inside page using [fun.getv](../uchtml/jinja2-context.md#fungetv)(query:vnum) or [fun.getvi](../uchtml/jinja2-context.md#fungetvi)(query:vnum).
 
 ## Location
 
 Location is the string after **#**.
 
-It tells **UCHTML** where to scroll the target page after load.  
-It works together with [Grid System's **id** attribute](./grid-system.md#attributes-overview): you can create an **anchor** using `id` attribute in any html tag you want, and it becomes a possible "target" for location.
+It tells the wiki window, through UCHTML's [`main` tag](../uchtml/components-layout.md#main), where to scroll the target page after load.  
+It works together with [Grid System's **id** attribute](../uchtml/grid-system.md#attributes-overview): you can create an **anchor** using `id` attribute in any html tag you want, and it becomes a possible "target" for location.
 
 **Example**
 

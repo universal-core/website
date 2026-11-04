@@ -2,6 +2,8 @@ import clsx from "clsx";
 import React from "react";
 import {
   VscCheck,
+  VscChecklist,
+  VscDebugStart,
   VscClose,
   VscDiffModified,
   VscDiscard,
@@ -41,12 +43,14 @@ type TutorialProps = {
   solution?: Files;
   /** file open at start; defaults to the first path */
   active?: string;
+  /** label of the first step, shown in the status line */
+  stage?: string;
   children?: React.ReactNode;
 };
 
-export const Tutorial = ({ files, solution, active, children }: TutorialProps) => {
+export const Tutorial = ({ files, solution, active, stage, children }: TutorialProps) => {
   const [state, dispatch] = React.useReducer(reducer, undefined, () =>
-    createState(files, solution, active),
+    createState(files, solution, active, stage),
   );
   const [collapsed, setCollapsed] = React.useState<Set<string>>(() => new Set());
   const [mode, setMode] = React.useState<"text" | "files">("text");
@@ -197,6 +201,16 @@ export const Tutorial = ({ files, solution, active, children }: TutorialProps) =
               {state.solution ? (
                 <button
                   type="button"
+                  title="Compare your files with this step's solution"
+                  disabled={state.solved}
+                  onClick={() => dispatch({ type: "check" })}
+                >
+                  <VscChecklist /> Check
+                </button>
+              ) : null}
+              {state.solution ? (
+                <button
+                  type="button"
                   className={clsx(state.solved && "uc-tutorial__solve--on")}
                   aria-pressed={state.solved}
                   onClick={() => dispatch({ type: "solve" })}
@@ -234,8 +248,24 @@ export const Tutorial = ({ files, solution, active, children }: TutorialProps) =
               <div className="uc-tutorial__empty">Pick a file on the left.</div>
             )}
           </div>
-          {state.solved ? (
-            <div className="uc-tutorial__status">Solution, read only</div>
+          {state.solved || state.stage || state.check ? (
+            <div className="uc-tutorial__status">
+              {state.stage ? <strong>{state.stage}</strong> : null}
+              {state.solved ? <span>Solution, read only</span> : null}
+              {state.check ? (
+                <span
+                  className={
+                    state.check.differs.length
+                      ? "uc-tutorial__check uc-tutorial__check--no"
+                      : "uc-tutorial__check uc-tutorial__check--ok"
+                  }
+                >
+                  {state.check.differs.length
+                    ? `Differs from the solution: ${state.check.differs.join(", ")}`
+                    : "Matches the solution"}
+                </span>
+              ) : null}
+            </div>
           ) : null}
         </div>
 
@@ -329,5 +359,33 @@ export const ShowFile = ({ path, lines, children }: StepProps) => (
     action={{ type: "step", path, lines: parseLines(lines) }}
   >
     {children}
+  </StepButton>
+);
+
+type StageProps = {
+  /** status-line label, e.g. "Step 2 of 5: Count logins" */
+  label: string;
+  /** the files this step starts from; replaces the workbench (the reader's edits too) */
+  files?: Files;
+  /** the files this step ends with; Solve and Check use them */
+  solution?: Files;
+  /** file to open */
+  path?: string;
+  children?: React.ReactNode;
+};
+
+export const Stage = ({ label, files, solution, path, children }: StageProps) => (
+  <StepButton
+    path={path ?? ""}
+    icon={<VscDebugStart />}
+    verb="Start"
+    action={{ type: "stage", files, solution, label, path }}
+  >
+    {children ?? (
+      <>
+        <span>Start</span>
+        <code>{label}</code>
+      </>
+    )}
   </StepButton>
 );
