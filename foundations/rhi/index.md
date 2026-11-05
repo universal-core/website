@@ -63,7 +63,7 @@ The graph uses three resource lifetimes:
 
 - **Imported resources** wrap physical resources owned elsewhere, such as the swapchain backbuffer.
 - **Persistent resources** are named and retained across graph resets. A persistent texture is recreated when relevant descriptor properties, such as dimensions, format, usage, mip count, layers, or samples, change.
-- **Transient resources** come from a pool. The compiler calculates first and last use, but execution acquires referenced transients before the pass loop and returns them after it. The pool can reuse a matching texture or buffer on a later acquisition; that lifetime calculation does not by itself imply aliasing between passes in the same frame.
+- **Transient resources** come from a pool. The compiler calculates first and last use, but execution acquires referenced transients before the pass loop and returns them after it. The pool can reuse a matching texture or buffer on a later acquisition; that lifetime calculation does not by itself imply aliasing between passes in the same frame. The shipped client creates no transient resource: every scene target is persistent.
 
 A type-keyed blackboard shares data between graph-building code and passes. For example, deferred construction publishes G-buffer handles and dimensions for screen-space consumers. Putting a handle on the blackboard shares it; the pass must still declare its resource access for dependency tracking.
 
