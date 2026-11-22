@@ -1,5 +1,5 @@
 ---
-date: 2026-12-29
+date: 2027-02-23
 title: "Rules as questions: four decisions that stopped being branches"
 description: Four engine decisions moved from scattered branches to ordered policies, bringing their own rules for errors, repeated calls, and verdicts.
 authors: luscha

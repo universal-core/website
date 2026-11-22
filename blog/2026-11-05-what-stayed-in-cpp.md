@@ -1,5 +1,5 @@
 ---
-date: 2027-04-27
+date: 2027-06-22
 title: "What stayed in C++: one damage formula, one grid, one cache"
 description: Three things I never moved into Lua, what each one gives Lua instead, and what it cost to keep the line where it is.
 authors: luscha

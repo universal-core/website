@@ -1,5 +1,5 @@
 ---
-date: 2027-01-12
+date: 2027-03-09
 title: "Affects as a channel: what the broadcast carries and where it lost state"
 description: I sent the full affect element to every viewer instead of a bit. The lifecycle around that channel (add, substitute, expire, remove) lost state in three places before it held.
 authors: luscha

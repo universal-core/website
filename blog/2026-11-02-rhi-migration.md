@@ -1,4 +1,5 @@
 ---
+date: 2027-01-05
 title: 22 weeks planned, a triangle on day 5
 description: Replacing a Direct3D 9 renderer in stages, from the first device wrapper to retiring the old device.
 authors: luscha

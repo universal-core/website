@@ -1,5 +1,5 @@
 ---
-date: 2027-02-02
+date: 2027-03-30
 title: A cast has phases
 description: In the Metin2 mainline engine a skill is one function that finds its victims and applies the effect in the same pass. I rebuilt it as nodes that collect before they act, and the bugs that cost me were all about when a cast starts, runs and ends.
 authors: luscha

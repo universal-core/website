@@ -1,5 +1,5 @@
 ---
-date: 2027-03-16
+date: 2027-05-11
 title: A feature stopped needing its own packet
 description: In the Metin2 mainline engine a feature that crosses the network is a packet with a header, a struct and a switch case on each side. Eight generic Luna headers replaced them, and a feature became a proto package, a forge file and a window. The envelope took three corrections to hold.
 authors: luscha

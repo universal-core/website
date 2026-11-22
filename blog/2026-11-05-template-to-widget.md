@@ -1,5 +1,5 @@
 ---
-date: 2027-04-13
+date: 2027-06-08
 title: "From template to widget: a page that is compiled, and a window that is a tag"
 description: A UCHTML page used to parse its template source on every render. Production now runs a precompiled module and debug keeps the source path, and the same markup can hold a hand-built window as a tag.
 authors: luscha

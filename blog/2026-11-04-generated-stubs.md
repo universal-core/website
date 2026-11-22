@@ -1,5 +1,5 @@
 ---
-date: 2027-03-23
+date: 2027-05-18
 title: A stub is a second copy of the binding
 description: A binding gives an editor nothing to read, so the Lua surface is described twice, in C++ and in a stub. Every way the two copies drifted apart, and what made the stub generated output.
 authors: luscha

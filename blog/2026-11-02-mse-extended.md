@@ -1,4 +1,5 @@
 ---
+date: 2027-01-12
 title: Extended, never wrapped
 description: How materials extended particle effects without replacing the paths that already referenced them.
 authors: luscha

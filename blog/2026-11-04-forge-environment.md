@@ -1,5 +1,5 @@
 ---
-date: 2027-02-16
+date: 2027-04-13
 title: "A forge is a file with an environment: what isolates one module from another"
 description: I gave each forge a Lua thread and wrapped its functions, then an environment of its own, then dropped the wrapper. What a forge keeps to itself, what still leaks, and why the db core runs the same loader.
 authors: luscha

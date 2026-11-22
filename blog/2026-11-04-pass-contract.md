@@ -1,5 +1,5 @@
 ---
-date: 2026-12-22
+date: 2027-02-16
 title: b0 and b1 belong to the frame and pass
 description: I gave renderers a shared frame and pass contract, then paid for making each renderer responsible for its own bindings.
 authors: luscha

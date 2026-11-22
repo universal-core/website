@@ -1,5 +1,5 @@
 ---
-date: 2026-12-15
+date: 2027-02-09
 title: Four wikis in six years
 description: How the in-game wiki moved from hand-copied client tables to generated world data and HTML templates.
 authors: luscha

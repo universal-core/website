@@ -1,5 +1,5 @@
 ---
-date: 2027-02-09
+date: 2027-04-06
 title: "Count once, use everywhere: a catalog where a declaration fixes what a name means"
 description: In the Metin2 mainline engine a lifetime number about a player has no home, so every feature counts in its own vocabulary. I built one catalog of declared metrics, and the decisions that mattered were the ones that stop a wrong count from ever being written.
 authors: luscha

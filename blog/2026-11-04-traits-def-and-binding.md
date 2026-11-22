@@ -1,5 +1,5 @@
 ---
-date: 2027-02-23
+date: 2027-04-20
 title: "A def is the behaviour, a binding is the gate: splitting a trait in two"
 description: The first trait carried its gate and could be gated by one affect. I split the definition from the binding, so one behaviour serves several affects with their own numbers, and gave it a native C++ backend that reaches every hook a Lua trait does.
 authors: luscha

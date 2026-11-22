@@ -1,5 +1,5 @@
 ---
-date: 2027-01-19
+date: 2027-03-16
 title: "Markup that re-renders only its zones: one number, not the page"
 description: A UCHTML page used to rebuild every element when one counter changed. Reactive zones rebuild only the children that watch the variable, and the batching around them decides whether that is cheap.
 authors: luscha

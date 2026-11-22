@@ -1,5 +1,5 @@
 ---
-date: 2026-11-24
+date: 2027-01-19
 title: Damage read in chat for ten years, then a verdict without a client
 description: How a headless simulator gave an agent a way to test the server, and why a passing verdict still needs a world worth testing.
 authors: luscha

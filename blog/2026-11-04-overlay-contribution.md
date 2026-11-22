@@ -1,5 +1,5 @@
 ---
-date: 2027-03-02
+date: 2027-04-27
 title: An overlay costs a contribution, not a pass
 description: Every material effect on a worn model owned its own redraw of the geometry, so cost grew as effects times batches. I turned an overlay into a shader function evaluated in one additive redraw, and left the effects that need their own vertex shader as separate passes.
 authors: luscha

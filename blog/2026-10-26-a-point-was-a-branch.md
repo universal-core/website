@@ -1,4 +1,5 @@
 ---
+date: 2026-11-24
 title: A point used to be a branch in the damage code
 description: In the Metin2 mainline engine a bonus point does nothing until some function reads it, and a conditional bonus is one more branch in the damage code. How a scoped point bump turned that into a hook, a skills-only detour that traits superseded, and what still lives in the damage code.
 authors: luscha

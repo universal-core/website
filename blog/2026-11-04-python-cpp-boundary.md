@@ -1,5 +1,5 @@
 ---
-date: 2027-03-09
+date: 2027-05-04
 title: A window handler was a pointer in an int
 description: A window registered for server messages was identified by its C++ pointer, returned to Python as an int and sent to the server as an id. The 64-bit client could not hold it in an int, so a table now maps every handler to a 32-bit id, and a callback wrapper keeps registered windows from living forever.
 authors: luscha

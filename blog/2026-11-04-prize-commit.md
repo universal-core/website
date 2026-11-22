@@ -1,5 +1,5 @@
 ---
-date: 2027-01-05
+date: 2027-03-02
 title: "The way out of a copy: custom transformers and the prize commit"
 description: I extended player virtualization to state outside the bulk load and gave rewards a narrow route back to the real player.
 authors: luscha

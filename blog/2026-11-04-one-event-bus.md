@@ -1,5 +1,5 @@
 ---
-date: 2027-01-26
+date: 2027-03-23
 title: One event bus, and the hook chain I deleted because nothing listened
 description: Game, database and Lua share one named event bus. Two weeks after it landed I added a sibling that let Lua change a C++ result, and in 2026 I deleted it with two of its three hooks never used.
 authors: luscha

@@ -1,4 +1,5 @@
 ---
+date: 2026-12-01
 title: Eleven branches, three functions, one list
 description: Who may hit whom lived in eleven branches over three functions, each dropped in wherever it fit. How the attack rules went from the Metin2 mainline engine to one ordered list that events join and leave.
 authors: luscha

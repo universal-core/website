@@ -1,4 +1,5 @@
 ---
+date: 2026-12-22
 title: Rage in 237 lines of Lua, and 1,422 lines of C++ deleted
 description: Every visible effect on a character cost me an engine change, and the effect artist could not work without me. How the bitfield limit led to broadcast affects, and what rage looked like once it moved onto them.
 authors: luscha

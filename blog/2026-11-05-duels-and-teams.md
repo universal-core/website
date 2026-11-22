@@ -1,5 +1,5 @@
 ---
-date: 2027-04-06
+date: 2027-06-01
 title: Two team lists and a duel packet that left too early
 description: The picture of who may fight whom was built by hand in each mode, next to a second manager that listed teams for chat. How both became one map-scoped session manager, and what the missing phase check in the packet sender showed.
 authors: luscha

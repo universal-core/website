@@ -1,5 +1,5 @@
 ---
-date: 2027-04-20
+date: 2027-06-15
 title: "The render graph: declared reads and writes decide what runs"
 description: A frame used to be one function calling renderers in a fixed order. The graph schedules passes from what they declare, and its first version declared a lot and bound nothing.
 authors: luscha

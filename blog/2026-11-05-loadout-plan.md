@@ -1,5 +1,5 @@
 ---
-date: 2027-03-30
+date: 2027-05-25
 title: A plan that keeps what it displaced
 description: In the Metin2 mainline engine a character holds the skills its job and skill group list. A loadout is a plan the server resolves per character, and the part that took care was giving back what the plan had taken.
 authors: luscha
