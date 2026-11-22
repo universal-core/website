@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[4615],{31814:e=>{e.exports=JSON.parse('{"label":"multi-core","permalink":"/blog/tags/multi-core","allTagsPath":"/blog/tags","count":1}')}}]);

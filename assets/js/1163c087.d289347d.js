@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[6910],{81386:e=>{e.exports=JSON.parse('{"permalink":"/blog/tags/refactoring","page":1,"postsPerPage":12,"totalPages":1,"totalCount":4,"blogDescription":"Notes, deep dives and release notes from inside UniversalCore","blogTitle":"Blog"}')}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[1105],{80449:e=>{e.exports=JSON.parse('{"permalink":"/blog/tags/directx-11","page":1,"postsPerPage":12,"totalPages":1,"totalCount":2,"blogDescription":"Notes, deep dives and release notes from inside UniversalCore","blogTitle":"Blog"}')}}]);
