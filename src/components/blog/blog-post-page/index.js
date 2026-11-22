@@ -121,6 +121,14 @@ export const BlogPostPageView = ({ children }) => {
               "ml-4 blog-md:ml-0",
             )}
           >
+            {author?.url && (
+              <>
+                <a href={author.url} className="uc-post-author">
+                  by {author.name}
+                </a>
+                <span className="w-[4px] h-[4px] rounded-full bg-refine-react-5 dark:bg-refine-react-4 " />
+              </>
+            )}
             <Date date={date} formattedDate={formattedDate} />
             {typeof readingTime !== "undefined" && (
               <>
