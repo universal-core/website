@@ -12,7 +12,8 @@
             "summary": "A quest coroutine could wait for a player and for nothing else. The bridge made any script wait on the database or another core with a receipt, an owner and a pin, and three lifetime bugs showed what that costs.",
             "date_modified": "2026-11-04T00:00:00.000Z",
             "author": {
-                "name": "Luscha"
+                "name": "Luscha",
+                "url": "https://github.com/Luscha"
             },
             "tags": [
                 "luna",
@@ -29,7 +30,8 @@
             "summary": "Two things I could not do in the classic quest manager, reaching two players in one block and binding a UI button to an action, and the same two tasks done in Forge.",
             "date_modified": "2026-10-22T00:00:00.000Z",
             "author": {
-                "name": "Luscha"
+                "name": "Luscha",
+                "url": "https://github.com/Luscha"
             },
             "tags": [
                 "luna",
@@ -46,7 +48,8 @@
             "summary": "Quest logs that could not print a player or a mob, then a remote debugger, a linter and 106 stub files. The compiler rewrite was the hard part.",
             "date_modified": "2026-10-20T00:00:00.000Z",
             "author": {
-                "name": "Luscha"
+                "name": "Luscha",
+                "url": "https://github.com/Luscha"
             },
             "tags": [
                 "lua",
@@ -63,7 +66,8 @@
             "summary": "Four hand-written parsers across three languages per message, replaced by one protobuf transport the C++ launcher cannot read, and the registry bug that sat in it for 22 months.",
             "date_modified": "2026-10-20T00:00:00.000Z",
             "author": {
-                "name": "Luscha"
+                "name": "Luscha",
+                "url": "https://github.com/Luscha"
             },
             "tags": [
                 "protobuf",
@@ -79,7 +83,8 @@
             "summary": "Moving the arena and lobby from 5,021 lines of C++ to Lua processors and referees, the garbage collector bug that stopped it silently for a month, and what building a mode became afterwards.",
             "date_modified": "2026-10-19T00:00:00.000Z",
             "author": {
-                "name": "Luscha"
+                "name": "Luscha",
+                "url": "https://github.com/Luscha"
             },
             "tags": [
                 "forge",
@@ -96,7 +101,8 @@
             "summary": "A d.kill_all that crashed the core, a flag that dropped events for two years, a dungeon rejoin held together by quest flags, and why that pushed me to build Luna.",
             "date_modified": "2026-10-19T00:00:00.000Z",
             "author": {
-                "name": "Luscha"
+                "name": "Luscha",
+                "url": "https://github.com/Luscha"
             },
             "tags": [
                 "luna",
