@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[5767],{20541:e=>{e.exports=JSON.parse('{"permalink":"/blog/page/2","page":2,"postsPerPage":12,"totalPages":2,"totalCount":14,"previousPage":"/blog","blogDescription":"Notes, deep dives and release notes from inside UniversalCore","blogTitle":"Blog"}')}}]);

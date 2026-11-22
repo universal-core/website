@@ -639,6 +639,9 @@
           "name": "padding-y"
         },
         {
+          "name": "reactive"
+        },
+        {
           "name": "scrollbar-gap"
         },
         {
@@ -1011,6 +1014,322 @@
         {
           "name": "color",
           "description": "Required attribute"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "arrows",
+          "values": [
+            {
+              "name": "over"
+            },
+            {
+              "name": "under"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "page-var"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "carousel-page",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
         }
       ]
     },
@@ -1634,6 +1953,9 @@
         },
         {
           "name": "padding-y"
+        },
+        {
+          "name": "reactive"
         },
         {
           "name": "scrollbar-gap"
@@ -3290,6 +3612,16 @@
       ]
     },
     {
+      "name": "hhmap",
+      "description": "",
+      "attributes": [
+        {
+          "name": "id",
+          "description": "Required attribute"
+        }
+      ]
+    },
+    {
       "name": "hitem",
       "description": "",
       "attributes": [
@@ -3507,8 +3839,7 @@
           ]
         },
         {
-          "name": "width",
-          "description": "Required attribute"
+          "name": "width"
         },
         {
           "name": "x"
@@ -4139,6 +4470,158 @@
         {
           "name": "width",
           "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "name": "item-shop-card",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height"
+        },
+        {
+          "name": "id",
+          "description": "Required attribute"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width"
         },
         {
           "name": "x"
@@ -4813,7 +5296,16 @@
           "name": "background"
         },
         {
+          "name": "camera-eye"
+        },
+        {
           "name": "camera-move"
+        },
+        {
+          "name": "camera-target"
+        },
+        {
+          "name": "camera-up"
         },
         {
           "name": "display",
@@ -4878,6 +5370,9 @@
         },
         {
           "name": "margin-y"
+        },
+        {
+          "name": "motion-index"
         },
         {
           "name": "name"
@@ -5881,6 +6376,172 @@
       ]
     },
     {
+      "name": "ranking-window",
+      "description": "",
+      "attributes": [
+        {
+          "name": "align",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "left"
+            },
+            {
+              "name": "right"
+            }
+          ]
+        },
+        {
+          "name": "align-items",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "stretch"
+            }
+          ]
+        },
+        {
+          "name": "display",
+          "values": [
+            {
+              "name": "block"
+            },
+            {
+              "name": "flex"
+            },
+            {
+              "name": "relative"
+            }
+          ]
+        },
+        {
+          "name": "height",
+          "description": "Required attribute"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "justify-content",
+          "values": [
+            {
+              "name": "center"
+            },
+            {
+              "name": "flex-end"
+            },
+            {
+              "name": "flex-start"
+            },
+            {
+              "name": "space-around"
+            },
+            {
+              "name": "space-between"
+            },
+            {
+              "name": "space-evenly"
+            }
+          ]
+        },
+        {
+          "name": "margin"
+        },
+        {
+          "name": "margin-bottom"
+        },
+        {
+          "name": "margin-left"
+        },
+        {
+          "name": "margin-right"
+        },
+        {
+          "name": "margin-top"
+        },
+        {
+          "name": "margin-x"
+        },
+        {
+          "name": "margin-y"
+        },
+        {
+          "name": "more-info"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "padding"
+        },
+        {
+          "name": "padding-bottom"
+        },
+        {
+          "name": "padding-left"
+        },
+        {
+          "name": "padding-right"
+        },
+        {
+          "name": "padding-top"
+        },
+        {
+          "name": "padding-x"
+        },
+        {
+          "name": "padding-y"
+        },
+        {
+          "name": "ranking-type",
+          "description": "Required attribute"
+        },
+        {
+          "name": "rows"
+        },
+        {
+          "name": "show-pagination"
+        },
+        {
+          "name": "spacing"
+        },
+        {
+          "name": "vertical-align",
+          "values": [
+            {
+              "name": "bottom"
+            },
+            {
+              "name": "center"
+            },
+            {
+              "name": "top"
+            }
+          ]
+        },
+        {
+          "name": "width",
+          "description": "Required attribute"
+        },
+        {
+          "name": "x"
+        },
+        {
+          "name": "y"
+        }
+      ]
+    },
+    {
       "name": "slot-card",
       "description": "",
       "attributes": [
@@ -6253,6 +6914,10 @@
               "name": "relative"
             }
           ]
+        },
+        {
+          "name": "expanded",
+          "description": "Open the tooltip on the formulas instead of the numbers, without holding SHIFT."
         },
         {
           "name": "grade",

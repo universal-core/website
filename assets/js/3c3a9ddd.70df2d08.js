@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[74],{98870:e=>{e.exports=JSON.parse('{"label":"quest-compiler","permalink":"/blog/tags/quest-compiler","allTagsPath":"/blog/tags","count":1}')}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[74839],{37148:e=>{e.exports=JSON.parse('{"permalink":"/blog/tags/react","page":1,"postsPerPage":12,"totalPages":1,"totalCount":1,"blogDescription":"Notes, deep dives and release notes from inside UniversalCore","blogTitle":"Blog"}')}}]);
